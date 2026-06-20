@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Альфа-ландия — Лига дивизионов</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: #0A1628; min-height: 100vh; font-family: var(--font-body); }
+    .team-wrap { max-width: 800px; margin: 0 auto; padding: 20px 16px 60px; }
+
+    /* ── HERO ── */
+    .league-hero {
+      text-align: center; padding: 28px 20px 24px; margin-bottom: 22px;
+    }
+    .league-logo { font-size: 3.2rem; margin-bottom: 8px; }
+    .league-title {
+      font-size: 1.8rem; font-weight: 900; color: #fff; letter-spacing: -.5px;
+    }
+    .league-title span { color: #FFD700; }
+    .league-sub { font-size: .88rem; color: rgba(255,255,255,.5); margin-top: 6px; }
+    .season-badge {
+      display: inline-block; margin-top: 12px;
+      background: rgba(255,215,0,.15); border: 1.5px solid rgba(255,215,0,.4);
+      color: #FFD700; border-radius: 20px; padding: 4px 16px;
+      font-size: .8rem; font-weight: 700; letter-spacing: .5px;
+    }
+
+    /* ── MY DIVISION STRIP ── */
+    .my-division-strip {
+      border-radius: 12px; padding: 12px 18px; margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+      border: 1.5px solid rgba(255,255,255,.15);
+      background: rgba(255,255,255,.05);
+    }
+    .mds-dot { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; }
+    .mds-text { font-size: .88rem; color: rgba(255,255,255,.7); }
+    .mds-text strong { color: #fff; }
+    .mds-rank { margin-left: auto; font-size: 1.1rem; font-weight: 900; color: #FFD700; }
+
+    /* ── PODIUM ── */
+    .podium-section { margin-bottom: 26px; }
+    .podium-section h3 { font-size: .8rem; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,.4); margin-bottom: 14px; text-align: center; }
+    .podium-row {
+      display: flex; align-items: flex-end; justify-content: center; gap: 10px;
+    }
+    .podium-item {
+      flex: 1; max-width: 180px; text-align: center; display: flex; flex-direction: column; align-items: center;
+    }
+    .podium-badge-wrap { position: relative; margin-bottom: 8px; }
+    .podium-circle {
+      width: 68px; height: 68px; border-radius: 50%; display: flex; align-items: center;
+      justify-content: center; font-size: 1.6rem; font-weight: 900; color: #fff;
+      border: 3px solid rgba(255,255,255,.3); box-shadow: 0 4px 20px rgba(0,0,0,.4);
+      margin: 0 auto;
+    }
+    .podium-rank-badge {
+      position: absolute; bottom: -4px; right: -4px; width: 22px; height: 22px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: .7rem; font-weight: 900; border: 2px solid #0A1628;
+    }
+    .podium-name { font-size: .88rem; font-weight: 800; color: #fff; margin-bottom: 3px; }
+    .podium-pts  { font-size: 1.3rem; font-weight: 900; color: #FFD700; }
+    .podium-meta { font-size: .72rem; color: rgba(255,255,255,.45); margin-top: 2px; }
+    .podium-block {
+      border-radius: 10px 10px 0 0; width: 100%;
+      display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px;
+    }
+    .podium-1st .podium-circle { width: 80px; height: 80px; font-size: 2rem; }
+    .podium-1st .podium-pts    { font-size: 1.5rem; }
+
+    /* ── LEAGUE TABLE ── */
+    .league-table-wrap {
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 16px; overflow: hidden; margin-bottom: 20px;
+    }
+    .lt-header {
+      display: grid; grid-template-columns: 48px 1fr 90px 90px 100px;
+      padding: 10px 16px; background: rgba(255,255,255,.06);
+      font-size: .72rem; font-weight: 700; color: rgba(255,255,255,.4);
+      text-transform: uppercase; letter-spacing: .8px; gap: 8px;
+    }
+    .lt-row {
+      display: grid; grid-template-columns: 48px 1fr 90px 90px 100px;
+      padding: 14px 16px; gap: 8px; align-items: center;
+      border-top: 1px solid rgba(255,255,255,.06);
+      transition: background .15s;
+    }
+    .lt-row:hover   { background: rgba(255,255,255,.04); }
+    .lt-row.my-div  { background: rgba(255,215,0,.06); border-left: 3px solid #FFD700; }
+    .lt-rank {
+      font-size: 1.1rem; font-weight: 900; color: rgba(255,255,255,.3); text-align: center;
+    }
+    .lt-rank.top3 { color: #FFD700; }
+    .lt-div-info { display: flex; align-items: center; gap: 10px; }
+    .lt-color { width: 10px; height: 38px; border-radius: 3px; flex-shrink: 0; }
+    .lt-div-name { font-size: .9rem; font-weight: 800; color: #fff; }
+    .lt-product  { font-size: .72rem; color: rgba(255,255,255,.4); margin-top: 2px; }
+    .lt-members  { text-align: center; }
+    .lt-count    { font-size: 1rem; font-weight: 800; color: #fff; }
+    .lt-active   { font-size: .72rem; color: rgba(255,255,255,.4); margin-top: 1px; }
+    .lt-avg      { text-align: center; }
+    .lt-avg-val  { font-size: 1rem; font-weight: 900; color: #FFD700; }
+    .lt-avg-lbl  { font-size: .72rem; color: rgba(255,255,255,.35); margin-top: 1px; }
+    .lt-bar-col  { }
+    .lt-bar-bg   { background: rgba(255,255,255,.1); border-radius: 4px; height: 6px; overflow: hidden; }
+    .lt-bar-fill { height: 100%; border-radius: 4px; transition: width .6s ease; }
+    .lt-top-name { font-size: .72rem; color: rgba(255,255,255,.4); margin-top: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    @media (max-width:580px) {
+      .lt-header, .lt-row { grid-template-columns: 36px 1fr 70px 70px; }
+      .lt-bar-col { display: none; }
+    }
+
+    /* ── NO DATA STATE ── */
+    .empty-state {
+      text-align: center; padding: 32px 20px; color: rgba(255,255,255,.4);
+    }
+    .empty-state .es-icon { font-size: 3rem; margin-bottom: 10px; }
+    .empty-state p { font-size: .88rem; }
+
+    /* ── DEMO SEED CARD ── */
+    .demo-card {
+      background: rgba(255,255,255,.04); border: 1px dashed rgba(255,255,255,.15);
+      border-radius: 14px; padding: 18px 20px; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 16px;
+    }
+    .demo-icon { font-size: 2rem; flex-shrink: 0; }
+    .demo-text h4 { font-size: .9rem; font-weight: 800; color: #fff; margin-bottom: 3px; }
+    .demo-text p  { font-size: .78rem; color: rgba(255,255,255,.45); line-height: 1.5; margin: 0; }
+    .btn-demo { margin-left: auto; flex-shrink: 0; }
+    .btn-demo button {
+      background: rgba(255,255,255,.08); color: rgba(255,255,255,.7);
+      border: 1.5px solid rgba(255,255,255,.2); border-radius: 8px;
+      padding: 8px 14px; font-size: .8rem; font-weight: 700; cursor: pointer;
+      white-space: nowrap; transition: all .15s;
+    }
+    .btn-demo button:hover { background: rgba(255,255,255,.15); color: #fff; }
+    .btn-demo button.seeded { border-color: #28A745; color: #28A745; background: rgba(40,167,69,.1); cursor: default; }
+
+    /* ── REFRESH HINT ── */
+    .refresh-hint { text-align: center; font-size: .78rem; color: rgba(255,255,255,.3); margin-top: -8px; margin-bottom: 16px; }
+
+    /* ── LEGEND ── */
+    .legend-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; }
+    .legend-item { display: flex; align-items: center; gap: 6px; font-size: .75rem; color: rgba(255,255,255,.45); }
+    .legend-dot  { width: 8px; height: 8px; border-radius: 50%; }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="logo">Альфа-<span>ландия</span></div>
+  <div class="nav-links">
+    <a href="game.html">Игра</a>
+    <a href="daily.html">⚡ Вызов</a>
+    <a href="scenarios.html">🎭 Сценарии</a>
+    <a href="profile.html">Профиль</a>
+    <a href="leaderboard.html">Личный рейтинг</a>
+  </div>
+  <div class="nav-right">
+    <span class="user-pill" id="nav-user">—</span>
+    <button class="btn-logout" onclick="logout()">Выйти</button>
+  </div>
+</nav>
+
+<div class="team-wrap">
+
+  <!-- HERO -->
+  <div class="league-hero">
+    <div class="league-logo">🏆</div>
+    <div class="league-title">Лига <span>дивизионов</span></div>
+    <div class="league-sub">Командный зачёт · Альфа-ландия</div>
+    <div class="season-badge">⚡ Сезон 2026</div>
+  </div>
+
+  <!-- MY DIVISION -->
+  <div class="my-division-strip" id="my-div-strip"></div>
+
+  <!-- PODIUM -->
+  <div class="podium-section">
+    <h3>Топ-3 дивизиона</h3>
+    <div class="podium-row" id="podium-row"></div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend-row" id="legend-row"></div>
+
+  <!-- TABLE -->
+  <div class="league-table-wrap">
+    <div class="lt-header">
+      <div style="text-align:center">#</div>
+      <div>Дивизион</div>
+      <div style="text-align:center">Участники</div>
+      <div style="text-align:center">Ср. балл</div>
+      <div>Прогресс</div>
+    </div>
+    <div id="league-table-body"></div>
+  </div>
+
+  <div class="refresh-hint">Таблица обновляется в реальном времени по данным всех участников</div>
+
+  <!-- DEMO SEED -->
+  <div class="demo-card" id="demo-card">
+    <div class="demo-icon">🎲</div>
+    <div class="demo-text">
+      <h4>Демонстрационные данные</h4>
+      <p>Заполнить таблицу синтетическими участниками по всем 8 дивизионам — для презентации и тестирования. Можно сбросить в любой момент.</p>
+    </div>
+    <div class="btn-demo">
+      <button id="seed-btn" onclick="seedDemoData()">Сгенерировать →</button>
+    </div>
+  </div>
+  <div style="text-align:center;margin-bottom:20px" id="reset-wrap" style="display:none">
+    <button onclick="resetDemoData()" style="background:none;border:none;color:rgba(255,255,255,.3);font-size:.78rem;cursor:pointer;text-decoration:underline;">Сбросить демо-данные</button>
+  </div>
+
+</div><!-- /team-wrap -->
+
+<div id="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script>
+// ── INIT ──
+const user = requireAuth();
+document.getElementById('nav-user').textContent = user.name.split(' ')[0];
+
+// ── COMPUTE TEAM STATS ──
+function computeTeamStats() {
+  const allUsers = getAllUsers().filter(u => !u.isSystem);
+  const stats = {};
+
+  Object.entries(DIVISIONS).forEach(([divId, div]) => {
+    stats[divId] = {
+      divId, divName: div.name, color: div.color,
+      product: div.product, cx: div.cx, cy: div.cy,
+      members: [], totalPts: 0, avgPts: 0,
+      activeCount: 0, quizPassed: 0, topPlayer: null, rating: 0
+    };
+  });
+
+  allUsers.forEach(u => {
+    const divId = u.division || u.homeDivision;
+    if (!divId || !stats[divId]) return;
+    const s = stats[divId];
+    s.members.push(u);
+    s.totalPts += (u.points || 0);
+    const quizzes = Object.values(u.completedQuizzes || {});
+    const hasActivity = quizzes.some(q => q.passed);
+    if (hasActivity) s.activeCount++;
+    s.quizPassed += quizzes.filter(q => q.passed).length;
+  });
+
+  Object.values(stats).forEach(s => {
+    const n = s.members.length;
+    s.avgPts   = n > 0 ? Math.round(s.totalPts / n) : 0;
+    // Rating: avg points, with activity multiplier
+    const activityRate = n > 0 ? s.activeCount / n : 0;
+    s.rating = Math.round(s.avgPts * (0.6 + 0.4 * activityRate));
+    s.topPlayer = n > 0
+      ? [...s.members].sort((a,b) => (b.points||0)-(a.points||0))[0]
+      : null;
+  });
+
+  return Object.values(stats).sort((a,b) => b.rating - a.rating || b.avgPts - a.avgPts);
+}
+
+// ── RENDER LEGEND ──
+function renderLegend(teams) {
+  const el = document.getElementById('legend-row');
+  el.innerHTML = teams.slice(0,4).map(t =>
+    `<div class="legend-item">
+       <div class="legend-dot" style="background:${t.color}"></div>
+       <span>${t.divName} &nbsp;<strong style="color:rgba(255,255,255,.7)">${t.members.length > 0 ? t.rating + ' рейт.' : '—'}</strong></span>
+     </div>`
+  ).join('') + `<div class="legend-item" style="margin-left:auto;color:rgba(255,255,255,.35)">Рейтинг = ср. балл × активность</div>`;
+}
+
+// ── RENDER MY DIVISION STRIP ──
+function renderMyDiv(teams) {
+  const myDivId = user.division || user.homeDivision;
+  const rank = teams.findIndex(t => t.divId === myDivId) + 1;
+  const myTeam = teams.find(t => t.divId === myDivId);
+  const div  = DIVISIONS[myDivId] || {};
+  const strip = document.getElementById('my-div-strip');
+  if (!myTeam) { strip.style.display='none'; return; }
+  const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : '#' + rank;
+  strip.innerHTML = `
+    <div class="mds-dot" style="background:${div.color}"></div>
+    <div class="mds-text">
+      Ваш дивизион: <strong>${div.name || myDivId}</strong> ·
+      ${myTeam.members.length} участников · ср. балл ${myTeam.avgPts}
+    </div>
+    <div class="mds-rank">${medal}</div>`;
+}
+
+// ── RENDER PODIUM ──
+function renderPodium(teams) {
+  const top3 = [teams[1], teams[0], teams[2]].filter(Boolean); // [2nd, 1st, 3rd]
+  const heights = [130, 160, 110];
+  const medals  = ['🥈','🥇','🥉'];
+  const mColors = ['#C0C0C0','#FFD700','#CD7F32'];
+  const orders  = [1,2,3];
+
+  const row = document.getElementById('podium-row');
+  row.innerHTML = '';
+
+  top3.forEach((team, i) => {
+    if (!team) return;
+    const rank = team === teams[0] ? 1 : team === teams[1] ? 2 : 3;
+    const item = document.createElement('div');
+    item.className = 'podium-item' + (rank === 1 ? ' podium-1st' : '');
+    item.style.order = orders[i];
+
+    const abbr = team.divName.substring(0,3).toUpperCase();
+    const memberText = team.members.length === 1 ? '1 участник' :
+                       team.members.length < 5 ? team.members.length + ' участника' :
+                       team.members.length + ' участников';
+    item.innerHTML = `
+      <div class="podium-badge-wrap">
+        <div class="podium-circle" style="background:${team.color}30;border-color:${team.color}">
+          <span style="color:${team.color}">${abbr}</span>
+        </div>
+        <div class="podium-rank-badge" style="background:${mColors[i]};color:#000">${medals[i]}</div>
+      </div>
+      <div class="podium-name">${team.divName}</div>
+      <div class="podium-pts">${team.rating > 0 ? team.rating : '—'}</div>
+      <div class="podium-meta">${team.members.length > 0 ? memberText : 'Нет данных'}</div>
+      <div class="podium-block" style="background:${team.color}18;height:${heights[i]}px"></div>`;
+    row.appendChild(item);
+  });
+
+  if (row.innerHTML === '') {
+    row.innerHTML = `<div class="empty-state"><div class="es-icon">🏁</div><p>Данных пока нет. Зарегистрируйте участников или сгенерируйте демо-данные.</p></div>`;
+  }
+}
+
+// ── RENDER TABLE ──
+function renderTable(teams) {
+  const body = document.getElementById('league-table-body');
+  const maxRating = Math.max(...teams.map(t => t.rating), 1);
+  const myDivId = user.division || user.homeDivision;
+
+  if (teams.every(t => t.members.length === 0)) {
+    body.innerHTML = `<div class="empty-state">
+      <div class="es-icon">📋</div>
+      <p>Нет зарегистрированных участников.<br>Используйте демо-данные для презентации.</p>
+    </div>`;
+    return;
+  }
+
+  body.innerHTML = teams.map((team, i) => {
+    const rank  = i + 1;
+    const isMe  = team.divId === myDivId;
+    const pct   = maxRating > 0 ? Math.round((team.rating / maxRating) * 100) : 0;
+    const prod  = PRODUCTS[team.product];
+    const top   = team.topPlayer;
+    const activeLabel = team.members.length > 0
+      ? `${team.activeCount} / ${team.members.length} актив.`
+      : '—';
+    const topLabel = top ? top.name.split(' ').slice(0,2).join(' ') : '';
+    const rankDisp = rank <= 3
+      ? ['🥇','🥈','🥉'][rank-1]
+      : rank;
+
+    return `<div class="lt-row ${isMe ? 'my-div' : ''}">
+      <div class="lt-rank ${rank<=3?'top3':''}">${rankDisp}</div>
+      <div class="lt-div-info">
+        <div class="lt-color" style="background:${team.color}"></div>
+        <div>
+          <div class="lt-div-name">${team.divName}${isMe?' <span style="font-size:.7rem;color:#FFD700">◀ вы</span>':''}</div>
+          <div class="lt-product">${prod ? prod.icon + ' ' + prod.name : ''}</div>
+        </div>
+      </div>
+      <div class="lt-members">
+        <div class="lt-count">${team.members.length || '—'}</div>
+        <div class="lt-active">${activeLabel}</div>
+      </div>
+      <div class="lt-avg">
+        <div class="lt-avg-val" style="color:${team.rating > 0 ? '#FFD700' : 'rgba(255,255,255,.25)'}">${team.rating || '—'}</div>
+        <div class="lt-avg-lbl">рейтинг</div>
+      </div>
+      <div class="lt-bar-col">
+        <div class="lt-bar-bg">
+          <div class="lt-bar-fill" style="width:0%;background:${team.color}" data-pct="${pct}"></div>
+        </div>
+        <div class="lt-top-name">${topLabel ? '👑 ' + topLabel : ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Animate bars
+  setTimeout(() => {
+    document.querySelectorAll('.lt-bar-fill').forEach(el => {
+      el.style.width = el.dataset.pct + '%';
+    });
+  }, 100);
+}
+
+// ── RENDER ALL ──
+function renderAll() {
+  const teams = computeTeamStats();
+  renderMyDiv(teams);
+  renderPodium(teams);
+  renderTable(teams);
+  renderLegend(teams);
+
+  // Show/hide reset button
+  const hasDemo = getAllUsers().some(u => u.isDemo);
+  document.getElementById('reset-wrap').style.display = hasDemo ? '' : 'none';
+  const seedBtn = document.getElementById('seed-btn');
+  if (hasDemo) { seedBtn.textContent = '✅ Данные загружены'; seedBtn.classList.add('seeded'); seedBtn.disabled = true; }
+  else         { seedBtn.textContent = 'Сгенерировать →'; seedBtn.classList.remove('seeded'); seedBtn.disabled = false; }
+}
+
+// ── DEMO SEED DATA ──
+const DEMO_EMPLOYEES = [
+  // URAL — лидер (avg ~450)
+  { name: 'Вероника Абрамова',  division: 'URAL', role: 'chief',   points: 520, xp: 520 },
+  { name: 'Геннадий Гусев',     division: 'URAL', role: 'senior',  points: 480, xp: 480 },
+  { name: 'Диана Калинина',     division: 'URAL', role: 'chief',   points: 460, xp: 460 },
+  { name: 'Захар Королёв',      division: 'URAL', role: 'senior',  points: 440, xp: 440 },
+  { name: 'Ирина Ларионова',    division: 'URAL', role: 'manager', points: 350, xp: 350 },
+  // SIB — 2-е место (avg ~380)
+  { name: 'Евгений Никитин',    division: 'SIB',  role: 'chief',   points: 460, xp: 460 },
+  { name: 'Дарья Агафонова',    division: 'SIB',  role: 'senior',  points: 410, xp: 410 },
+  { name: 'Кирилл Власов',      division: 'SIB',  role: 'senior',  points: 370, xp: 370 },
+  { name: 'Людмила Борисова',   division: 'SIB',  role: 'manager', points: 330, xp: 330 },
+  { name: 'Антон Яковлев',      division: 'SIB',  role: 'manager', points: 310, xp: 310 },
+  // VOLGA — 3-е место (avg ~330)
+  { name: 'Юлия Зайцева',       division: 'VOLGA',role: 'chief',   points: 420, xp: 420 },
+  { name: 'Никита Семёнов',     division: 'VOLGA',role: 'senior',  points: 360, xp: 360 },
+  { name: 'Алёна Воробьёва',    division: 'VOLGA',role: 'senior',  points: 320, xp: 320 },
+  { name: 'Константин Жуков',   division: 'VOLGA',role: 'manager', points: 280, xp: 280 },
+  // NW — 4-е место (avg ~290)
+  { name: 'Алексей Волков',     division: 'NW',   role: 'chief',   points: 380, xp: 380 },
+  { name: 'Мария Новикова',     division: 'NW',   role: 'senior',  points: 310, xp: 310 },
+  { name: 'Сергей Козлов',      division: 'NW',   role: 'manager', points: 270, xp: 270 },
+  { name: 'Татьяна Лебедева',   division: 'NW',   role: 'manager', points: 200, xp: 200 },
+  // MOS — 5-е место (avg ~250)
+  { name: 'Анна Соколова',      division: 'MOS',  role: 'senior',  points: 320, xp: 320 },
+  { name: 'Иван Морозов',       division: 'MOS',  role: 'senior',  points: 280, xp: 280 },
+  { name: 'Светлана Попова',    division: 'MOS',  role: 'manager', points: 230, xp: 230 },
+  { name: 'Дмитрий Иванов',     division: 'MOS',  role: 'manager', points: 210, xp: 210 },
+  { name: 'Ольга Кузнецова',    division: 'MOS',  role: 'manager', points: 210, xp: 210 },
+  // CENT — 6-е место (avg ~210)
+  { name: 'Михаил Петров',      division: 'CENT', role: 'senior',  points: 280, xp: 280 },
+  { name: 'Наталья Орлова',     division: 'CENT', role: 'manager', points: 220, xp: 220 },
+  { name: 'Андрей Соловьёв',    division: 'CENT', role: 'manager', points: 190, xp: 190 },
+  { name: 'Ирина Фёдорова',     division: 'CENT', role: 'manager', points: 170, xp: 170 },
+  // YUG — 7-е место (avg ~175)
+  { name: 'Екатерина Якимова',  division: 'YUG',  role: 'senior',  points: 240, xp: 240 },
+  { name: 'Роман Захаров',      division: 'YUG',  role: 'manager', points: 180, xp: 180 },
+  { name: 'Максим Степанов',    division: 'YUG',  role: 'manager', points: 150, xp: 150 },
+  { name: 'Виктория Лукьянова', division: 'YUG',  role: 'manager', points: 130, xp: 130 },
+  // FAR — 8-е место (avg ~130)
+  { name: 'Александра Тихонова',division: 'FAR',  role: 'senior',  points: 170, xp: 170 },
+  { name: 'Владимир Медведев',  division: 'FAR',  role: 'manager', points: 130, xp: 130 },
+  { name: 'Кристина Ершова',    division: 'FAR',  role: 'manager', points: 90,  xp: 90  },
+];
+
+function seedDemoData() {
+  const users = getUsers();
+  let added = 0;
+  DEMO_EMPLOYEES.forEach(emp => {
+    const id = 'demo_' + emp.name.replace(/\s+/g,'_').toLowerCase();
+    if (users[id]) return;
+    const passedQuizzes = Math.floor(emp.points / 100);
+    const completedQuizzes = {};
+    const divList = Object.keys(DIVISIONS).slice(0, passedQuizzes);
+    divList.forEach(d => {
+      completedQuizzes[d] = { score: 60, maxScore: 80, passed: true, date: new Date().toISOString() };
+    });
+    users[id] = {
+      id, isDemo: true,
+      name: emp.name, division: emp.division, homeDivision: emp.division,
+      role: emp.role, office: '', region: emp.division, position: emp.division,
+      points: emp.points, xp: emp.xp, level: Math.floor(emp.xp / 200) + 1,
+      streak: 0, badges: [],
+      visitedDivisions: divList.length > 0 ? divList : [emp.division],
+      completedQuizzes,
+      createdAt: new Date().toISOString(),
+      lastLoginDate: null
+    };
+    added++;
+  });
+  saveUsers(users);
+  toast(added > 0 ? `✅ Добавлено ${added} демо-участников` : '⚠️ Данные уже загружены', added > 0 ? 'success' : '');
+  renderAll();
+}
+
+function resetDemoData() {
+  const users = getUsers();
+  let removed = 0;
+  Object.keys(users).forEach(id => {
+    if (users[id].isDemo) { delete users[id]; removed++; }
+  });
+  saveUsers(users);
+  toast(`Удалено ${removed} демо-участников`, '');
+  renderAll();
+}
+
+function toast(msg, type = '') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+// ── START ──
+renderAll();
+</script>
+</body>
+</html>

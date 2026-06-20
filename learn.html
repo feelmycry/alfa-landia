@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Альфа-ландия — Изучаем продукт</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root { --accent: #EF3124; }
+    body { background: #0F1929; min-height: 100vh; font-family: var(--font-body); }
+
+    /* ── LAYOUT ── */
+    .learn-wrap {
+      max-width: 780px; margin: 0 auto; padding: 16px;
+      min-height: calc(100vh - 60px);
+      display: flex; flex-direction: column;
+    }
+
+    /* ── STEP PROGRESS BAR ── */
+    .step-bar {
+      display: flex; gap: 6px; margin-bottom: 20px;
+    }
+    .step-seg {
+      flex: 1; height: 5px; border-radius: 3px;
+      background: rgba(255,255,255,.15);
+      transition: background .4s;
+    }
+    .step-seg.done    { background: var(--accent); }
+    .step-seg.current { background: rgba(239,49,36,.5); }
+
+    /* ── PRODUCT HEADER ── */
+    .product-header {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 20px;
+      padding: 16px 20px; border-radius: 14px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+    }
+    .product-icon-big { font-size: 3rem; line-height: 1; }
+    .product-header h2 { font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 3px; }
+    .product-header .tagline { font-size: .85rem; color: rgba(255,255,255,.6); }
+    .step-label { margin-left: auto; text-align: right; }
+    .step-label .step-num { font-size: .75rem; color: rgba(255,255,255,.4); font-weight: 600; }
+    .step-label .step-name { font-size: .85rem; color: rgba(255,255,255,.7); font-weight: 700; }
+
+    /* ── CARD ── */
+    .content-card {
+      background: #fff; border-radius: 18px;
+      padding: 28px; flex: 1;
+      box-shadow: 0 8px 40px rgba(0,0,0,.4);
+      position: relative; overflow: hidden;
+    }
+    .content-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: var(--accent);
+    }
+    .card-title {
+      font-size: 1.3rem; font-weight: 900; color: #1A1A2E;
+      margin-bottom: 16px; line-height: 1.3;
+    }
+    .card-text { font-size: .95rem; color: #444; line-height: 1.65; margin-bottom: 20px; }
+
+    /* ── HOW-IT-WORKS STEPS ── */
+    .how-steps { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+    .how-step {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 12px 14px; background: #F8F9FA; border-radius: 10px;
+    }
+    .how-step .step-icon { font-size: 1.3rem; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+    .how-step .step-text { font-size: .9rem; color: #333; line-height: 1.5; }
+
+    /* ── FACTS GRID ── */
+    .facts-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+    @media(max-width:500px){ .facts-grid { grid-template-columns: repeat(2,1fr); } }
+    .fact-card {
+      background: #F8F9FA; border-radius: 12px; padding: 12px;
+      text-align: center; border: 1.5px solid #EAEAEA;
+    }
+    .fact-card .f-icon { font-size: 1.4rem; margin-bottom: 5px; }
+    .fact-card .f-label { font-size: .72rem; color: #888; font-weight: 600; text-transform: uppercase; margin-bottom: 3px; }
+    .fact-card .f-value { font-size: .88rem; font-weight: 700; color: #1A1A2E; line-height: 1.3; }
+    .tip-box {
+      background: #FFF8E1; border-left: 4px solid #F59E0B;
+      border-radius: 8px; padding: 12px 14px; font-size: .88rem; color: #444;
+      line-height: 1.5;
+    }
+
+    /* ── ARGUMENTS ── */
+    .arguments-list { display: flex; flex-direction: column; gap: 14px; }
+    .arg-card {
+      border-radius: 12px; padding: 16px; border: 2px solid #EAEAEA;
+      transition: border-color .2s;
+    }
+    .arg-card:hover { border-color: var(--accent); }
+    .arg-top { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .arg-icon { font-size: 1.8rem; flex-shrink: 0; }
+    .arg-title { font-size: 1rem; font-weight: 800; color: #1A1A2E; }
+    .arg-text { font-size: .88rem; color: #555; line-height: 1.6; margin-bottom: 10px; }
+    .arg-phrase {
+      background: #F0F7FF; border-left: 3px solid #2196F3;
+      border-radius: 0 6px 6px 0; padding: 8px 12px;
+      font-size: .84rem; color: #1565C0; font-style: italic; line-height: 1.4;
+    }
+
+    /* ── OBJECTIONS ── */
+    .objections-list { display: flex; flex-direction: column; gap: 12px; }
+    .obj-card { border-radius: 12px; overflow: hidden; border: 1.5px solid #EAEAEA; }
+    .obj-q {
+      display: flex; align-items: center; gap: 10px;
+      background: #FFF5F5; padding: 11px 14px;
+      font-size: .9rem; font-weight: 700; color: #C0392B; line-height: 1.4;
+    }
+    .obj-q-icon { font-size: 1.1rem; flex-shrink: 0; }
+    .obj-tag {
+      margin-left: auto; flex-shrink: 0;
+      background: rgba(192,57,43,.1); color: #C0392B;
+      border-radius: 20px; padding: 2px 9px; font-size: .72rem; font-weight: 700;
+    }
+    .obj-a {
+      padding: 11px 14px; font-size: .88rem; color: #333;
+      line-height: 1.6; background: #fff;
+    }
+    .obj-a::before { content: '✅ '; }
+
+    /* ── CLIENT PROFILE ── */
+    .client-profile {
+      margin-top: 16px; background: linear-gradient(135deg,#F0FFF4,#E8F5E9);
+      border-radius: 12px; padding: 14px 16px;
+      border-left: 4px solid #1E8449;
+    }
+    .client-profile h4 { font-size: .85rem; font-weight: 800; color: #1E8449; margin-bottom: 5px; }
+    .client-profile p  { font-size: .87rem; color: #333; line-height: 1.5; }
+
+    /* ── NAVIGATION ── */
+    .nav-row {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-top: 20px; gap: 12px;
+    }
+    .btn-back {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,.08); border: 1.5px solid rgba(255,255,255,.2);
+      color: rgba(255,255,255,.7); padding: 11px 20px; border-radius: 10px;
+      cursor: pointer; font-size: .92rem; font-weight: 600; transition: all .2s;
+    }
+    .btn-back:hover { background: rgba(255,255,255,.15); }
+    .btn-next {
+      flex: 1; max-width: 280px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      background: var(--accent); color: #fff;
+      padding: 13px 24px; border-radius: 10px; border: none;
+      font-size: 1rem; font-weight: 700; cursor: pointer;
+      transition: all .2s; box-shadow: 0 4px 18px rgba(239,49,36,.4);
+    }
+    .btn-next:hover { background: #C0281E; transform: translateY(-2px); box-shadow: 0 7px 24px rgba(239,49,36,.5); }
+    .btn-next.final {
+      background: linear-gradient(135deg,#28A745,#1E8449);
+      box-shadow: 0 4px 18px rgba(40,167,69,.4);
+    }
+    .btn-next.final:hover { box-shadow: 0 7px 24px rgba(40,167,69,.5); }
+
+    /* ── STEP NAMES ── */
+    .step-names-row {
+      display: flex; gap: 4px; margin-bottom: 14px; flex-wrap: wrap;
+    }
+    .step-pill {
+      font-size: .75rem; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+      background: rgba(255,255,255,.08); color: rgba(255,255,255,.4);
+      cursor: pointer; transition: all .2s; border: 1px solid transparent;
+    }
+    .step-pill.active { background: rgba(239,49,36,.25); color: #fff; border-color: rgba(239,49,36,.5); }
+    .step-pill.done   { background: rgba(40,167,69,.2); color: rgba(255,255,255,.7); border-color: rgba(40,167,69,.3); }
+
+    /* ── SECTION HEADER ── */
+    .section-icon-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 16px;
+    }
+    .section-icon-header .badge-icon {
+      width: 36px; height: 36px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+    .section-icon-header h3 { font-size: 1.1rem; font-weight: 800; color: #1A1A2E; }
+
+    /* Slide animation */
+    @keyframes slideInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    .content-card.animate { animation: slideInRight .3s ease; }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="logo">Альфа-<span>ландия</span></div>
+  <div class="nav-links">
+    <a href="game.html">← Карта</a>
+    <a href="daily.html">⚡ Вызов</a>
+    <a href="scenarios.html">🎭 Сценарии</a>
+    <a href="profile.html">Профиль</a>
+    <a href="leaderboard.html">Рейтинг</a>
+    <a href="team.html">🏆 Лига</a>
+  </div>
+  <div class="nav-right">
+    <span class="user-pill" id="nav-user">—</span>
+    <button class="btn-logout" onclick="logout()">Выйти</button>
+  </div>
+</nav>
+
+<div class="learn-wrap">
+  <!-- Step progress dots -->
+  <div class="step-bar" id="step-bar"></div>
+
+  <!-- Step pills nav -->
+  <div class="step-names-row" id="step-pills"></div>
+
+  <!-- Product header -->
+  <div class="product-header" id="product-header">
+    <div class="product-icon-big" id="ph-icon"></div>
+    <div>
+      <h2 id="ph-name"></h2>
+      <div class="tagline" id="ph-tagline"></div>
+    </div>
+    <div class="step-label">
+      <div class="step-num" id="ph-step-num"></div>
+      <div class="step-name" id="ph-step-name"></div>
+    </div>
+  </div>
+
+  <!-- Dynamic content card -->
+  <div class="content-card" id="content-card"></div>
+
+  <!-- Nav row -->
+  <div class="nav-row">
+    <button class="btn-back" id="btn-back" onclick="prevStep()">← Назад</button>
+    <button class="btn-next" id="btn-next" onclick="nextStep()">Далее →</button>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/learning-data.js"></script>
+<script>
+const user = requireAuth();
+document.getElementById('nav-user').textContent = user.name.split(' ')[0];
+
+const div     = DIVISIONS[user.position];
+const product = PRODUCTS[div.product];
+const learn   = LEARNING[div.product];
+
+// Set CSS accent color
+document.documentElement.style.setProperty('--accent', product.color || '#EF3124');
+
+let currentStep = 0;
+const totalSteps = learn.steps.length;
+
+const STEP_ICONS  = ['📖','📊','💬','🎯'];
+const STEP_LABELS = ['Суть продукта','Ключевые факты','Аргументы','Возражения'];
+
+// ── INIT HEADER ──
+document.getElementById('ph-icon').textContent    = product.icon;
+document.getElementById('ph-name').textContent    = product.fullName;
+document.getElementById('ph-tagline').textContent = learn.tagline;
+
+// ── BUILD STEP BAR & PILLS ──
+function buildNav() {
+  const bar   = document.getElementById('step-bar');
+  const pills = document.getElementById('step-pills');
+  bar.innerHTML = '';
+  pills.innerHTML = '';
+  for (let i = 0; i < totalSteps; i++) {
+    const seg = document.createElement('div');
+    seg.className = 'step-seg ' + (i < currentStep ? 'done' : i === currentStep ? 'current' : '');
+    bar.appendChild(seg);
+
+    const pill = document.createElement('div');
+    pill.className = 'step-pill ' + (i < currentStep ? 'done' : i === currentStep ? 'active' : '');
+    pill.textContent = STEP_ICONS[i] + ' ' + STEP_LABELS[i];
+    pill.onclick = () => { currentStep = i; render(); };
+    pills.appendChild(pill);
+  }
+}
+
+// ── RENDER CURRENT STEP ──
+function render() {
+  buildNav();
+  const step = learn.steps[currentStep];
+
+  document.getElementById('ph-step-num').textContent  = `Шаг ${currentStep + 1} из ${totalSteps}`;
+  document.getElementById('ph-step-name').textContent = STEP_LABELS[currentStep];
+
+  const card = document.getElementById('content-card');
+  card.className = 'content-card animate';
+  setTimeout(() => card.classList.remove('animate'), 350);
+
+  // Accent stripe color
+  card.style.setProperty('--accent', product.color || '#EF3124');
+  card.style.cssText += `--accent:${product.color || '#EF3124'}`;
+
+  let html = '';
+
+  if (step.type === 'overview') {
+    html = `
+      <div class="section-icon-header">
+        <div class="badge-icon" style="background:${product.color}18">📖</div>
+        <h3 class="card-title" style="margin-bottom:0">${step.title}</h3>
+      </div>
+      <p class="card-text">${step.text}</p>
+      <div class="how-steps">
+        ${step.steps.map(s => `
+          <div class="how-step">
+            <span class="step-icon">${s.icon}</span>
+            <span class="step-text">${s.text}</span>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  else if (step.type === 'facts') {
+    html = `
+      <div class="section-icon-header">
+        <div class="badge-icon" style="background:${product.color}18">📊</div>
+        <h3 style="font-size:1.1rem;font-weight:800;color:#1A1A2E;margin:0">${step.title}</h3>
+      </div>
+      <div class="facts-grid">
+        ${step.facts.map(f => `
+          <div class="fact-card">
+            <div class="f-icon">${f.icon}</div>
+            <div class="f-label">${f.label}</div>
+            <div class="f-value">${f.value}</div>
+          </div>`).join('')}
+      </div>
+      <div class="tip-box">${step.tip}</div>`;
+  }
+
+  else if (step.type === 'arguments') {
+    html = `
+      <div class="section-icon-header">
+        <div class="badge-icon" style="background:${product.color}18">💬</div>
+        <h3 style="font-size:1.1rem;font-weight:800;color:#1A1A2E;margin:0">${step.title}</h3>
+      </div>
+      <div class="arguments-list">
+        ${step.arguments.map(a => `
+          <div class="arg-card" style="border-color:${product.color}30">
+            <div class="arg-top">
+              <span class="arg-icon">${a.icon}</span>
+              <span class="arg-title">${a.title}</span>
+            </div>
+            <p class="arg-text">${a.text}</p>
+            <div class="arg-phrase">${a.phrase}</div>
+          </div>`).join('')}
+      </div>`;
+  }
+
+  else if (step.type === 'objections') {
+    html = `
+      <div class="section-icon-header">
+        <div class="badge-icon" style="background:${product.color}18">🎯</div>
+        <h3 style="font-size:1.1rem;font-weight:800;color:#1A1A2E;margin:0">${step.title}</h3>
+      </div>
+      <div class="objections-list">
+        ${step.objections.map(o => `
+          <div class="obj-card">
+            <div class="obj-q">
+              <span class="obj-q-icon">❓</span>
+              <span>${o.q}</span>
+              <span class="obj-tag">${o.tag}</span>
+            </div>
+            <div class="obj-a">${o.a}</div>
+          </div>`).join('')}
+      </div>
+      <div class="client-profile">
+        <h4>${step.clientProfile.icon} ${step.clientProfile.title}</h4>
+        <p>${step.clientProfile.desc}</p>
+      </div>`;
+  }
+
+  card.innerHTML = html;
+
+  // Buttons
+  const btnBack = document.getElementById('btn-back');
+  const btnNext = document.getElementById('btn-next');
+  btnBack.style.display = currentStep === 0 ? 'none' : '';
+
+  if (currentStep === totalSteps - 1) {
+    btnNext.textContent = '🚀 Я готов — начать тест';
+    btnNext.classList.add('final');
+  } else {
+    btnNext.innerHTML = 'Далее →';
+    btnNext.classList.remove('final');
+  }
+}
+
+function nextStep() {
+  if (currentStep < totalSteps - 1) {
+    currentStep++;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    window.location.href = 'quiz.html';
+  }
+}
+
+function prevStep() {
+  if (currentStep > 0) {
+    currentStep--;
+    render();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+render();
+</script>
+</body>
+</html>

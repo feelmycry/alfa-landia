@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Альфа-ландия — Клиентские сценарии</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { background: #0A1628; min-height: 100vh; font-family: var(--font-body); }
+    .sc-wrap { max-width: 680px; margin: 0 auto; padding: 20px 16px 60px; }
+
+    /* ── SESSION HEADER ── */
+    .sc-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
+    }
+    .sc-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: linear-gradient(135deg,#6C3DC0,#9B59B6);
+      color: #fff; border-radius: 20px; padding: 6px 16px;
+      font-weight: 800; font-size: .9rem;
+      box-shadow: 0 4px 16px rgba(108,61,192,.4);
+    }
+    .sc-counter { font-size: .85rem; font-weight: 700; color: rgba(255,255,255,.5); }
+
+    /* ── PROGRESS ── */
+    .sc-progress-wrap { background: rgba(255,255,255,.1); border-radius: 4px; height: 6px; margin-bottom: 20px; overflow: hidden; }
+    .sc-progress-bar  { height: 100%; background: linear-gradient(90deg,#9B59B6,#6C3DC0); border-radius: 4px; transition: width .4s ease; }
+
+    /* ── SCORE BAR ── */
+    .score-strip {
+      display: flex; gap: 10px; margin-bottom: 18px;
+    }
+    .score-box {
+      flex: 1; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1);
+      border-radius: 12px; padding: 10px 14px; text-align: center;
+    }
+    .score-box .sv { font-size: 1.4rem; font-weight: 900; color: #FFD700; }
+    .score-box .sl { font-size: .72rem; color: rgba(255,255,255,.45); text-transform: uppercase; letter-spacing: .5px; margin-top: 1px; }
+
+    /* ── CLIENT CARD ── */
+    .client-card {
+      background: #fff; border-radius: 18px;
+      box-shadow: 0 8px 40px rgba(0,0,0,.5);
+      overflow: hidden; margin-bottom: 12px;
+    }
+    .client-top {
+      padding: 18px 20px 12px;
+      display: flex; align-items: center; gap: 14px;
+      border-bottom: 1px solid #F0F0F0;
+    }
+    .client-avatar { font-size: 2.8rem; }
+    .client-name   { font-size: 1rem; font-weight: 800; color: #1A1A2E; }
+    .client-occ    { font-size: .8rem; color: #777; margin-top: 1px; }
+    .client-detail {
+      display: inline-block; margin-top: 5px;
+      background: #F0F4FF; color: #5B5EC0; border-radius: 20px;
+      padding: 2px 10px; font-size: .73rem; font-weight: 700;
+    }
+    .client-bubble {
+      padding: 16px 20px; position: relative;
+    }
+    .bubble-label { font-size: .7rem; font-weight: 700; color: #B0B0B0; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+    .bubble-text  {
+      background: #F8F9FF; border-left: 4px solid #9B59B6;
+      border-radius: 0 12px 12px 12px; padding: 14px 16px;
+      font-size: .95rem; color: #1A1A2E; line-height: 1.6; font-style: italic;
+    }
+    .keywords-row { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 5px; }
+    .kw-chip {
+      background: rgba(155,89,182,.12); border: 1px solid rgba(155,89,182,.3);
+      color: #9B59B6; border-radius: 20px; padding: 2px 10px; font-size: .72rem; font-weight: 700;
+    }
+
+    /* ── PROMPT ── */
+    .choose-prompt {
+      text-align: center; color: rgba(255,255,255,.65); font-size: .88rem;
+      font-weight: 600; margin: 16px 0 12px; letter-spacing: .3px;
+    }
+
+    /* ── PRODUCT GRID ── */
+    .product-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+      margin-bottom: 14px;
+    }
+    @media (max-width: 560px) { .product-grid { grid-template-columns: repeat(3, 1fr); } }
+    .prod-btn {
+      background: rgba(255,255,255,.06); border: 2px solid rgba(255,255,255,.12);
+      border-radius: 12px; padding: 12px 6px; text-align: center; cursor: pointer;
+      transition: all .18s; display: flex; flex-direction: column; align-items: center; gap: 5px;
+    }
+    .prod-btn:hover:not(:disabled) {
+      border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.12);
+      transform: translateY(-2px);
+    }
+    .prod-btn .pi { font-size: 1.6rem; }
+    .prod-btn .pn { font-size: .7rem; color: rgba(255,255,255,.8); font-weight: 700; line-height: 1.2; }
+    .prod-btn.correct-choice {
+      border-color: #28A745 !important; background: rgba(40,167,69,.15) !important;
+      box-shadow: 0 0 0 3px rgba(40,167,69,.3);
+    }
+    .prod-btn.wrong-choice {
+      border-color: #DC3545 !important; background: rgba(220,53,69,.12) !important;
+    }
+    .prod-btn.reveal-correct {
+      border-color: #28A745 !important; background: rgba(40,167,69,.08) !important;
+    }
+    .prod-btn:disabled { cursor: default; opacity: .7; }
+
+    /* ── RESULT PANEL ── */
+    .result-panel {
+      border-radius: 16px; overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,.5);
+      margin-bottom: 14px; display: none;
+    }
+    .rp-top {
+      padding: 18px 20px; display: flex; align-items: center; gap: 14px; color: #fff;
+    }
+    .rp-emoji { font-size: 2.2rem; }
+    .rp-title { font-size: 1.1rem; font-weight: 900; }
+    .rp-sub   { font-size: .82rem; opacity: .8; margin-top: 2px; }
+    .rp-body  { background: #fff; padding: 18px 20px; }
+    .reason-box {
+      background: #F8F9FF; border-left: 4px solid #6C3DC0;
+      border-radius: 0 10px 10px 0; padding: 12px 14px; margin-bottom: 14px;
+    }
+    .reason-box .rb-label { font-size: .72rem; font-weight: 700; color: #9B59B6; text-transform: uppercase; margin-bottom: 4px; }
+    .reason-box p { font-size: .88rem; color: #333; line-height: 1.55; margin: 0; }
+    .tip-box {
+      background: #FFFBEC; border: 1.5px solid #FFD700;
+      border-radius: 10px; padding: 10px 14px; margin-bottom: 14px;
+      font-size: .85rem; color: #7D6000; line-height: 1.5;
+    }
+    .tip-box strong { color: #5C4400; }
+
+    /* ── OBJECTION ── */
+    .objection-section { margin-bottom: 16px; }
+    .obj-label {
+      font-size: .72rem; font-weight: 700; color: #B0B0B0; text-transform: uppercase;
+      letter-spacing: 1px; margin-bottom: 8px;
+    }
+    .obj-bubble {
+      background: #FFF5F5; border-left: 4px solid #EF3124;
+      border-radius: 0 10px 10px 0; padding: 12px 14px; margin-bottom: 10px;
+      font-size: .9rem; color: #333; font-style: italic; line-height: 1.5;
+    }
+    .obj-answer {
+      background: #F0FFF4; border-left: 4px solid #28A745;
+      border-radius: 0 10px 10px 0; padding: 12px 14px;
+      font-size: .88rem; color: #1A1A2E; line-height: 1.6; display: none;
+    }
+    .obj-answer.show { display: block; }
+    .show-answer-btn {
+      background: #1A1A2E; color: rgba(255,255,255,.8);
+      border: none; border-radius: 8px; padding: 8px 16px;
+      font-size: .82rem; font-weight: 700; cursor: pointer; margin-bottom: 12px;
+      transition: background .15s;
+    }
+    .show-answer-btn:hover { background: #2C2C4E; }
+
+    /* ── NAV BUTTONS ── */
+    .sc-actions { display: flex; gap: 10px; }
+    .sc-actions a, .sc-actions button { flex: 1; }
+
+    /* ── FINAL SCREEN ── */
+    .final-card {
+      background: #fff; border-radius: 18px; padding: 32px 24px; text-align: center;
+      box-shadow: 0 8px 40px rgba(0,0,0,.5); display: none;
+    }
+    .final-trophy { font-size: 4rem; margin-bottom: 10px; }
+    .final-title  { font-size: 1.4rem; font-weight: 900; color: #1A1A2E; margin-bottom: 6px; }
+    .final-sub    { font-size: .9rem; color: #777; margin-bottom: 20px; }
+    .final-stats  { display: flex; gap: 12px; margin-bottom: 20px; }
+    .final-stat   { flex:1; background:#F8F9FA; border-radius:12px; padding:14px; text-align:center; }
+    .final-stat .fv { font-size:1.5rem; font-weight:900; color:#6C3DC0; }
+    .final-stat .fl { font-size:.72rem; color:#888; font-weight:600; text-transform:uppercase; }
+    .star-row { font-size: 2rem; margin-bottom: 12px; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeSlide { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    .fade-slide { animation: fadeSlide .35s ease; }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
+    .shake { animation: shake .3s ease; }
+    @keyframes pop { 0%{transform:scale(1)} 50%{transform:scale(1.08)} 100%{transform:scale(1)} }
+    .pop { animation: pop .3s ease; }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="logo">Альфа-<span>ландия</span></div>
+  <div class="nav-links">
+    <a href="game.html">← Карта</a>
+    <a href="daily.html">⚡ Вызов</a>
+    <a href="profile.html">Профиль</a>
+    <a href="leaderboard.html">Рейтинг</a>
+  </div>
+  <div class="nav-right">
+    <span class="user-pill" id="nav-user">—</span>
+    <button class="btn-logout" onclick="logout()">Выйти</button>
+  </div>
+</nav>
+
+<div class="sc-wrap">
+
+  <!-- HEADER -->
+  <div class="sc-header">
+    <div class="sc-badge">🎭 Клиентские сценарии</div>
+    <div class="sc-counter" id="sc-counter">1 / 5</div>
+  </div>
+  <div class="sc-progress-wrap">
+    <div class="sc-progress-bar" id="sc-progress" style="width:0%"></div>
+  </div>
+
+  <!-- SCORE STRIP -->
+  <div class="score-strip">
+    <div class="score-box"><div class="sv" id="sc-correct">0</div><div class="sl">Верно</div></div>
+    <div class="score-box"><div class="sv" id="sc-pts" style="color:#28A745">+0</div><div class="sl">Очков за сессию</div></div>
+    <div class="score-box"><div class="sv" id="sc-total">0</div><div class="sl">Всего очков</div></div>
+  </div>
+
+  <!-- MAIN AREA -->
+  <div id="sc-main">
+
+    <!-- CLIENT CARD -->
+    <div class="client-card fade-slide" id="client-card">
+      <div class="client-top">
+        <div class="client-avatar" id="cl-avatar"></div>
+        <div>
+          <div class="client-name"  id="cl-name"></div>
+          <div class="client-occ"   id="cl-occ"></div>
+          <div class="client-detail" id="cl-detail"></div>
+        </div>
+      </div>
+      <div class="client-bubble">
+        <div class="bubble-label">Клиент говорит:</div>
+        <div class="bubble-text" id="cl-message"></div>
+        <div class="keywords-row" id="cl-keywords"></div>
+      </div>
+    </div>
+
+    <!-- PRODUCT CHOOSER -->
+    <div class="choose-prompt">Какой продукт порекомендуете клиенту?</div>
+    <div class="product-grid" id="product-grid"></div>
+
+    <!-- RESULT PANEL -->
+    <div class="result-panel fade-slide" id="result-panel">
+      <div class="rp-top" id="rp-top">
+        <div class="rp-emoji" id="rp-emoji"></div>
+        <div><div class="rp-title" id="rp-title"></div><div class="rp-sub" id="rp-sub"></div></div>
+      </div>
+      <div class="rp-body">
+        <div class="reason-box">
+          <div class="rb-label" id="rb-label">Почему это правильно</div>
+          <p id="rp-reason"></p>
+        </div>
+        <div class="tip-box" id="rp-tip"></div>
+
+        <div class="objection-section">
+          <div class="obj-label">💬 Клиент возражает:</div>
+          <div class="obj-bubble" id="obj-text"></div>
+          <button class="show-answer-btn" id="show-ans-btn" onclick="showObjAnswer()">
+            Показать ответ на возражение →
+          </button>
+          <div class="obj-answer" id="obj-answer"></div>
+        </div>
+
+        <div class="sc-actions">
+          <a href="game.html"><button class="btn btn-ghost" style="width:100%">🗺️ На карту</button></a>
+          <button class="btn btn-primary" id="next-btn" onclick="nextScenario()" style="width:100%">
+            Следующий сценарий →
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /sc-main -->
+
+  <!-- FINAL SCREEN -->
+  <div class="final-card fade-slide" id="final-card">
+    <div class="final-trophy" id="final-trophy">🏆</div>
+    <div class="star-row" id="star-row"></div>
+    <div class="final-title" id="final-title">Сессия завершена!</div>
+    <div class="final-sub" id="final-sub"></div>
+    <div class="final-stats">
+      <div class="final-stat"><div class="fv" id="fin-correct">0/5</div><div class="fl">Верных ответов</div></div>
+      <div class="final-stat"><div class="fv" id="fin-pts">+0</div><div class="fl">Очков</div></div>
+      <div class="final-stat"><div class="fv" id="fin-total">0</div><div class="fl">Всего очков</div></div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <a href="game.html" style="flex:1"><button class="btn btn-ghost" style="width:100%">🗺️ На карту</button></a>
+      <button class="btn btn-primary" style="flex:1" onclick="restartSession()">🔄 Ещё раз</button>
+    </div>
+  </div>
+
+</div><!-- /sc-wrap -->
+
+<div id="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/scenarios-data.js"></script>
+<script>
+// ── INIT ──
+const user = requireAuth();
+document.getElementById('nav-user').textContent = user.name.split(' ')[0];
+
+const SESSION_SIZE = 5;
+const PTS_CORRECT  = 25;
+const PTS_BONUS    = 50;
+
+let session = [];
+let idx     = 0;
+let correct = 0;
+let sessionPts = 0;
+let answered = false;
+
+// ── UTILS ──
+function toast(msg, type = '') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3000);
+}
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function buildSession() {
+  session = shuffle(SCENARIOS).slice(0, SESSION_SIZE);
+  idx = 0; correct = 0; sessionPts = 0; answered = false;
+}
+
+// ── UPDATE SCORE BAR ──
+function updateScoreBar() {
+  const u = getCurrentUser();
+  document.getElementById('sc-correct').textContent = correct;
+  document.getElementById('sc-pts').textContent     = '+' + sessionPts;
+  document.getElementById('sc-total').textContent   = u.points || 0;
+}
+
+// ── RENDER SCENARIO ──
+function renderScenario() {
+  const sc = session[idx];
+  answered = false;
+
+  // Progress
+  const pct = (idx / SESSION_SIZE) * 100;
+  document.getElementById('sc-progress').style.width = pct + '%';
+  document.getElementById('sc-counter').textContent  = `${idx + 1} / ${SESSION_SIZE}`;
+
+  // Client card
+  document.getElementById('cl-avatar').textContent  = sc.client.avatar;
+  document.getElementById('cl-name').textContent    = sc.client.name;
+  document.getElementById('cl-occ').textContent     = sc.client.occupation;
+  document.getElementById('cl-detail').textContent  = sc.client.detail;
+  document.getElementById('cl-message').textContent = sc.message;
+
+  // Keywords
+  const kwr = document.getElementById('cl-keywords');
+  kwr.innerHTML = '';
+  (sc.keywords || []).forEach(kw => {
+    const span = document.createElement('span');
+    span.className = 'kw-chip';
+    span.textContent = '🔑 ' + kw;
+    kwr.appendChild(span);
+  });
+
+  // Product grid
+  const grid = document.getElementById('product-grid');
+  grid.innerHTML = '';
+  Object.values(PRODUCTS).forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'prod-btn';
+    btn.dataset.id = p.id;
+    btn.innerHTML = `<span class="pi">${p.icon}</span><span class="pn">${p.name}</span>`;
+    btn.onclick = () => { if (!answered) selectProduct(p.id); };
+    grid.appendChild(btn);
+  });
+
+  // Hide result panel
+  document.getElementById('result-panel').style.display = 'none';
+  document.getElementById('client-card').classList.remove('fade-slide');
+  void document.getElementById('client-card').offsetWidth;
+  document.getElementById('client-card').classList.add('fade-slide');
+
+  updateScoreBar();
+}
+
+// ── SELECT PRODUCT ──
+function selectProduct(productId) {
+  answered = true;
+  const sc   = session[idx];
+  const isOk = productId === sc.correct;
+  const btns = document.querySelectorAll('.prod-btn');
+
+  btns.forEach(b => {
+    b.disabled = true;
+    if (b.dataset.id === productId && isOk)  b.classList.add('correct-choice', 'pop');
+    if (b.dataset.id === productId && !isOk) b.classList.add('wrong-choice', 'shake');
+    if (b.dataset.id === sc.correct && !isOk) b.classList.add('reveal-correct');
+  });
+
+  // Points
+  const pts = isOk ? PTS_CORRECT : 0;
+  if (isOk) { correct++; sessionPts += pts; }
+
+  // Save points to user
+  let u = getCurrentUser();
+  if (pts > 0) {
+    u.points = (u.points || 0) + pts;
+    u.xp     = (u.xp || 0) + pts;
+    u.level  = Math.floor(u.xp / 200) + 1;
+    saveUser(u);
+    toast('+' + pts + ' очков!', 'success');
+  }
+
+  // Render result panel
+  showResult(sc, isOk, productId);
+  updateScoreBar();
+}
+
+// ── SHOW RESULT ──
+function showResult(sc, isOk, selectedId) {
+  const rp  = document.getElementById('result-panel');
+  const top = document.getElementById('rp-top');
+
+  if (isOk) {
+    top.style.background = 'linear-gradient(135deg,#28A745,#1E8449)';
+    document.getElementById('rp-emoji').textContent = '✅';
+    document.getElementById('rp-title').textContent = 'Верно! +' + PTS_CORRECT + ' очков';
+    document.getElementById('rp-sub').textContent   = PRODUCTS[sc.correct].fullName + ' — правильный выбор';
+    document.getElementById('rb-label').textContent = 'Почему это правильно';
+    document.getElementById('rp-reason').textContent = sc.correctReason;
+  } else {
+    const wrongText = sc.wrongReasons[selectedId] || 'Это не оптимальный выбор для данного клиента.';
+    top.style.background = 'linear-gradient(135deg,#DC3545,#C0392B)';
+    document.getElementById('rp-emoji').textContent = '❌';
+    document.getElementById('rp-title').textContent = 'Не совсем...';
+    document.getElementById('rp-sub').textContent   = 'Правильный ответ: ' + PRODUCTS[sc.correct].icon + ' ' + PRODUCTS[sc.correct].name;
+    document.getElementById('rb-label').textContent = 'Почему не ' + PRODUCTS[selectedId].name + ' и почему ' + PRODUCTS[sc.correct].name;
+    document.getElementById('rp-reason').textContent = wrongText + '\n\n✅ ' + sc.correctReason;
+  }
+
+  document.getElementById('rp-tip').innerHTML  = '🎯 <strong>Маркер для менеджера:</strong> ' + sc.tip;
+  document.getElementById('obj-text').textContent   = sc.objection.text;
+  document.getElementById('obj-answer').textContent = sc.objection.answer;
+  document.getElementById('obj-answer').classList.remove('show');
+  document.getElementById('show-ans-btn').style.display = '';
+
+  // Last scenario → rename button
+  if (idx === SESSION_SIZE - 1) {
+    document.getElementById('next-btn').textContent = 'Завершить сессию →';
+  } else {
+    document.getElementById('next-btn').textContent = 'Следующий сценарий →';
+  }
+
+  rp.style.display = '';
+  rp.classList.remove('fade-slide');
+  void rp.offsetWidth;
+  rp.classList.add('fade-slide');
+
+  // Scroll to result
+  setTimeout(() => rp.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
+}
+
+// ── SHOW OBJECTION ANSWER ──
+function showObjAnswer() {
+  document.getElementById('obj-answer').classList.add('show');
+  document.getElementById('show-ans-btn').style.display = 'none';
+}
+
+// ── NEXT SCENARIO ──
+function nextScenario() {
+  idx++;
+  if (idx >= SESSION_SIZE) {
+    showFinal();
+  } else {
+    document.getElementById('result-panel').style.display = 'none';
+    renderScenario();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+}
+
+// ── FINAL SCREEN ──
+function showFinal() {
+  // Bonus for perfect score
+  const perfect = correct === SESSION_SIZE;
+  if (perfect) {
+    let u = getCurrentUser();
+    u.points = (u.points || 0) + PTS_BONUS;
+    u.xp     = (u.xp || 0) + PTS_BONUS;
+    u.level  = Math.floor(u.xp / 200) + 1;
+    sessionPts += PTS_BONUS;
+    saveUser(u);
+    toast('🎉 Идеальный результат! Бонус +' + PTS_BONUS + ' очков!', 'badge');
+  }
+
+  document.getElementById('sc-main').style.display   = 'none';
+  const fc = document.getElementById('final-card');
+  fc.style.display = '';
+
+  const pct = (correct / SESSION_SIZE) * 100;
+  const stars = pct === 100 ? '⭐⭐⭐' : pct >= 60 ? '⭐⭐' : '⭐';
+  document.getElementById('star-row').textContent   = stars;
+  document.getElementById('final-trophy').textContent = pct === 100 ? '🏆' : pct >= 60 ? '🥈' : '📚';
+  document.getElementById('final-title').textContent =
+    pct === 100 ? 'Идеально! Вы эксперт!' : pct >= 60 ? 'Хороший результат!' : 'Нужно повторить материал';
+  document.getElementById('final-sub').textContent =
+    pct === 100
+      ? 'Все 5 клиентов получили правильную рекомендацию. Бонус +' + PTS_BONUS + ' очков!'
+      : 'Изучите обоснования к ошибочным ответам — они помогут в реальных продажах.';
+
+  const u = getCurrentUser();
+  document.getElementById('fin-correct').textContent = correct + '/' + SESSION_SIZE;
+  document.getElementById('fin-pts').textContent     = '+' + sessionPts;
+  document.getElementById('fin-total').textContent   = u.points || 0;
+
+  document.getElementById('sc-progress').style.width = '100%';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── RESTART ──
+function restartSession() {
+  document.getElementById('final-card').style.display = 'none';
+  document.getElementById('sc-main').style.display   = '';
+  buildSession();
+  renderScenario();
+}
+
+// ── START ──
+buildSession();
+renderScenario();
+</script>
+</body>
+</html>

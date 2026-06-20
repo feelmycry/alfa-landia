@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Альфа-ландия — Игровое поле</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    body { overflow-x: hidden; background: #0A1628; }
+    .game-layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 58px); }
+    .sidebar { background: #fff; border-right: 1px solid var(--border); padding: 16px; overflow-y: auto; }
+    .main-area { padding: 14px; overflow-y: auto; background: #0A1628; }
+    #map-wrap { width: 100%; border-radius: 18px; overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,.6); }
+    #game-map { width: 100%; display: block; }
+    #info-panel { margin-top: 12px; }
+    .current-div-banner {
+      background: linear-gradient(135deg, #1A1A2E, #111827);
+      color: #fff; border-radius: 14px; padding: 14px 18px; margin-bottom: 10px;
+      display: flex; align-items: center; gap: 14px;
+      border: 1px solid rgba(255,255,255,.08);
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    }
+    .current-div-banner .big-icon { font-size: 2.2rem; flex-shrink: 0; }
+    .current-div-banner h3 { font-size: 1.05rem; font-weight: 800; margin-bottom: 2px; }
+    .current-div-banner p  { font-size: .78rem; opacity: .7; }
+    .section-title { font-size:.88rem; font-weight:800; margin-bottom:10px; display:flex; align-items:center; gap:6px; color:var(--text); }
+    .sidebar-section { margin-bottom:14px; }
+    .sidebar-section h3 { font-size:.68rem; text-transform:uppercase; letter-spacing:1.2px; color:var(--muted); margin-bottom:8px; font-weight:700; }
+    @media (max-width:800px) { .game-layout { grid-template-columns:1fr; } }
+
+    /* Daily Challenge Widget */
+    .daily-widget {
+      border-radius: 12px; padding: 12px 16px; margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; transition: transform .15s, box-shadow .15s;
+      text-decoration: none;
+    }
+    .daily-widget:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.25); }
+    .daily-available {
+      background: linear-gradient(135deg,#FF6B35,#EF3124);
+      border: 1.5px solid rgba(255,255,255,.2);
+      box-shadow: 0 4px 16px rgba(239,49,36,.35);
+    }
+    .daily-done { background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.12); }
+    .dw-left { display: flex; align-items: center; gap: 10px; }
+    .dw-fire { font-size: 1.8rem; }
+    .dw-title { font-size: .9rem; font-weight: 800; color: #fff; }
+    .dw-sub   { font-size: .78rem; color: rgba(255,255,255,.75); margin-top: 2px; }
+    .btn-daily-go {
+      background: rgba(255,255,255,.25); color: #fff; border: 1.5px solid rgba(255,255,255,.5);
+      border-radius: 8px; padding: 6px 14px; font-size: .82rem; font-weight: 800;
+      cursor: pointer; white-space: nowrap; transition: background .15s;
+    }
+    .btn-daily-go:hover { background: rgba(255,255,255,.4); }
+
+    /* Scenarios Widget */
+    .scenarios-widget {
+      border-radius: 12px; padding: 12px 16px; margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg,rgba(108,61,192,.25),rgba(155,89,182,.15));
+      border: 1.5px solid rgba(155,89,182,.4);
+      cursor: pointer; transition: transform .15s, box-shadow .15s;
+      text-decoration: none;
+    }
+    .scenarios-widget:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,61,192,.3); }
+    .sw-left { display: flex; align-items: center; gap: 10px; }
+    .sw-icon  { font-size: 1.8rem; }
+    .sw-title { font-size: .88rem; font-weight: 800; color: #fff; }
+    .sw-sub   { font-size: .76rem; color: rgba(255,255,255,.6); margin-top: 2px; }
+    .btn-sc-go {
+      background: rgba(155,89,182,.3); color: #fff; border: 1.5px solid rgba(155,89,182,.6);
+      border-radius: 8px; padding: 5px 12px; font-size: .8rem; font-weight: 800;
+      cursor: pointer; white-space: nowrap;
+    }
+    /* Team League Widget */
+    .league-widget {
+      border-radius: 12px; padding: 12px 16px; margin-bottom: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(135deg,rgba(255,215,0,.12),rgba(255,165,0,.08));
+      border: 1.5px solid rgba(255,215,0,.3);
+      cursor: pointer; transition: transform .15s, box-shadow .15s;
+      text-decoration: none;
+    }
+    .league-widget:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,215,0,.2); }
+    .lw-left  { display: flex; align-items: center; gap: 10px; }
+    .lw-icon  { font-size: 1.8rem; }
+    .lw-title { font-size: .88rem; font-weight: 800; color: #fff; }
+    .lw-sub   { font-size: .76rem; color: rgba(255,255,255,.55); margin-top: 2px; }
+    .btn-lg-go {
+      background: rgba(255,215,0,.2); color: #FFD700; border: 1.5px solid rgba(255,215,0,.5);
+      border-radius: 8px; padding: 5px 12px; font-size: .8rem; font-weight: 800;
+      cursor: pointer; white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+<nav>
+  <div class="logo">Альфа-<span>ландия</span></div>
+  <div class="nav-links">
+    <a href="game.html">Игра</a>
+    <a href="daily.html">⚡ Вызов</a>
+    <a href="scenarios.html">🎭 Сценарии</a>
+    <a href="profile.html">Профиль</a>
+    <a href="leaderboard.html">Рейтинг</a>
+    <a href="team.html">🏆 Лига</a>
+  </div>
+  <div class="nav-right">
+    <span class="user-pill" id="nav-user">—</span>
+    <button class="btn-logout" onclick="logout()">Выйти</button>
+  </div>
+</nav>
+
+<div class="game-layout">
+  <!-- ═══ SIDEBAR ═══ -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <h3>Мои результаты</h3>
+      <div class="stat-row"><span>Очки</span><span class="stat-val" id="s-points">0</span></div>
+      <div class="stat-row"><span>Уровень</span><span class="stat-val" id="s-level">1</span></div>
+      <div class="stat-row"><span>Стрик</span><span class="stat-val" id="s-streak">0 🔥</span></div>
+      <div class="stat-row"><span>Дивизионов</span><span class="stat-val" id="s-visited">0/8</span></div>
+    </div>
+    <div class="divider"></div>
+    <div class="sidebar-section">
+      <h3>Маршрут</h3>
+      <ul class="check-list" id="route-list"></ul>
+    </div>
+    <div class="divider"></div>
+    <div class="sidebar-section">
+      <h3>Значки</h3>
+      <div id="badge-mini" style="display:flex;flex-wrap:wrap;gap:5px;"></div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN ═══ -->
+  <main class="main-area">
+    <!-- MAP -->
+    <div id="map-wrap">
+      <svg id="game-map" viewBox="0 0 1400 720" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI,Arial,sans-serif">
+        <defs>
+          <linearGradient id="ocean-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stop-color="#5DADE2"/>
+            <stop offset="100%" stop-color="#2980B9"/>
+          </linearGradient>
+          <linearGradient id="sky-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%"   stop-color="#1A3A6B"/>
+            <stop offset="100%" stop-color="#2471A3"/>
+          </linearGradient>
+          <filter id="reg-shadow" x="-4%" y="-4%" width="108%" height="108%">
+            <feDropShadow dx="2" dy="3" stdDeviation="5" flood-color="rgba(0,0,0,0.35)"/>
+          </filter>
+          <filter id="pin-glow">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <filter id="card-shadow" x="-10%" y="-10%" width="120%" height="120%">
+            <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.4)"/>
+          </filter>
+          <!-- Road pattern -->
+          <pattern id="road-dots" x="0" y="0" width="16" height="1" patternUnits="userSpaceOnUse">
+            <rect width="10" height="1" fill="rgba(255,255,255,0.85)"/>
+          </pattern>
+        </defs>
+
+        <!-- ══ OCEAN BACKGROUND ══ -->
+        <rect width="1400" height="720" fill="url(#ocean-grad)"/>
+
+        <!-- Ocean waves (decorative) -->
+        <g stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none">
+          <path d="M 1260,440 Q 1285,430 1310,440 Q 1335,450 1360,440"/>
+          <path d="M 1260,470 Q 1285,460 1310,470 Q 1335,480 1360,470"/>
+          <path d="M 1265,500 Q 1285,490 1310,500 Q 1330,510 1355,500"/>
+          <path d="M 50,580 Q 70,570 90,580 Q 110,590 130,580"/>
+          <path d="M 50,610 Q 70,600 90,610 Q 110,620 130,610"/>
+          <path d="M 55,640 Q 75,630 95,640 Q 115,650 135,640"/>
+        </g>
+
+        <!-- ══ DIVISION POLYGONS ══ -->
+
+        <!-- FAR — Дальний Восток (teal-green, drawn first = bottom layer) -->
+        <polygon filter="url(#reg-shadow)" fill="#1A8A6A" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+          points="
+            964,50  1030,47  1085,51  1140,59  1190,69  1245,81  1300,94
+            1352,112  1382,162  1388,244  1386,344  1364,444  1334,514
+            1272,570  1206,606  1102,652  988,664  916,642  886,598
+            842,538  964,482  1014,398  1024,232  994,112  964,50
+          "/>
+
+        <!-- SIB — Сибирь (blue) -->
+        <polygon filter="url(#reg-shadow)" fill="#2471A3" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+          points="
+            642,58  686,50  728,40  772,28  816,22  858,32  898,48  926,52  964,50
+            994,112  1024,232  1014,398  964,482  842,538
+            720,568  622,554  582,488  586,454  650,448
+            676,382  686,258  676,132  642,58
+          "/>
+
+        <!-- URAL — Урал (teal) -->
+        <polygon filter="url(#reg-shadow)" fill="#148F77" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+          points="
+            514,68  538,56  562,42  586,36  608,50  622,62  642,58
+            676,132  686,258  676,382  650,448  586,454  550,468
+            576,404  582,294  572,177  552,97  514,68
+          "/>
+
+        <!-- VOLGA — Поволжье (amber) -->
+        <polygon filter="url(#reg-shadow)" fill="#C8920A" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+          points="
+            414,74  516,68  552,97  572,177  582,294  576,404  550,468
+            500,509  446,524  406,504  392,478  330,444  356,378
+            330,298  316,228  386,218  426,186  440,120  414,74
+          "/>
+
+        <!-- NW — Северо-Запад (purple) -->
+        <polygon filter="url(#reg-shadow)" fill="#8E44AD" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+          points="
+            50,174  50,102  72,83  98,65  122,55  142,68  157,82  170,66
+            183,80  204,74  250,70  304,68  360,68  414,74  440,120  426,186
+            386,218  316,228  246,224  180,244  126,258  86,248  52,224  50,174
+          "/>
+
+        <!-- CENT — Центр (orange-brown) -->
+        <polygon filter="url(#reg-shadow)" fill="#D35400" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+          points="
+            126,258  180,244  246,224  218,264  236,308  290,322
+            330,298  356,378  330,444  256,458  180,448  116,418
+            86,374  90,308  126,258
+          "/>
+
+        <!-- YUG — Юг (green) -->
+        <polygon filter="url(#reg-shadow)" fill="#1E8449" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+          points="
+            86,374  116,418  180,448  256,458  330,444  392,478  376,560
+            320,614  226,628  152,604  92,564  66,510  70,434  86,374
+          "/>
+
+        <!-- MOS — Москва и МО (red, smallest — drawn last = top layer) -->
+        <polygon filter="url(#reg-shadow)" fill="#C0392B" stroke="white" stroke-width="2.5" stroke-linejoin="round"
+          points="
+            246,224  316,228  330,298  290,322  236,308  218,264  246,224
+          "/>
+
+        <!-- ══ GAME ROUTE ROADS ══ -->
+        <!-- Road glow layer (wider, semi-transparent) -->
+        <g fill="none" stroke-linecap="round">
+
+          <!-- MOS ↔ NW -->
+          <path d="M 268,264 C 240,210 215,175 195,148"
+                stroke="rgba(255,220,0,0.3)" stroke-width="12"/>
+          <path d="M 268,264 C 240,210 215,175 195,148"
+                stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
+
+          <!-- MOS ↔ CENT -->
+          <path d="M 268,264 C 240,300 215,328 188,350"
+                stroke="rgba(255,220,0,0.3)" stroke-width="12"/>
+          <path d="M 268,264 C 240,300 215,328 188,350"
+                stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
+
+          <!-- NW ↔ URAL (long route across north) -->
+          <path d="M 195,148 C 320,108 450,95 580,270"
+                stroke="rgba(255,220,0,0.3)" stroke-width="12"/>
+          <path d="M 195,148 C 320,108 450,95 580,270"
+                stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
+
+          <!-- CENT ↔ YUG -->
+          <path d="M 188,350 C 194,414 200,456 212,500"
+                stroke="rgba(255,220,0,0.3)" stroke-width="12"/>
+          <path d="M 188,350 C 194,414 200,456 212,500"
+                stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
+
+          <!-- URAL ↔ SIB -->
+          <path d="M 580,270 C 666,272 738,288 810,315"
+                stroke="rgba(255,220,0,0.3)" stroke-width="12"/>
+          <path d="M 580,270 C 666,272 738,288 810,315"
+                stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
+
+          <!-- SIB ↔ FAR -->
+          <path d="M 810,315 C 936,322 1044,332 1145,345"
+                stroke="rgba(255,220,0,0.3)" stroke-width="12"/>
+          <path d="M 810,315 C 936,322 1044,332 1145,345"
+                stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
+
+          <!-- FAR ↔ VOLGA (game connection — red special route) -->
+          <path d="M 1145,345 C 950,460 720,510 435,340"
+                stroke="rgba(239,49,36,0.25)" stroke-width="14"/>
+          <path d="M 1145,345 C 950,460 720,510 435,340"
+                stroke="#EF3124" stroke-width="4" stroke-dasharray="6,8"/>
+
+          <!-- VOLGA ↔ YUG -->
+          <path d="M 435,340 C 380,400 312,452 212,500"
+                stroke="rgba(255,220,0,0.3)" stroke-width="12"/>
+          <path d="M 435,340 C 380,400 312,452 212,500"
+                stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
+        </g>
+
+        <!-- ══ DIVISION LABELS ══ -->
+        <g fill="white" font-weight="700" text-anchor="middle" paint-order="stroke" stroke="rgba(0,0,0,0.55)" stroke-width="3" stroke-linejoin="round">
+          <text x="185"  y="120"  font-size="13">Северо-Запад</text>
+          <text x="268"  y="256"  font-size="10">Москва и МО</text>
+          <text x="175"  y="350"  font-size="13">Центр</text>
+          <text x="205"  y="498"  font-size="14">Юг</text>
+          <text x="435"  y="330"  font-size="13">Поволжье</text>
+          <text x="578"  y="262"  font-size="14">Урал</text>
+          <text x="810"  y="308"  font-size="18">Сибирь</text>
+          <text x="1145" y="318"  font-size="13">Дальний</text>
+          <text x="1145" y="335"  font-size="13">Восток</text>
+        </g>
+
+        <!-- ══ PRODUCT LABELS (small, under region name) ══ -->
+        <g fill="rgba(255,255,255,0.75)" font-size="9" font-weight="600" text-anchor="middle" paint-order="stroke" stroke="rgba(0,0,0,0.4)" stroke-width="2">
+          <text x="185"  y="136">ПДС 💰</text>
+          <text x="175"  y="364">ОМС 🥇</text>
+          <text x="205"  y="513">ПИФ 🌳</text>
+          <text x="435"  y="346">НСЖ 🛡️</text>
+          <text x="578"  y="278">НСЖ 🛡️</text>
+          <text x="810"  y="326">ПДС 💰</text>
+          <text x="1145" y="353">ОМС 🥇</text>
+        </g>
+        <!-- MOS label with product -->
+        <g fill="rgba(255,255,255,0.75)" font-size="8" font-weight="600" text-anchor="middle" paint-order="stroke" stroke="rgba(0,0,0,0.4)" stroke-width="2">
+          <text x="268" y="267">Брокер 📈</text>
+        </g>
+
+        <!-- ══ PRODUCT CARDS — LEFT SIDE ══ -->
+        <!-- BROKER -->
+        <g transform="translate(8,148)" filter="url(#card-shadow)">
+          <rect width="126" height="80" rx="11" fill="white" opacity="0.95"/>
+          <rect width="126" height="12" rx="0" y="68" fill="#C0392B" opacity="0.9"/>
+          <rect width="126" height="12" rx="0" y="68" fill="#C0392B" opacity="0.9"/>
+          <rect x="0" y="68" width="126" height="12" rx="0" fill="none"/>
+          <rect width="126" height="80" rx="11" fill="none" stroke="#C0392B" stroke-width="2.5"/>
+          <text x="63" y="34" text-anchor="middle" font-size="22">📈</text>
+          <text x="63" y="54" text-anchor="middle" font-size="9.5" font-weight="800" fill="#C0392B">ИНВЕСТИЦИИ</text>
+          <text x="63" y="66" text-anchor="middle" font-size="8" fill="#555">Альфа Инвестиции</text>
+          <rect x="0" y="69" width="126" height="11" rx="0" fill="#C0392B"/>
+          <text x="63" y="78" text-anchor="middle" font-size="8.5" font-weight="700" fill="white">БРОКЕР</text>
+        </g>
+        <!-- PDS -->
+        <g transform="translate(8,244)" filter="url(#card-shadow)">
+          <rect width="126" height="80" rx="11" fill="white" opacity="0.95" stroke="#2196F3" stroke-width="2.5"/>
+          <text x="63" y="30" text-anchor="middle" font-size="22">💰</text>
+          <text x="63" y="50" text-anchor="middle" font-size="9.5" font-weight="800" fill="#2196F3">ПДС</text>
+          <text x="63" y="62" text-anchor="middle" font-size="7.5" fill="#555">Альфа НПФ</text>
+          <rect x="0" y="69" width="126" height="11" rx="0" fill="#2196F3"/>
+          <text x="63" y="78" text-anchor="middle" font-size="8.5" font-weight="700" fill="white">ДОЛГОСРОЧН.</text>
+        </g>
+        <!-- NSJ -->
+        <g transform="translate(8,340)" filter="url(#card-shadow)">
+          <rect width="126" height="80" rx="11" fill="white" opacity="0.95" stroke="#1ABC9C" stroke-width="2.5"/>
+          <text x="63" y="30" text-anchor="middle" font-size="22">🛡️</text>
+          <text x="63" y="50" text-anchor="middle" font-size="9.5" font-weight="800" fill="#1ABC9C">СТРАХОВАНИЕ</text>
+          <text x="63" y="62" text-anchor="middle" font-size="7.5" fill="#555">Альфа Страхование</text>
+          <rect x="0" y="69" width="126" height="11" rx="0" fill="#1ABC9C"/>
+          <text x="63" y="78" text-anchor="middle" font-size="8.5" font-weight="700" fill="white">НСЖ</text>
+        </g>
+
+        <!-- ══ PRODUCT CARDS — RIGHT SIDE ══ -->
+        <!-- OMS -->
+        <g transform="translate(1268,210)" filter="url(#card-shadow)">
+          <rect width="126" height="80" rx="11" fill="white" opacity="0.95" stroke="#F4A261" stroke-width="2.5"/>
+          <text x="63" y="30" text-anchor="middle" font-size="22">🥇</text>
+          <text x="63" y="50" text-anchor="middle" font-size="9.5" font-weight="800" fill="#F4A261">ОМС</text>
+          <text x="63" y="62" text-anchor="middle" font-size="7.5" fill="#555">КИБ Альфа-Банка</text>
+          <rect x="0" y="69" width="126" height="11" rx="0" fill="#F4A261"/>
+          <text x="63" y="78" text-anchor="middle" font-size="8.5" font-weight="700" fill="white">МЕТАЛЛЫ</text>
+        </g>
+        <!-- PIF -->
+        <g transform="translate(1268,306)" filter="url(#card-shadow)">
+          <rect width="126" height="80" rx="11" fill="white" opacity="0.95" stroke="#6A0DAD" stroke-width="2.5"/>
+          <text x="63" y="30" text-anchor="middle" font-size="22">🌳</text>
+          <text x="63" y="50" text-anchor="middle" font-size="9.5" font-weight="800" fill="#6A0DAD">ПИФ</text>
+          <text x="63" y="62" text-anchor="middle" font-size="7.5" fill="#555">Альфа-Капитал</text>
+          <rect x="0" y="69" width="126" height="11" rx="0" fill="#6A0DAD"/>
+          <text x="63" y="78" text-anchor="middle" font-size="8.5" font-weight="700" fill="white">ПАЕВЫЕ ФОНДЫ</text>
+        </g>
+
+        <!-- ══ COMPASS ROSE ══ -->
+        <g transform="translate(1322, 58)" font-size="10" font-weight="700" text-anchor="middle" fill="white">
+          <circle cx="0" cy="0" r="32" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+          <!-- N/S lines -->
+          <line x1="0" y1="-28" x2="0" y2="28" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+          <!-- E/W lines -->
+          <line x1="-28" y1="0" x2="28" y2="0" stroke="rgba(255,255,255,0.5)" stroke-width="1"/>
+          <!-- Diagonal lines -->
+          <line x1="-20" y1="-20" x2="20" y2="20" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+          <line x1="20" y1="-20" x2="-20" y2="20" stroke="rgba(255,255,255,0.25)" stroke-width="1"/>
+          <!-- Arrows -->
+          <polygon points="0,-32 -5,-18 0,-22 5,-18" fill="white"/>
+          <polygon points="0,32 -5,18 0,22 5,18" fill="rgba(255,255,255,0.6)"/>
+          <text x="0"   y="-36" font-size="11" fill="white">С</text>
+          <text x="0"   y="46"  font-size="10" fill="rgba(255,255,255,.7)">Ю</text>
+          <text x="38"  y="4"   font-size="10" fill="rgba(255,255,255,.7)">В</text>
+          <text x="-38" y="4"   font-size="10" fill="rgba(255,255,255,.7)">З</text>
+        </g>
+
+        <!-- ══ TITLE BANNER ══ -->
+        <g>
+          <!-- Background pill -->
+          <rect x="320" y="8" width="760" height="56" rx="28" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <!-- Gear icon -->
+          <text x="345" y="46" font-size="28">⚙️</text>
+          <!-- Title -->
+          <text x="700" y="42" text-anchor="middle" font-size="30" font-weight="900"
+                fill="white" paint-order="stroke" stroke="rgba(0,0,0,0.5)" stroke-width="3">
+            Альфа-<tspan fill="#FFD700">ландия</tspan>
+          </text>
+          <!-- Red pin -->
+          <text x="1038" y="44" font-size="22">📍</text>
+        </g>
+
+        <!-- ══ LEGEND (BOTTOM) ══ -->
+        <g transform="translate(310, 680)">
+          <rect width="780" height="38" rx="19" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+          <!-- Новичок -->
+          <rect x="16" y="9" width="18" height="18" rx="9" fill="#4CAF50"/>
+          <text x="40" y="22" font-size="11" font-weight="700" fill="white">1</text>
+          <text x="50" y="22" font-size="11" font-weight="700" fill="white">НОВИЧОК</text>
+          <!-- Опытный -->
+          <rect x="196" y="9" width="18" height="18" rx="9" fill="#FF9800"/>
+          <text x="220" y="22" font-size="11" font-weight="700" fill="white">1</text>
+          <text x="230" y="22" font-size="11" font-weight="700" fill="white">ОПЫТНЫЙ</text>
+          <!-- Эксперт -->
+          <text x="402" y="23" font-size="16">⭐</text>
+          <text x="420" y="22" font-size="11" font-weight="700" fill="white">ЭКСПЕРТ</text>
+          <!-- Connection legend -->
+          <line x1="550" y1="19" x2="590" y2="19" stroke="#FFD700" stroke-width="3" stroke-dasharray="8,4"/>
+          <text x="598" y="22" font-size="10" fill="rgba(255,255,255,.8)">Основной маршрут</text>
+          <line x1="690" y1="19" x2="730" y2="19" stroke="#EF3124" stroke-width="3" stroke-dasharray="5,6"/>
+          <text x="738" y="22" font-size="10" fill="rgba(255,255,255,.8)">Игровой</text>
+        </g>
+
+        <!-- ══ INTERACTIVE NODES — rendered by JS ══ -->
+        <g id="map-nodes"></g>
+
+        <!-- ══ PLAYER TOKEN — rendered by JS ══ -->
+        <g id="player-token" style="display:none">
+          <circle id="tk-outer" r="24" fill="#FFD700" opacity="0.35"/>
+          <circle id="tk-inner" r="18" fill="#FFD700" stroke="white" stroke-width="3"/>
+          <text id="tk-text" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="900" fill="#1A1A2E">А</text>
+        </g>
+      </svg>
+    </div><!-- /map-wrap -->
+
+    <!-- INFO PANEL -->
+    <div id="info-panel"></div>
+  </main>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/game.js"></script>
+<script>
+// ── INIT ──
+const user = requireAuth();
+document.getElementById('nav-user').textContent = user.name.split(' ')[0];
+
+function toast(msg, type='') {
+  const c = document.getElementById('toast-container');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ── RENDER MAP NODES (pins on the Russia map) ──
+function renderMap() {
+  const u = getCurrentUser();
+  const available = canMove(u) ? getAvailableMoves(u) : [];
+  const g = document.getElementById('map-nodes');
+  g.innerHTML = '';
+
+  Object.values(DIVISIONS).forEach(div => {
+    const isCurrent   = div.id === u.position;
+    const isVisited   = u.visitedDivisions.includes(div.id);
+    const isAvailable = available.includes(div.id);
+    const isLocked    = !isVisited && !isAvailable && !isCurrent;
+    const p = PRODUCTS[div.product];
+
+    const node = document.createElementNS('http://www.w3.org/2000/svg','g');
+    node.style.cursor = isAvailable ? 'pointer' : 'default';
+
+    // Pulse ring for available
+    if (isAvailable) {
+      const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      ring.setAttribute('cx', div.cx); ring.setAttribute('cy', div.cy);
+      ring.setAttribute('r', 36);
+      ring.setAttribute('fill', 'none');
+      ring.setAttribute('stroke', '#28A745');
+      ring.setAttribute('stroke-width', '2.5');
+      ring.setAttribute('stroke-dasharray', '6 4');
+      ring.style.animation = 'pulse-node 1.5s ease-in-out infinite';
+      node.appendChild(ring);
+    }
+
+    // PIN base (location marker shape)
+    // Circle
+    const pinBg = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    pinBg.setAttribute('cx', div.cx); pinBg.setAttribute('cy', div.cy);
+    pinBg.setAttribute('r', 22);
+    let bgColor = isCurrent ? '#EF3124' : isAvailable ? '#28A745' : isVisited ? div.color : 'rgba(255,255,255,0.25)';
+    let strokeC = isCurrent ? '#FFD700' : isAvailable ? '#FFFFFF' : isVisited ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.3)';
+    pinBg.setAttribute('fill', bgColor);
+    pinBg.setAttribute('stroke', strokeC);
+    pinBg.setAttribute('stroke-width', isCurrent ? '3.5' : '2.5');
+    if (isLocked) pinBg.setAttribute('opacity','0.55');
+    node.appendChild(pinBg);
+
+    // Product emoji on pin
+    const icon = document.createElementNS('http://www.w3.org/2000/svg','text');
+    icon.setAttribute('x', div.cx); icon.setAttribute('y', div.cy + 1);
+    icon.setAttribute('text-anchor','middle'); icon.setAttribute('dominant-baseline','central');
+    icon.setAttribute('font-size', '14');
+    if (isLocked) icon.setAttribute('opacity','0.5');
+    icon.textContent = isVisited || isAvailable || isCurrent ? p.icon : '🔒';
+    node.appendChild(icon);
+
+    // Status badges
+    if (isVisited && !isCurrent) {
+      // Green checkmark badge
+      const ck = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      ck.setAttribute('cx', div.cx + 16); ck.setAttribute('cy', div.cy - 16);
+      ck.setAttribute('r', '9'); ck.setAttribute('fill', '#28A745');
+      ck.setAttribute('stroke','white'); ck.setAttribute('stroke-width','1.5');
+      node.appendChild(ck);
+      const ckTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      ckTxt.setAttribute('x', div.cx + 16); ckTxt.setAttribute('y', div.cy - 16);
+      ckTxt.setAttribute('text-anchor','middle'); ckTxt.setAttribute('dominant-baseline','central');
+      ckTxt.setAttribute('font-size','10'); ckTxt.setAttribute('fill','white'); ckTxt.setAttribute('font-weight','900');
+      ckTxt.textContent = '✓';
+      node.appendChild(ckTxt);
+    }
+    if (isAvailable) {
+      // Green arrow badge
+      const ab = document.createElementNS('http://www.w3.org/2000/svg','circle');
+      ab.setAttribute('cx', div.cx + 16); ab.setAttribute('cy', div.cy - 16);
+      ab.setAttribute('r','9'); ab.setAttribute('fill','#28A745');
+      ab.setAttribute('stroke','white'); ab.setAttribute('stroke-width','1.5');
+      node.appendChild(ab);
+      const abTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
+      abTxt.setAttribute('x', div.cx + 16); abTxt.setAttribute('y', div.cy - 16);
+      abTxt.setAttribute('text-anchor','middle'); abTxt.setAttribute('dominant-baseline','central');
+      abTxt.setAttribute('font-size','11'); abTxt.setAttribute('fill','white'); abTxt.setAttribute('font-weight','900');
+      abTxt.textContent = '→';
+      node.appendChild(abTxt);
+    }
+
+    if (isAvailable) node.addEventListener('click', () => handleMove(div.id));
+    g.appendChild(node);
+  });
+
+  // Player token
+  const u2 = getCurrentUser();
+  const pos = DIVISIONS[u2.position];
+  const tk = document.getElementById('player-token');
+  document.getElementById('tk-outer').setAttribute('cx', pos.cx);
+  document.getElementById('tk-outer').setAttribute('cy', pos.cy);
+  document.getElementById('tk-inner').setAttribute('cx', pos.cx);
+  document.getElementById('tk-inner').setAttribute('cy', pos.cy);
+  document.getElementById('tk-text').setAttribute('x', pos.cx);
+  document.getElementById('tk-text').setAttribute('y', pos.cy);
+  tk.style.display = '';
+}
+
+// ── SIDEBAR ──
+function renderSidebar() {
+  const u = getCurrentUser();
+  document.getElementById('s-points').textContent  = u.points || 0;
+  document.getElementById('s-level').textContent   = u.level || 1;
+  const _ds = (u.daily || {}).streak || 0;
+  document.getElementById('s-streak').textContent  = _ds + ' 🔥';
+  document.getElementById('s-visited').textContent = u.visitedDivisions.length + '/8';
+
+  const cycleOrder = ['MOS','NW','URAL','SIB','FAR','VOLGA','YUG','CENT'];
+  const ul = document.getElementById('route-list');
+  ul.innerHTML = '';
+  cycleOrder.forEach(id => {
+    const d = DIVISIONS[id];
+    const isCurrent = id === u.position;
+    const isVisited = u.visitedDivisions.includes(id);
+    const passed    = u.completedQuizzes[id]?.passed;
+    const li = document.createElement('li');
+    li.className = isCurrent ? 'current' : (isVisited && passed ? 'done' : '');
+    li.innerHTML = `<span class="tick">${isCurrent ? '📍' : (isVisited && passed ? '✓' : '·')}</span>
+      <span style="font-size:.82rem">${d.name} <span style="color:var(--muted);font-size:.75rem">(${PRODUCTS[d.product].name})</span></span>`;
+    ul.appendChild(li);
+  });
+
+  const bm = document.getElementById('badge-mini');
+  bm.innerHTML = '';
+  BADGES.forEach(b => {
+    if ((u.badges||[]).includes(b.id)) {
+      const s = document.createElement('span');
+      s.title = b.name + ': ' + b.desc;
+      s.style.cssText = 'font-size:1.3rem;cursor:default;';
+      s.textContent = b.icon;
+      bm.appendChild(s);
+    }
+  });
+  if (!(u.badges||[]).length) bm.innerHTML = '<span style="font-size:.78rem;color:var(--muted)">Пройдите первый тест!</span>';
+}
+
+// ── INFO PANEL ──
+function renderInfoPanel() {
+  const u = getCurrentUser();
+  const div = DIVISIONS[u.position];
+  const p   = PRODUCTS[div.product];
+  const quiz = u.completedQuizzes[u.position];
+  const available = getAvailableMoves(u);
+  const allDone = u.visitedDivisions.length >= 8 && Object.values(u.completedQuizzes).every(q => q.passed);
+
+  let html = '';
+
+  // ── DAILY CHALLENGE WIDGET ──
+  const _today = new Date().toISOString().slice(0,10);
+  const _daily = u.daily || {};
+  const _dailyDone = _daily.lastDate === _today && _daily.todayResult !== null;
+  if (!_dailyDone) {
+    html += `<a href="daily.html" class="daily-widget daily-available" style="text-decoration:none">
+      <div class="dw-left">
+        <div class="dw-fire">⚡</div>
+        <div>
+          <div class="dw-title">Ежедневный вызов доступен!</div>
+          <div class="dw-sub">1 вопрос · 30 секунд · <strong>+15 очков</strong></div>
+        </div>
+      </div>
+      <button class="btn-daily-go" onclick="event.preventDefault();window.location.href='daily.html'">Играть →</button>
+    </a>`;
+  } else {
+    html += `<a href="daily.html" class="daily-widget daily-done" style="text-decoration:none">
+      <div class="dw-left">
+        <div class="dw-fire">✅</div>
+        <div>
+          <div class="dw-title" style="color:#fff">Вызов пройден!</div>
+          <div class="dw-sub">🔥 Стрик: ${_daily.streak || 0} дней · Завтра новый вопрос</div>
+        </div>
+      </div>
+      <span style="color:rgba(255,255,255,.45);font-size:.8rem;font-weight:600">→</span>
+    </a>`;
+  }
+
+  // ── SCENARIOS WIDGET ──
+  html += `<a href="scenarios.html" class="scenarios-widget" style="text-decoration:none">
+    <div class="sw-left">
+      <div class="sw-icon">🎭</div>
+      <div>
+        <div class="sw-title">Клиентские сценарии</div>
+        <div class="sw-sub">5 реальных ситуаций · +25 очков за каждый верный ответ</div>
+      </div>
+    </div>
+    <button class="btn-sc-go" onclick="event.preventDefault();window.location.href='scenarios.html'">Играть →</button>
+  </a>`;
+
+  // ── LEAGUE WIDGET ──
+  html += `<a href="team.html" class="league-widget" style="text-decoration:none">
+    <div class="lw-left">
+      <div class="lw-icon">🏆</div>
+      <div>
+        <div class="lw-title">Лига дивизионов</div>
+        <div class="lw-sub">Командный зачёт · Ваш дивизион vs все остальные</div>
+      </div>
+    </div>
+    <button class="btn-lg-go" onclick="event.preventDefault();window.location.href='team.html'">Таблица →</button>
+  </a>`;
+
+  // Banner
+  html += `<div class="current-div-banner" style="border-left:4px solid ${div.color}">
+    <div class="big-icon">${p.icon}</div>
+    <div>
+      <h3>${div.name}</h3>
+      <p>${p.fullName} · ${p.company}</p>
+      <p style="font-size:.78rem;margin-top:2px;opacity:.75">${p.description}</p>
+    </div>
+  </div>`;
+
+  if (allDone) {
+    html += `<div class="card" style="text-align:center;padding:28px;background:#fff">
+      <div style="font-size:3.5rem">🏆</div>
+      <h2 style="margin:10px 0 6px">Вся Россия пройдена!</h2>
+      <p class="text-muted">Вы изучили все 5 инвестиционных продуктов Альфа-Банка, побывали в каждом из 8 дивизионов.</p>
+      <div style="font-size:2rem;font-weight:900;color:var(--red);margin-top:12px">${u.points} очков</div>
+      <a href="profile.html"><button class="btn btn-primary" style="margin-top:14px">Посмотреть профиль</button></a>
+    </div>`;
+  } else if (!quiz || !quiz.passed) {
+    const role = ROLES[u.role];
+    html += `<div class="card" style="background:#fff">
+      <div class="section-title">📝 Тест по текущему продукту</div>
+      <p style="font-size:.87rem;color:var(--muted);margin-bottom:14px">
+        Пройдите тест по продукту <strong>${p.fullName}</strong>, чтобы разблокировать передвижение на карте.
+      </p>
+      <div class="grid-2" style="margin-bottom:14px">
+        <div style="background:var(--gray);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:.7rem;color:var(--muted);font-weight:600">ВОПРОСОВ</div>
+          <div style="font-size:1.4rem;font-weight:800">5</div>
+        </div>
+        <div style="background:var(--gray);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:.7rem;color:var(--muted);font-weight:600">УРОВЕНЬ</div>
+          <div style="font-size:1.4rem;font-weight:800;color:${role.color}">${role.label}</div>
+        </div>
+      </div>
+      ${quiz && !quiz.passed ? `<div class="warning-block mb-16" style="font-size:.85rem">Предыдущий результат: ${quiz.score}/${quiz.maxScore} — попробуйте снова!</div>` : ''}
+      <a href="learn.html"><button class="btn btn-primary">📖 Изучить и пройти тест</button></a>
+    </div>`;
+  } else {
+    html += `<div class="card" style="background:#fff">
+      <span class="completed-badge">✅ Тест пройден · ${quiz.score}/${quiz.maxScore} очков</span>`;
+
+    if (available.length === 0) {
+      const unvisited = Object.keys(DIVISIONS).filter(id => !u.visitedDivisions.includes(id));
+      html += unvisited.length > 0
+        ? `<div class="info-block">Все соседние дивизионы уже посещены. Продолжайте путь!</div>`
+        : `<div class="success-block">🎉 Все дивизионы посещены! Пройдите тесты там, где ещё не сдавали.</div>`;
+    } else {
+      html += `<div class="section-title" style="margin-top:6px">🗺️ Выберите следующий дивизион</div>
+        <p style="font-size:.83rem;color:var(--muted);margin-bottom:10px">Нажмите на маркер карты или выберите ниже:</p>
+        <div class="move-options">`;
+      available.forEach(nId => {
+        const nd = DIVISIONS[nId];
+        const np = PRODUCTS[nd.product];
+        html += `<div class="move-card" onclick="handleMove('${nId}')">
+          <div style="font-size:1.5rem;margin-bottom:4px">${np.icon}</div>
+          <div class="div-name">${nd.name}</div>
+          <div class="product-preview">${np.fullName}</div>
+          <div style="margin-top:6px">
+            <span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;
+              background:${nd.color}20;border:1.5px solid ${nd.color};color:${nd.color}">${np.name}</span>
+          </div>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+    html += `</div>`;
+  }
+
+  document.getElementById('info-panel').innerHTML = html;
+}
+
+// ── MOVE ──
+function handleMove(divId) {
+  let u = getCurrentUser();
+  if (!canMove(u)) { toast('Сначала пройдите тест!', 'error'); return; }
+  if (!getAvailableMoves(u).includes(divId)) { toast('Этот дивизион недоступен', 'error'); return; }
+  u = moveTo(u, divId);
+  toast('Переход в ' + DIVISIONS[divId].name + '!', 'success');
+  renderAll();
+}
+
+function renderAll() { renderMap(); renderSidebar(); renderInfoPanel(); }
+renderAll();
+</script>
+</body>
+</html>

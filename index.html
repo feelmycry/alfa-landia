@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Альфа-ландия — Вход</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Extra particles for hero */
+    .hero-particles { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+    .particle {
+      position: absolute; border-radius: 50%;
+      background: rgba(255,255,255,.04);
+      border: 1px solid rgba(255,255,255,.06);
+      animation: particleFloat linear infinite;
+    }
+    @keyframes particleFloat {
+      0%   { transform: translateY(100vh) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 1; }
+      90%  { opacity: 1; }
+      100% { transform: translateY(-120px) rotate(720deg); opacity: 0; }
+    }
+    /* Stats strip below form */
+    .hero-stats {
+      display: flex; gap: 0; margin-top: 28px;
+      border-top: 1px solid rgba(255,255,255,.08); padding-top: 20px;
+    }
+    .hs-item { flex: 1; text-align: center; }
+    .hs-item + .hs-item { border-left: 1px solid rgba(255,255,255,.08); }
+    .hs-val { font-size: 1.3rem; font-weight: 800; color: #fff; }
+    .hs-lbl { font-size: .7rem; color: rgba(255,255,255,.4); margin-top: 2px; text-transform: uppercase; letter-spacing: .5px; }
+    /* Decorative map dots (right side of hero) */
+    .hero-deco {
+      position: absolute; right: 5%; top: 50%; transform: translateY(-50%);
+      opacity: .07; pointer-events: none;
+      display: none;
+    }
+    @media (min-width: 1100px) { .hero-deco { display: block; } }
+  </style>
+</head>
+<body>
+<div class="hero">
+  <!-- Grid overlay -->
+  <div class="hero-grid"></div>
+
+  <!-- Floating particles -->
+  <div class="hero-particles">
+    <div class="particle" style="width:14px;height:14px;left:12%;animation-duration:18s;animation-delay:0s"></div>
+    <div class="particle" style="width:8px;height:8px;left:28%;animation-duration:22s;animation-delay:-4s"></div>
+    <div class="particle" style="width:20px;height:20px;left:45%;animation-duration:16s;animation-delay:-8s"></div>
+    <div class="particle" style="width:6px;height:6px;left:62%;animation-duration:20s;animation-delay:-2s"></div>
+    <div class="particle" style="width:12px;height:12px;left:78%;animation-duration:24s;animation-delay:-6s"></div>
+    <div class="particle" style="width:18px;height:18px;left:88%;animation-duration:19s;animation-delay:-10s"></div>
+    <div class="particle" style="width:10px;height:10px;left:5%;animation-duration:21s;animation-delay:-14s"></div>
+    <div class="particle" style="width:16px;height:16px;left:55%;animation-duration:17s;animation-delay:-16s"></div>
+  </div>
+
+  <!-- Decorative SVG Russia silhouette -->
+  <div class="hero-deco">
+    <svg width="600" height="320" viewBox="0 0 1400 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <ellipse cx="700" cy="360" rx="650" ry="300" fill="white" opacity=".5"/>
+      <circle cx="268" cy="264" r="40" fill="white"/>
+      <circle cx="195" cy="148" r="35" fill="white"/>
+      <circle cx="188" cy="350" r="38" fill="white"/>
+      <circle cx="212" cy="500" r="36" fill="white"/>
+      <circle cx="435" cy="340" r="42" fill="white"/>
+      <circle cx="1145" cy="345" r="44" fill="white"/>
+      <circle cx="810" cy="315" r="46" fill="white"/>
+      <circle cx="580" cy="270" r="40" fill="white"/>
+    </svg>
+  </div>
+
+  <!-- FORM BOX -->
+  <div class="hero-box">
+    <div class="hero-logo">
+      <div class="brand-icon">🗺️</div>
+      <h1>Альфа-<span>ландия</span></h1>
+      <p>Обучение через игру · Альфа-Банк</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('login')">Войти</button>
+      <button class="tab-btn" onclick="switchTab('register')">Регистрация</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="tab-panel active" id="tab-login">
+      <div class="form-group">
+        <label>Имя и фамилия</label>
+        <input type="text" id="login-name" placeholder="Иванов Иван" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>Дивизион</label>
+        <select id="login-div"></select>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px" onclick="doLogin()">
+        Войти в игру →
+      </button>
+      <p class="auth-footer">Нет аккаунта? <a onclick="switchTab('register')">Зарегистрироваться</a></p>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="tab-panel" id="tab-register">
+      <div class="form-group">
+        <label>ФИО</label>
+        <input type="text" id="reg-name" placeholder="Иванов Иван Иванович" autocomplete="name">
+      </div>
+      <div class="form-group">
+        <label>Офис (ДО)</label>
+        <input type="text" id="reg-office" placeholder="ДО Москва Центральный">
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="form-group">
+          <label>Дивизион</label>
+          <select id="reg-div"></select>
+        </div>
+        <div class="form-group">
+          <label>Должность</label>
+          <select id="reg-role">
+            <option value="manager">Менеджер</option>
+            <option value="senior">Вед. менеджер</option>
+            <option value="chief">Гл. менеджер</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Регион</label>
+        <input type="text" id="reg-region" placeholder="Московская область">
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px" onclick="doRegister()">
+        Начать игру →
+      </button>
+      <p class="auth-footer">Уже есть аккаунт? <a onclick="switchTab('login')">Войти</a></p>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="hero-stats">
+      <div class="hs-item"><div class="hs-val">8</div><div class="hs-lbl">Дивизионов</div></div>
+      <div class="hs-item"><div class="hs-val">5</div><div class="hs-lbl">Продуктов</div></div>
+      <div class="hs-item"><div class="hs-val">75</div><div class="hs-lbl">Вопросов</div></div>
+      <div class="hs-item"><div class="hs-val">12</div><div class="hs-lbl">Наград</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-container"></div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script>
+  const DIV_NAMES = Object.values(DIVISIONS).map(d => ({ id: d.id, name: d.name }));
+
+  function fillSelects() {
+    ['login-div','reg-div'].forEach(id => {
+      const sel = document.getElementById(id);
+      DIV_NAMES.forEach(d => {
+        const opt = document.createElement('option');
+        opt.value = d.id; opt.textContent = d.name;
+        sel.appendChild(opt);
+      });
+    });
+  }
+  fillSelects();
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab-btn').forEach((b,i) =>
+      b.classList.toggle('active', (i===0&&tab==='login')||(i===1&&tab==='register')));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-'+tab).classList.add('active');
+  }
+
+  function toast(msg, type='') {
+    const c = document.getElementById('toast-container');
+    const t = document.createElement('div');
+    t.className = 'toast ' + type; t.textContent = msg;
+    c.appendChild(t); setTimeout(()=>t.remove(), 3500);
+  }
+
+  function doLogin() {
+    const name = document.getElementById('login-name').value.trim();
+    const div  = document.getElementById('login-div').value;
+    if (!name) { toast('Введите имя', 'error'); return; }
+    const users = getAllUsers();
+    const match = users.find(u => u.name.toLowerCase()===name.toLowerCase() && u.division===div && !u.isDemo);
+    if (!match) { toast('Пользователь не найден. Зарегистрируйтесь.', 'error'); return; }
+    localStorage.setItem(SESSION_KEY, match.id);
+    updateStreak(match);
+    window.location.href = 'game.html';
+  }
+
+  function doRegister() {
+    const name   = document.getElementById('reg-name').value.trim();
+    const office = document.getElementById('reg-office').value.trim();
+    const div    = document.getElementById('reg-div').value;
+    const region = document.getElementById('reg-region').value.trim();
+    const role   = document.getElementById('reg-role').value;
+    if (!name||!office||!region) { toast('Заполните все поля', 'error'); return; }
+    // Check duplicate
+    const existing = getAllUsers().find(u => u.name.toLowerCase()===name.toLowerCase() && u.division===div && !u.isDemo);
+    if (existing) { toast('Пользователь с таким именем уже есть. Войдите.', 'error'); return; }
+    const user = createUser({ name, office, division: div, region, role });
+    updateStreak(user);
+    window.location.href = 'game.html';
+  }
+
+  if (getCurrentUser()) window.location.href = 'game.html';
+</script>
+</body>
+</html>

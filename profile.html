@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Альфа-ландия — Профиль</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<nav>
+  <div class="logo">Альфа-<span>ландия</span></div>
+  <div class="nav-links">
+    <a href="game.html">Игра</a>
+    <a href="daily.html">⚡ Вызов</a>
+    <a href="scenarios.html">🎭 Сценарии</a>
+    <a href="profile.html">Профиль</a>
+    <a href="leaderboard.html">Рейтинг</a>
+    <a href="team.html">🏆 Лига</a>
+  </div>
+  <div class="nav-right">
+    <span class="user-pill" id="nav-user">—</span>
+    <button class="btn-logout" onclick="logout()">Выйти</button>
+  </div>
+</nav>
+
+<div class="profile-layout">
+  <!-- HERO -->
+  <div class="profile-hero">
+    <div class="avatar" id="p-avatar">А</div>
+    <div class="profile-meta" style="flex:1">
+      <h2 id="p-name">—</h2>
+      <div id="p-role" class="role-badge">—</div>
+      <div style="font-size:.85rem;opacity:.7;margin-top:8px" id="p-info">—</div>
+      <div class="level-bar-wrap">
+        <div class="label">Уровень <span id="p-level">1</span> · <span id="p-xp">0</span> XP</div>
+        <div class="progress-wrap" style="background:rgba(255,255,255,.2)">
+          <div class="progress-bar" id="p-xp-bar" style="background:var(--gold);width:0%"></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-size:2.5rem;font-weight:900;color:var(--gold)" id="p-points">0</div>
+      <div style="font-size:.8rem;opacity:.7">очков</div>
+      <div style="margin-top:8px;font-size:1.5rem">🔥 <span id="p-streak">0</span></div>
+      <div style="font-size:.75rem;opacity:.7">дней подряд</div>
+    </div>
+  </div>
+
+  <!-- STATS GRID -->
+  <div class="grid-2 mb-16">
+    <div class="card">
+      <div style="font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-bottom:8px">Прогресс по карте</div>
+      <div style="font-size:2rem;font-weight:900;color:var(--red)" id="st-visited">0 / 8</div>
+      <div style="font-size:.85rem;color:var(--muted)">дивизионов посещено</div>
+      <div class="progress-wrap mt-8">
+        <div class="progress-bar" id="st-map-bar" style="background:var(--red);width:0%"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:.75rem;color:var(--muted);font-weight:600;text-transform:uppercase;margin-bottom:8px">Тесты пройдены</div>
+      <div style="font-size:2rem;font-weight:900;color:var(--red)" id="st-quizzes">0 / 8</div>
+      <div style="font-size:.85rem;color:var(--muted)">тестов успешно</div>
+      <div class="progress-wrap mt-8">
+        <div class="progress-bar" id="st-quiz-bar" style="background:#2196F3;width:0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT PROGRESS -->
+  <div class="card mb-16">
+    <div class="page-title" style="font-size:1.1rem;margin-bottom:16px">📊 Прогресс по продуктам</div>
+    <div id="product-progress"></div>
+  </div>
+
+  <!-- BADGES -->
+  <div class="card mb-16">
+    <div class="page-title" style="font-size:1.1rem;margin-bottom:16px">🏅 Значки и достижения</div>
+    <div class="badges-grid" id="badges-grid"></div>
+  </div>
+
+  <!-- QUIZ HISTORY -->
+  <div class="card">
+    <div class="page-title" style="font-size:1.1rem;margin-bottom:16px">📋 История тестов</div>
+    <table class="lb-table" id="history-table">
+      <thead><tr><th>Дивизион</th><th>Продукт</th><th>Результат</th><th>Статус</th><th>Дата</th></tr></thead>
+      <tbody id="history-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/game.js"></script>
+<script>
+const user = requireAuth();
+document.getElementById('nav-user').textContent = user.name.split(' ')[0];
+
+function render() {
+  const u = getCurrentUser();
+  const role = ROLES[u.role];
+
+  document.getElementById('p-avatar').textContent  = u.name.charAt(0).toUpperCase();
+  document.getElementById('p-name').textContent    = u.name;
+  document.getElementById('p-role').textContent    = `${role.name} · ${role.label}`;
+  document.getElementById('p-info').textContent    = `${DIVISIONS[u.division]?.name || u.division} · ${u.office} · ${u.region}`;
+  document.getElementById('p-points').textContent  = u.points || 0;
+  document.getElementById('p-streak').textContent  = (u.daily || {}).streak || 0;
+  document.getElementById('p-level').textContent   = u.level || 1;
+  document.getElementById('p-xp').textContent      = u.xp || 0;
+
+  const xpInLevel  = (u.xp || 0) % 200;
+  document.getElementById('p-xp-bar').style.width  = (xpInLevel / 200 * 100) + '%';
+
+  const visited = u.visitedDivisions.length;
+  const passed  = Object.values(u.completedQuizzes || {}).filter(q => q.passed).length;
+  document.getElementById('st-visited').textContent  = `${visited} / 8`;
+  document.getElementById('st-quizzes').textContent  = `${passed} / 8`;
+  document.getElementById('st-map-bar').style.width  = (visited / 8 * 100) + '%';
+  document.getElementById('st-quiz-bar').style.width = (passed / 8 * 100) + '%';
+
+  // Product progress
+  const pp = document.getElementById('product-progress');
+  pp.innerHTML = '';
+  Object.values(PRODUCTS).forEach(p => {
+    const divsForProduct = Object.values(DIVISIONS).filter(d => d.product === p.id);
+    const completedCount = divsForProduct.filter(d => u.completedQuizzes[d.id]?.passed).length;
+    const totalCount = divsForProduct.length;
+    const pct = Math.round(completedCount / totalCount * 100);
+    pp.innerHTML += `<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+      <div style="font-size:1.4rem;width:30px">${p.icon}</div>
+      <div style="flex:1">
+        <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:.9rem;font-weight:600">${p.fullName}</span>
+          <span style="font-size:.8rem;color:var(--muted)">${completedCount}/${totalCount} тестов</span>
+        </div>
+        <div class="progress-wrap">
+          <div class="progress-bar" style="background:${p.color || 'var(--red)'};width:${pct}%"></div>
+        </div>
+      </div>
+    </div>`;
+  });
+
+  // Badges
+  const bg = document.getElementById('badges-grid');
+  bg.innerHTML = '';
+  BADGES.forEach(b => {
+    const earned = (u.badges || []).includes(b.id);
+    bg.innerHTML += `<div class="badge-card ${earned ? 'earned' : 'locked'}">
+      <div class="b-icon">${b.icon}</div>
+      <div class="b-name">${b.name}</div>
+      <div class="b-desc">${b.desc}</div>
+      ${earned ? '<div style="color:var(--gold);font-size:.75rem;font-weight:700;margin-top:4px">✓ Получен</div>' : ''}
+    </div>`;
+  });
+
+  // History
+  const hb = document.getElementById('history-body');
+  hb.innerHTML = '';
+  const entries = Object.entries(u.completedQuizzes || {});
+  if (!entries.length) {
+    hb.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:20px">Тесты ещё не пройдены</td></tr>';
+  } else {
+    entries.sort((a,b) => new Date(b[1].date) - new Date(a[1].date)).forEach(([divId, q]) => {
+      const div = DIVISIONS[divId];
+      const p = PRODUCTS[div?.product];
+      const date = new Date(q.date).toLocaleDateString('ru-RU', { day:'2-digit', month:'short', year:'numeric' });
+      hb.innerHTML += `<tr>
+        <td>${div?.name || divId}</td>
+        <td>${p ? p.icon + ' ' + p.name : '—'}</td>
+        <td>${q.score} / ${q.maxScore} (${Math.round(q.score/q.maxScore*100)}%)</td>
+        <td>${q.passed ? '<span style="color:var(--green);font-weight:700">✅ Пройден</span>' : '<span style="color:#DC3545;font-weight:700">❌ Не пройден</span>'}</td>
+        <td style="color:var(--muted)">${date}</td>
+      </tr>`;
+    });
+  }
+}
+
+render();
+</script>
+</body>
+</html>
