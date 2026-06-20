@@ -91,6 +91,94 @@
       border-radius: 8px; padding: 5px 12px; font-size: .8rem; font-weight: 800;
       cursor: pointer; white-space: nowrap;
     }
+
+    /* ── 3D MAP BOARD ── */
+    .map-perspective {
+      perspective: 2400px;
+      perspective-origin: 50% -10%;
+      padding-bottom: 56px;
+    }
+    .map-3d-board {
+      transform: rotateX(13deg);
+      transform-origin: center top;
+      transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow:
+        0 65px 90px rgba(0,0,0,0.72),
+        0 32px 44px rgba(0,0,0,0.48),
+        0 10px 18px rgba(0,0,0,0.32);
+    }
+    .map-3d-board:hover { transform: rotateX(7deg); }
+
+    /* ── PLAYER PAWN ── */
+    #player-token {
+      will-change: transform;
+      transition: transform 0.82s cubic-bezier(0.34,1.56,0.64,1);
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+    }
+    #pawn-pulse {
+      transform-box: fill-box;
+      transform-origin: 50% 50%;
+      animation: pawnPulse 2.2s ease-in-out infinite;
+    }
+    @keyframes pawnPulse {
+      0%,100% { transform: scale(1); opacity: 0.55; }
+      50%      { transform: scale(2.2); opacity: 0; }
+    }
+    @keyframes tokenBounce {
+      0%   { transform: translateY(0); }
+      30%  { transform: translateY(-22px); }
+      60%  { transform: translateY(-8px); }
+      80%  { transform: translateY(-3px); }
+      100% { transform: translateY(0); }
+    }
+    .pawn-bounce { animation: tokenBounce 0.5s ease-out forwards; }
+
+    /* ── INFO BUTTON ── */
+    .info-btn { cursor: pointer; }
+    .info-btn circle { transition: fill 0.15s; }
+    .info-btn:hover circle { fill: #ffffff; }
+
+    /* ── REGION MODAL ── */
+    .r-modal {
+      position: fixed; inset: 0; z-index: 2000;
+      background: rgba(6,12,30,0.74);
+      backdrop-filter: blur(8px);
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.26s;
+    }
+    .r-modal.open { opacity: 1; pointer-events: all; }
+    .r-modal-box {
+      background: #fff; border-radius: 22px;
+      padding: 26px 28px 28px; max-width: 460px;
+      width: calc(100% - 32px); position: relative;
+      box-shadow: 0 28px 80px rgba(0,0,0,0.35);
+      transform: scale(0.86) translateY(28px);
+      transition: transform 0.28s cubic-bezier(0.34,1.56,0.64,1);
+    }
+    .r-modal.open .r-modal-box { transform: scale(1) translateY(0); }
+    .r-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 30px; height: 30px; border-radius: 50%;
+      border: none; background: #F2F2F6; cursor: pointer;
+      font-size: 13px; font-weight: 800;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .r-close:hover { background: #E2E2EA; }
+    .r-hdr  { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 12px; }
+    .r-icon { font-size: 2.6rem; line-height: 1; flex-shrink: 0; }
+    .r-name { font-size: 1.15rem; font-weight: 900; color: #111; line-height: 1.2; }
+    .r-sub  { font-size: .78rem; color: #666; margin-top: 3px; line-height: 1.45; }
+    .r-badge { display: inline-block; margin-top: 6px; padding: 2px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; }
+    .r-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 12px 0 0; }
+    .r-cell { background: #F4F4F8; border-radius: 10px; padding: 9px 12px; }
+    .r-span { grid-column: span 2; }
+    .r-lbl  { font-size: .62rem; text-transform: uppercase; letter-spacing: 1px; color: #999; font-weight: 700; margin-bottom: 2px; }
+    .r-val  { font-size: .82rem; font-weight: 700; color: #1A1A2E; }
+    .r-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .r-chip { background: #EEF0FF; color: #3848C0; border-radius: 20px; padding: 3px 11px; font-size: .74rem; font-weight: 600; }
   </style>
 </head>
 <body>
@@ -135,6 +223,8 @@
   <!-- ═══ MAIN ═══ -->
   <main class="main-area">
     <!-- MAP -->
+    <div class="map-perspective">
+    <div class="map-3d-board">
     <div id="map-wrap">
       <svg id="game-map" viewBox="0 0 1400 720" xmlns="http://www.w3.org/2000/svg" font-family="'Plus Jakarta Sans',Segoe UI,Arial,sans-serif">
         <defs>
@@ -184,8 +274,22 @@
             <stop offset="100%" stop-color="#FF4400" stop-opacity="0"/>
           </radialGradient>
           <!-- Filters -->
-          <filter id="f-shadow">
-            <feDropShadow dx="2" dy="4" stdDeviation="7" flood-color="rgba(0,0,0,0.5)"/>
+          <filter id="f-shadow" x="-8%" y="-8%" width="122%" height="138%">
+            <!-- Soft ambient glow -->
+            <feGaussianBlur in="SourceAlpha" stdDeviation="9" result="blurred"/>
+            <feOffset in="blurred" dx="2" dy="5" result="s-off"/>
+            <feFlood flood-color="rgba(0,0,0,0.38)" result="s-clr"/>
+            <feComposite in="s-clr" in2="blurred" operator="in" result="soft-s"/>
+            <!-- Hard wall extrusion (+5,+14) -->
+            <feFlood flood-color="rgba(10,5,0,0.58)" result="w-clr"/>
+            <feComposite in="w-clr" in2="SourceAlpha" operator="in" result="w-shape"/>
+            <feOffset in="w-shape" dx="5" dy="14" result="wall"/>
+            <!-- Stack: soft shadow → hard wall → surface -->
+            <feMerge>
+              <feMergeNode in="soft-s"/>
+              <feMergeNode in="wall"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
           </filter>
           <filter id="f-card">
             <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.4)"/>
@@ -727,18 +831,43 @@
 
         <!-- ══ INTERACTIVE NODES — JS ══ -->
         <g id="map-nodes"></g>
-        <!-- ══ PLAYER TOKEN — JS ══ -->
+        <!-- ══ PLAYER PAWN (3D) — positioned via CSS transform ══ -->
         <g id="player-token" style="display:none">
-          <circle id="tk-outer" r="24" fill="#FFD700" opacity="0.35"/>
-          <circle id="tk-inner" r="18" fill="#FFD700" stroke="white" stroke-width="3"/>
-          <text id="tk-text" text-anchor="middle" dominant-baseline="central" font-size="13" font-weight="900" fill="#1A1A2E">А</text>
+          <!-- Pulse ring -->
+          <circle id="pawn-pulse" r="30" cy="8" fill="rgba(255,215,0,0.45)"/>
+          <!-- Ground shadow -->
+          <ellipse rx="21" ry="7" cy="17" fill="rgba(0,0,0,0.38)"/>
+          <!-- Base disc (front lit) -->
+          <ellipse rx="20" ry="6.5" cy="10" fill="#A00010" stroke="#FF1428" stroke-width="1.5"/>
+          <!-- Body (tapered cylinder) -->
+          <path d="M-16,10 C-16,-15 -8,-34 0,-38 C8,-34 16,-15 16,10Z" fill="#E80014"/>
+          <!-- Left shadow on body -->
+          <path d="M-16,10 C-16,-15 -9,-34 -4,-38 C-7,-30 -11,-13 -11,10Z" fill="rgba(0,0,0,0.22)"/>
+          <!-- Right shine on body -->
+          <path d="M8,-5 C10,-18 11,-30 8,-38 C11,-26 13,-16 11,-5Z" fill="rgba(255,255,255,0.2)"/>
+          <!-- Head ball -->
+          <circle r="15" cy="-52" fill="#FFD700" stroke="white" stroke-width="2.5"/>
+          <!-- Head shine -->
+          <circle r="5" cx="-5" cy="-58" fill="rgba(255,255,255,0.42)"/>
+          <!-- Letter А on head -->
+          <text text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="900" fill="#880010" y="-52">А</text>
         </g>
       </svg>
     </div><!-- /map-wrap -->
+    </div><!-- /map-3d-board -->
+    </div><!-- /map-perspective -->
 
     <!-- INFO PANEL -->
     <div id="info-panel"></div>
   </main>
+</div>
+
+<!-- ── REGION INFO MODAL ── -->
+<div id="region-modal" class="r-modal" onclick="closeRegionModal()">
+  <div class="r-modal-box" onclick="event.stopPropagation()">
+    <button class="r-close" onclick="closeRegionModal()">✕</button>
+    <div id="region-modal-body"></div>
+  </div>
 </div>
 
 <div id="toast-container"></div>
@@ -747,6 +876,107 @@
 <script src="js/auth.js"></script>
 <script src="js/game.js"></script>
 <script>
+// ── REGION INFO DATA ──
+const REGION_INFO = {
+  MOS:  {
+    emoji:'🏙️', tagline:'Финансовое сердце страны',
+    area:'47 000 км²', climate:'Умеренно-континентальный',
+    cities:'Москва (12 млн), Химки, Подольск, Балашиха',
+    geo:'Центральная равнина, долина реки Москвы, Подмосковные холмы',
+    chips:['Московская биржа','Кремль и Красная площадь','#1 экономика России','Центр банковского сектора']
+  },
+  NW:   {
+    emoji:'🏛️', tagline:'Культурная столица и Арктика',
+    area:'1 677 900 км²', climate:'Умеренный морской, белые ночи летом',
+    cities:'Санкт-Петербург (5 млн), Мурманск, Архангельск, Петрозаводск',
+    geo:'Балтийское побережье, Ладожское и Онежское озёра, Карелия, Кольский полуостров',
+    chips:['Эрмитаж', 'Белые ночи','Атомный ледокольный флот','Арктические порты']
+  },
+  CENT: {
+    emoji:'🌾', tagline:'Исторический центр России',
+    area:'653 700 км²', climate:'Умеренно-континентальный, 4 ярких сезона',
+    cities:'Нижний Новгород, Воронеж, Ярославль, Тула, Орёл',
+    geo:'Волго-Окское междуречье, холмистые равнины, смешанные леса',
+    chips:['Золотое кольцо России','Нижегородская ярмарка','Тульский пряник','Центр авиапрома']
+  },
+  YUG:  {
+    emoji:'⛰️', tagline:'Горы, море и субтропики',
+    area:'589 200 км²', climate:'Субтропический на черноморском побережье, горный в Кавказе',
+    cities:'Краснодар, Ростов-на-Дону, Сочи, Волгоград, Ставрополь',
+    geo:'Большой Кавказ (Эльбрус 5642 м), Чёрное и Каспийское моря, Кубанские степи',
+    chips:['Эльбрус — высшая точка России','Сочи — курортная столица','Главный аграрный регион','Черноморские порты']
+  },
+  VOLGA:{
+    emoji:'🌊', tagline:'Великая река — великий регион',
+    area:'1 038 000 км²', climate:'Континентальный, степи на юге',
+    cities:'Казань, Самара, Нижний Новгород, Саратов, Волгоград',
+    geo:'Великая Волга (3530 км), Прикаспийская низменность, Жигулёвские горы',
+    chips:['Волга — главная река России','Многонациональный регион','Татарстан: нефть и IT','Тольятти — автопром']
+  },
+  URAL: {
+    emoji:'⛏️', tagline:'Хребет России — граница Европы и Азии',
+    area:'1 788 900 км²', climate:'Умеренный на западе, резко-континентальный на востоке',
+    cities:'Екатеринбург (1.5 млн), Челябинск, Пермь, Уфа, Оренбург',
+    geo:'Уральский хребет (до 1895 м), граница Европа/Азия, реки Кама и Урал',
+    chips:['Граница Европа/Азия','Медь, золото, платина','Уральские самоцветы','ВПК и металлургия']
+  },
+  SIB:  {
+    emoji:'🌲', tagline:'Тайга, Байкал и бескрайние просторы',
+    area:'5 114 800 км²', climate:'Резко-континентальный, зимы до −40°C',
+    cities:'Новосибирск (1.6 млн), Омск, Красноярск, Иркутск, Томск',
+    geo:'Сибирская тайга, Байкал (1642 м глубина), реки Обь и Енисей, Алтайские горы',
+    chips:['Байкал — 20% мировой пресной воды','Крупнейший лес планеты','Нефть и газ Западной Сибири','Академгородок Новосибирска']
+  },
+  FAR:  {
+    emoji:'🌋', tagline:'Огонь, тайга и Тихий океан',
+    area:'6 952 600 км²', climate:'От муссонного на юге до арктического на севере',
+    cities:'Владивосток, Хабаровск, Якутск, Магадан, Петропавловск-Камчатский',
+    geo:'Камчатка (300+ вулканов), Тихоокеанское побережье, вечная мерзлота Якутии, Долина гейзеров',
+    chips:['Самый большой регион России','Действующие вулканы Камчатки','Долина гейзеров','Восточные морские ворота России']
+  }
+};
+
+function showRegionInfo(divId) {
+  const info = REGION_INFO[divId];
+  const div  = DIVISIONS[divId];
+  const prod = PRODUCTS[div.product];
+  document.getElementById('region-modal-body').innerHTML = `
+    <div class="r-hdr">
+      <div class="r-icon">${info.emoji}</div>
+      <div>
+        <div class="r-name">${div.name}</div>
+        <div class="r-sub">${info.tagline}</div>
+        <span class="r-badge" style="background:${prod.color}18;color:${prod.color};border:1.5px solid ${prod.color}40">${prod.icon} ${prod.fullName}</span>
+      </div>
+    </div>
+    <div class="r-grid">
+      <div class="r-cell">
+        <div class="r-lbl">🌍 Площадь</div>
+        <div class="r-val">${info.area}</div>
+      </div>
+      <div class="r-cell">
+        <div class="r-lbl">🌡️ Климат</div>
+        <div class="r-val" style="font-size:.74rem">${info.climate}</div>
+      </div>
+      <div class="r-cell r-span">
+        <div class="r-lbl">🏙️ Крупные города</div>
+        <div class="r-val" style="font-size:.78rem">${info.cities}</div>
+      </div>
+      <div class="r-cell r-span">
+        <div class="r-lbl">🗺️ Природа и география</div>
+        <div class="r-val" style="font-size:.77rem">${info.geo}</div>
+      </div>
+    </div>
+    <div class="r-chips">
+      ${info.chips.map(c=>`<span class="r-chip">${c}</span>`).join('')}
+    </div>`;
+  document.getElementById('region-modal').classList.add('open');
+}
+
+function closeRegionModal() {
+  document.getElementById('region-modal').classList.remove('open');
+}
+
 // ── INIT ──
 const user = requireAuth();
 document.getElementById('nav-user').textContent = user.name.split(' ')[0];
@@ -843,20 +1073,49 @@ function renderMap() {
     }
 
     if (isAvailable) node.addEventListener('click', () => handleMove(div.id));
+
+    // ℹ Info button (top-right of pin)
+    const ib = document.createElementNS('http://www.w3.org/2000/svg','g');
+    ib.setAttribute('class','info-btn');
+    ib.addEventListener('click', e => { e.stopPropagation(); showRegionInfo(div.id); });
+    const ibBg = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    ibBg.setAttribute('cx', div.cx+24); ibBg.setAttribute('cy', div.cy-24);
+    ibBg.setAttribute('r','12');
+    ibBg.setAttribute('fill','rgba(255,255,255,0.88)');
+    ibBg.setAttribute('stroke', div.color); ibBg.setAttribute('stroke-width','2');
+    const ibTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    ibTxt.setAttribute('x', div.cx+24); ibTxt.setAttribute('y', div.cy-24);
+    ibTxt.setAttribute('text-anchor','middle'); ibTxt.setAttribute('dominant-baseline','central');
+    ibTxt.setAttribute('font-size','13'); ibTxt.setAttribute('font-weight','900');
+    ibTxt.setAttribute('fill', div.color);
+    ibTxt.textContent = 'i';
+    ib.appendChild(ibBg); ib.appendChild(ibTxt);
+    node.appendChild(ib);
+
     g.appendChild(node);
   });
 
-  // Player token
-  const u2 = getCurrentUser();
-  const pos = DIVISIONS[u2.position];
+  // ── Player pawn via CSS transform (animated) ──
+  const pos = DIVISIONS[u.position];
   const tk = document.getElementById('player-token');
-  document.getElementById('tk-outer').setAttribute('cx', pos.cx);
-  document.getElementById('tk-outer').setAttribute('cy', pos.cy);
-  document.getElementById('tk-inner').setAttribute('cx', pos.cx);
-  document.getElementById('tk-inner').setAttribute('cy', pos.cy);
-  document.getElementById('tk-text').setAttribute('x', pos.cx);
-  document.getElementById('tk-text').setAttribute('y', pos.cy);
-  tk.style.display = '';
+  tk.style.display = 'block';
+  if (!tk._init) {
+    // First render: snap without animation
+    tk.style.transition = 'none';
+    tk.style.transform  = `translate(${pos.cx}px,${pos.cy}px)`;
+    tk._init = true;
+    requestAnimationFrame(() => {
+      tk.style.transition = 'transform 0.82s cubic-bezier(0.34,1.56,0.64,1)';
+    });
+  } else {
+    tk.style.transform = `translate(${pos.cx}px,${pos.cy}px)`;
+    // Bounce arrival animation (applied to inner element)
+    const head = tk.querySelector('circle[r="15"]');
+    if (head) {
+      head.style.animation = 'none';
+      requestAnimationFrame(() => { head.style.animation = 'pawnBounce 0.5s ease-out'; });
+    }
+  }
 }
 
 // ── SIDEBAR ──
