@@ -832,3 +832,59 @@ const PRODUCT_BADGES = {
   BROKER: 'broker_master', PDS: 'pds_master',
   NSJ: 'nsj_master', OMS: 'oms_master', PIF: 'pif_master'
 };
+
+// ============================================================
+// LINEAR GAME: 40 stops, 5 per division, 10 questions per stop
+// Path: YUG(1-5) → CENT(6-10) → MOS(11-15) → NW(16-20) → [JUMP] → VOLGA(21-25) → URAL(26-30) → SIB(31-35) → FAR(36-40)
+// cx/cy = position on SVG map (viewBox 0 0 1400 720)
+// ============================================================
+const STOPS = [
+  // ── YUG (ПИФ) – stops 1-5 ──
+  { num:1,  division:'YUG',   product:'PIF',    cx:112, cy:620, special:false },
+  { num:2,  division:'YUG',   product:'PIF',    cx:158, cy:604, special:false },
+  { num:3,  division:'YUG',   product:'PIF',    cx:192, cy:562, special:false },
+  { num:4,  division:'YUG',   product:'PIF',    cx:228, cy:524, special:false },
+  { num:5,  division:'YUG',   product:'PIF',    cx:255, cy:488, special:true  },
+  // ── CENT (ОМС) – stops 6-10 ──
+  { num:6,  division:'CENT',  product:'OMS',    cx:190, cy:452, special:false },
+  { num:7,  division:'CENT',  product:'OMS',    cx:162, cy:414, special:false },
+  { num:8,  division:'CENT',  product:'OMS',    cx:148, cy:376, special:true  },
+  { num:9,  division:'CENT',  product:'OMS',    cx:165, cy:340, special:false },
+  { num:10, division:'CENT',  product:'OMS',    cx:195, cy:306, special:false },
+  // ── MOS (Брокер) – stops 11-15 ──
+  { num:11, division:'MOS',   product:'BROKER', cx:238, cy:280, special:false },
+  { num:12, division:'MOS',   product:'BROKER', cx:268, cy:262, special:true  },
+  { num:13, division:'MOS',   product:'BROKER', cx:308, cy:246, special:false },
+  { num:14, division:'MOS',   product:'BROKER', cx:354, cy:228, special:false },
+  { num:15, division:'MOS',   product:'BROKER', cx:400, cy:212, special:false },
+  // ── NW (ПДС) – stops 16-20 ──
+  { num:16, division:'NW',    product:'PDS',    cx:355, cy:176, special:false },
+  { num:17, division:'NW',    product:'PDS',    cx:292, cy:159, special:false },
+  { num:18, division:'NW',    product:'PDS',    cx:232, cy:151, special:false },
+  { num:19, division:'NW',    product:'PDS',    cx:195, cy:148, special:false },
+  { num:20, division:'NW',    product:'PDS',    cx:160, cy:118, special:true  },
+  // ── VOLGA (НСЖ) – stops 21-25  [after red jump from 20] ──
+  { num:21, division:'VOLGA', product:'NSJ',    cx:432, cy:192, special:false },
+  { num:22, division:'VOLGA', product:'NSJ',    cx:450, cy:244, special:false },
+  { num:23, division:'VOLGA', product:'NSJ',    cx:455, cy:292, special:false },
+  { num:24, division:'VOLGA', product:'NSJ',    cx:448, cy:338, special:true  },
+  { num:25, division:'VOLGA', product:'NSJ',    cx:440, cy:382, special:false },
+  // ── URAL (НСЖ) – stops 26-30 ──
+  { num:26, division:'URAL',  product:'NSJ',    cx:498, cy:290, special:false },
+  { num:27, division:'URAL',  product:'NSJ',    cx:534, cy:256, special:false },
+  { num:28, division:'URAL',  product:'NSJ',    cx:568, cy:232, special:true  },
+  { num:29, division:'URAL',  product:'NSJ',    cx:598, cy:260, special:false },
+  { num:30, division:'URAL',  product:'NSJ',    cx:622, cy:302, special:false },
+  // ── SIB (ПДС) – stops 31-35 ──
+  { num:31, division:'SIB',   product:'PDS',    cx:664, cy:284, special:false },
+  { num:32, division:'SIB',   product:'PDS',    cx:720, cy:260, special:false },
+  { num:33, division:'SIB',   product:'PDS',    cx:780, cy:248, special:true  },
+  { num:34, division:'SIB',   product:'PDS',    cx:840, cy:270, special:false },
+  { num:35, division:'SIB',   product:'PDS',    cx:890, cy:294, special:false },
+  // ── FAR (ОМС) – stops 36-40 ──
+  { num:36, division:'FAR',   product:'OMS',    cx:946, cy:294, special:false },
+  { num:37, division:'FAR',   product:'OMS',    cx:1002,cy:308, special:false },
+  { num:38, division:'FAR',   product:'OMS',    cx:1062,cy:328, special:false },
+  { num:39, division:'FAR',   product:'OMS',    cx:1120,cy:350, special:false },
+  { num:40, division:'FAR',   product:'OMS',    cx:1170,cy:382, special:true  },
+];

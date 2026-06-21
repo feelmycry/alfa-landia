@@ -239,9 +239,13 @@
 const user = requireAuth();
 document.getElementById('nav-user').textContent = user.name.split(' ')[0];
 
-const div     = DIVISIONS[user.position];
-const product = PRODUCTS[div.product];
-const learn   = LEARNING[div.product];
+if (!user.currentStop) user.currentStop = 1;
+if (!user.completedStops) user.completedStops = {};
+const currentStop = user.currentStop || 1;
+const stop    = STOPS[currentStop - 1];
+const div     = DIVISIONS[stop.division];
+const product = PRODUCTS[stop.product];
+const learn   = LEARNING[stop.product];
 
 // Set CSS accent color
 document.documentElement.style.setProperty('--accent', product.color || '#EF3124');

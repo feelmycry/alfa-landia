@@ -186,7 +186,7 @@
       <div class="stat-row"><span>Очки</span><span class="stat-val" id="s-points">0</span></div>
       <div class="stat-row"><span>Уровень</span><span class="stat-val" id="s-level">1</span></div>
       <div class="stat-row"><span>Стрик</span><span class="stat-val" id="s-streak">0 🔥</span></div>
-      <div class="stat-row"><span>Дивизионов</span><span class="stat-val" id="s-visited">0/8</span></div>
+      <div class="stat-row"><span>Ходов пройдено</span><span class="stat-val" id="s-visited">0/40</span></div>
     </div>
     <div class="divider"></div>
     <div class="sidebar-section">
@@ -549,39 +549,46 @@
         </g>
 
         <!-- ══ СТАРТ oval ══ -->
-        <g transform="translate(112,672)" filter="url(#f-card)">
-          <rect x="-58" y="-22" width="116" height="44" rx="22" fill="#E63946" stroke="white" stroke-width="3"/>
+        <g transform="translate(68,648)" filter="url(#f-card)">
+          <rect x="-48" y="-18" width="96" height="36" rx="18" fill="#E63946" stroke="white" stroke-width="2.5"/>
           <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
-                font-size="21" font-weight="900" fill="white" letter-spacing="3"
+                font-size="17" font-weight="900" fill="white" letter-spacing="3"
                 font-family="'Space Grotesk',Arial,sans-serif">СТАРТ</text>
         </g>
+        <line x1="112" y1="638" x2="112" y2="622" stroke="#E63946" stroke-width="2.5" stroke-dasharray="4,3"/>
 
-        <!-- ══ GAME ROUTE PATHS ══ -->
-        <g fill="none" stroke-linecap="round">
-          <!-- MOS → NW -->
-          <path d="M254,252 C235,212 218,190 200,166" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
-          <path d="M254,252 C235,212 218,190 200,166" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
-          <!-- MOS → CENT -->
-          <path d="M258,280 C238,308 220,333 191,367" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
-          <path d="M258,280 C238,308 220,333 191,367" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
-          <!-- NW → URAL -->
-          <path d="M225,153 C344,116 464,102 563,257" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
-          <path d="M225,153 C344,116 464,102 563,257" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
-          <!-- CENT → YUG -->
-          <path d="M188,373 C193,420 201,460 213,484" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
-          <path d="M188,373 C193,420 201,460 213,484" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
-          <!-- URAL → SIB -->
-          <path d="M613,274 C682,278 745,296 800,314" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
-          <path d="M613,274 C682,278 745,296 800,314" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
-          <!-- SIB → FAR -->
-          <path d="M845,318 C942,326 1052,337 1128,344" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
-          <path d="M845,318 C942,326 1052,337 1128,344" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
-          <!-- FAR → VOLGA (long red arch) -->
-          <path d="M1122,362 C958,468 732,522 460,354" stroke="rgba(230,57,70,0.26)" stroke-width="15"/>
-          <path d="M1122,362 C958,468 732,522 460,354" stroke="#E63946" stroke-width="5" stroke-dasharray="8,6" marker-end="url(#arrow-r)"/>
-          <!-- VOLGA → YUG -->
-          <path d="M419,356 C376,410 318,458 230,489" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
-          <path d="M419,356 C376,410 318,458 230,489" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
+        <!-- ══ LINEAR GAME PATH ══ -->
+        <!-- Segment 1: stops 1→20 (YUG · CENT · MOS · NW) -->
+        <polyline fill="none" stroke-linejoin="round" stroke-linecap="round"
+          points="112,620 158,604 192,562 228,524 255,488 190,452 162,414 148,376 165,340 195,306 238,280 268,262 308,246 354,228 400,212 355,176 292,159 232,151 195,148 160,118"
+          stroke="rgba(55,120,40,0.22)" stroke-width="12"/>
+        <polyline fill="none" stroke-linejoin="round" stroke-linecap="round"
+          points="112,620 158,604 192,562 228,524 255,488 190,452 162,414 148,376 165,340 195,306 238,280 268,262 308,246 354,228 400,212 355,176 292,159 232,151 195,148 160,118"
+          stroke="#3A9E28" stroke-width="3" stroke-dasharray="7,4"/>
+
+        <!-- RED JUMP: stop 20 → stop 21 (NW → VOLGA) -->
+        <path d="M160,118 C215,52 385,55 432,192" fill="none" stroke="rgba(230,57,70,0.28)" stroke-width="14"/>
+        <path d="M160,118 C215,52 385,55 432,192" fill="none" stroke="#E63946" stroke-width="4" stroke-dasharray="7,5" marker-end="url(#arrow-r)"/>
+        <rect x="248" y="55" width="102" height="22" rx="11" fill="#E63946" opacity="0.88"/>
+        <text x="299" y="66" text-anchor="middle" dominant-baseline="central"
+              font-size="10.5" font-weight="800" fill="white"
+              font-family="'Space Grotesk',Arial,sans-serif">🚀 ПРЫЖОК!</text>
+
+        <!-- Segment 2: stops 21→40 (VOLGA · URAL · SIB · FAR) -->
+        <polyline fill="none" stroke-linejoin="round" stroke-linecap="round"
+          points="432,192 450,244 455,292 448,338 440,382 498,290 534,256 568,232 598,260 622,302 664,284 720,260 780,248 840,270 890,294 946,294 1002,308 1062,328 1120,350 1170,382"
+          stroke="rgba(55,120,40,0.22)" stroke-width="12"/>
+        <polyline fill="none" stroke-linejoin="round" stroke-linecap="round"
+          points="432,192 450,244 455,292 448,338 440,382 498,290 534,256 568,232 598,260 622,302 664,284 720,260 780,248 840,270 890,294 946,294 1002,308 1062,328 1120,350 1170,382"
+          stroke="#3A9E28" stroke-width="3" stroke-dasharray="7,4"/>
+
+        <!-- ══ ФИНИШ oval ══ -->
+        <line x1="1186" y1="383" x2="1206" y2="396" stroke="#2A9D8F" stroke-width="2.5" stroke-dasharray="4,3"/>
+        <g transform="translate(1252,406)" filter="url(#f-card)">
+          <rect x="-50" y="-18" width="100" height="36" rx="18" fill="#2A9D8F" stroke="white" stroke-width="2.5"/>
+          <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
+                font-size="17" font-weight="900" fill="white" letter-spacing="3"
+                font-family="'Space Grotesk',Arial,sans-serif">ФИНИШ</text>
         </g>
 
         <!-- ══ TITLE ══ -->
@@ -751,157 +758,127 @@ function toast(msg, type='') {
   setTimeout(() => t.remove(), 3500);
 }
 
-// ── RENDER MAP NODES ──
+// ── RENDER MAP NODES (40 linear stops) ──
 function renderMap() {
-  const u = getCurrentUser();
-  const available = canMove(u) ? getAvailableMoves(u) : [];
+  const u = initUserStops(getCurrentUser());
+  const currentStop  = u.currentStop || 1;
+  const completedSt  = u.completedStops || {};
   const g = document.getElementById('map-nodes');
   g.innerHTML = '';
 
-  Object.values(DIVISIONS).forEach(div => {
-    const isCurrent   = div.id === u.position;
-    const isVisited   = u.visitedDivisions.includes(div.id);
-    const isAvailable = available.includes(div.id);
-    const isLocked    = !isVisited && !isAvailable && !isCurrent;
-    const p = PRODUCTS[div.product];
+  STOPS.forEach(stop => {
+    const num         = stop.num;
+    const isCompleted = completedSt[num]?.passed;
+    const isCurrent   = num === currentStop;
+    const isLocked    = num > currentStop;
+    const p = PRODUCTS[stop.product];
 
     const node = document.createElementNS('http://www.w3.org/2000/svg','g');
-    node.style.cursor = isAvailable ? 'pointer' : 'default';
+    node.style.cursor = isCurrent ? 'pointer' : 'default';
 
-    // Pulse ring for available
-    if (isAvailable) {
+    const r = isCurrent ? 22 : (stop.special ? 19 : 16);
+
+    // Pulse ring for current stop
+    if (isCurrent) {
       const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      ring.setAttribute('cx', div.cx); ring.setAttribute('cy', div.cy);
-      ring.setAttribute('r', '46');
-      ring.setAttribute('fill', 'rgba(40,167,69,0.15)');
-      ring.setAttribute('stroke', '#28A745');
-      ring.setAttribute('stroke-width', '2.5');
-      ring.setAttribute('stroke-dasharray', '6 4');
+      ring.setAttribute('cx', stop.cx); ring.setAttribute('cy', stop.cy);
+      ring.setAttribute('r', String(r + 11));
+      ring.setAttribute('fill', 'rgba(230,57,70,0.14)');
+      ring.setAttribute('stroke', '#E63946');
+      ring.setAttribute('stroke-width', '2');
+      ring.setAttribute('stroke-dasharray', '5 3');
       ring.style.animation = 'pulse-node 1.5s ease-in-out infinite';
       node.appendChild(ring);
     }
 
-    // Main circle (board-game style)
-    const pinBg = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    pinBg.setAttribute('cx', div.cx); pinBg.setAttribute('cy', div.cy);
-    pinBg.setAttribute('r', isCurrent ? '36' : '32');
-    const bgFill = isCurrent ? '#E63946' : 'white';
-    const strokeColor = isCurrent ? 'white' : isAvailable ? '#28A745' : isVisited ? p.color : 'rgba(160,160,160,0.65)';
-    const strokeW = isCurrent ? '5' : isAvailable ? '4.5' : '4';
-    pinBg.setAttribute('fill', bgFill);
-    pinBg.setAttribute('stroke', strokeColor);
-    pinBg.setAttribute('stroke-width', strokeW);
-    pinBg.setAttribute('filter', 'url(#f-node)');
-    if (isLocked) pinBg.setAttribute('opacity','0.62');
-    node.appendChild(pinBg);
+    // Main circle
+    const circle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    circle.setAttribute('cx', stop.cx); circle.setAttribute('cy', stop.cy);
+    circle.setAttribute('r', String(r));
+    circle.setAttribute('fill', isCurrent ? '#E63946' : 'white');
+    circle.setAttribute('stroke', isCurrent ? 'white'
+                                : isCompleted ? '#28A745'
+                                : isLocked ? 'rgba(155,155,155,0.5)'
+                                : p.color);
+    circle.setAttribute('stroke-width', isCurrent || isCompleted ? '3' : '2.5');
+    circle.setAttribute('filter', 'url(#f-node)');
+    if (isLocked) circle.setAttribute('opacity','0.45');
+    node.appendChild(circle);
 
-    // Division short ID (top line)
-    const nameText = document.createElementNS('http://www.w3.org/2000/svg','text');
-    nameText.setAttribute('x', div.cx); nameText.setAttribute('y', div.cy - 9);
-    nameText.setAttribute('text-anchor','middle'); nameText.setAttribute('dominant-baseline','central');
-    nameText.setAttribute('font-size', '10.5'); nameText.setAttribute('font-weight', '900');
-    nameText.setAttribute('fill', isCurrent ? 'white' : isLocked ? '#AAAAAA' : '#1A1A2E');
-    nameText.setAttribute('font-family', "'Space Grotesk','Plus Jakarta Sans',sans-serif");
-    nameText.textContent = div.id;
-    node.appendChild(nameText);
+    // Stop number
+    const numTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
+    numTxt.setAttribute('x', stop.cx); numTxt.setAttribute('y', stop.cy);
+    numTxt.setAttribute('text-anchor','middle'); numTxt.setAttribute('dominant-baseline','central');
+    numTxt.setAttribute('font-size', isCurrent ? '12' : '9.5');
+    numTxt.setAttribute('font-weight','900');
+    numTxt.setAttribute('fill', isCurrent ? 'white' : (isLocked ? '#BBB' : '#1A1A2E'));
+    numTxt.setAttribute('font-family',"'Space Grotesk','Plus Jakarta Sans',sans-serif");
+    numTxt.textContent = String(num);
+    if (isLocked) numTxt.setAttribute('opacity','0.45');
+    node.appendChild(numTxt);
 
-    // Product icon (bottom line)
-    const icon = document.createElementNS('http://www.w3.org/2000/svg','text');
-    icon.setAttribute('x', div.cx); icon.setAttribute('y', div.cy + 11);
-    icon.setAttribute('text-anchor','middle'); icon.setAttribute('dominant-baseline','central');
-    icon.setAttribute('font-size', '15');
-    if (isLocked) icon.setAttribute('opacity','0.38');
-    icon.textContent = isLocked ? '🔒' : p.icon;
-    node.appendChild(icon);
-
-    // Status badge (top-right of circle)
-    if (isVisited && !isCurrent) {
+    // Checkmark badge for completed stops
+    if (isCompleted) {
       const ck = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      ck.setAttribute('cx', div.cx+22); ck.setAttribute('cy', div.cy-22);
-      ck.setAttribute('r','11'); ck.setAttribute('fill','#28A745');
-      ck.setAttribute('stroke','white'); ck.setAttribute('stroke-width','2');
+      ck.setAttribute('cx', String(stop.cx + r - 2)); ck.setAttribute('cy', String(stop.cy - r + 2));
+      ck.setAttribute('r','6.5'); ck.setAttribute('fill','#28A745');
+      ck.setAttribute('stroke','white'); ck.setAttribute('stroke-width','1.5');
       node.appendChild(ck);
-      const ckTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
-      ckTxt.setAttribute('x', div.cx+22); ckTxt.setAttribute('y', div.cy-22);
-      ckTxt.setAttribute('text-anchor','middle'); ckTxt.setAttribute('dominant-baseline','central');
-      ckTxt.setAttribute('font-size','11'); ckTxt.setAttribute('fill','white'); ckTxt.setAttribute('font-weight','900');
-      ckTxt.textContent = '✓';
-      node.appendChild(ckTxt);
-    }
-    if (isAvailable) {
-      const ab = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      ab.setAttribute('cx', div.cx+22); ab.setAttribute('cy', div.cy-22);
-      ab.setAttribute('r','11'); ab.setAttribute('fill','#28A745');
-      ab.setAttribute('stroke','white'); ab.setAttribute('stroke-width','2');
-      node.appendChild(ab);
-      const abTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
-      abTxt.setAttribute('x', div.cx+22); abTxt.setAttribute('y', div.cy-22);
-      abTxt.setAttribute('text-anchor','middle'); abTxt.setAttribute('dominant-baseline','central');
-      abTxt.setAttribute('font-size','13'); abTxt.setAttribute('fill','white'); abTxt.setAttribute('font-weight','700');
-      abTxt.textContent = '→';
-      node.appendChild(abTxt);
+      const ckT = document.createElementNS('http://www.w3.org/2000/svg','text');
+      ckT.setAttribute('x', String(stop.cx + r - 2)); ckT.setAttribute('y', String(stop.cy - r + 2));
+      ckT.setAttribute('text-anchor','middle'); ckT.setAttribute('dominant-baseline','central');
+      ckT.setAttribute('font-size','7.5'); ckT.setAttribute('fill','white'); ckT.setAttribute('font-weight','900');
+      ckT.textContent = '✓';
+      node.appendChild(ckT);
     }
 
-    if (isAvailable) node.addEventListener('click', () => handleMove(div.id));
-
-    // ℹ Info button (bottom-right)
-    const ib = document.createElementNS('http://www.w3.org/2000/svg','g');
-    ib.setAttribute('class','info-btn');
-    ib.addEventListener('click', e => { e.stopPropagation(); showRegionInfo(div.id); });
-    const ibBg = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    ibBg.setAttribute('cx', div.cx+22); ibBg.setAttribute('cy', div.cy+22);
-    ibBg.setAttribute('r','11');
-    ibBg.setAttribute('fill','rgba(255,255,255,0.92)');
-    ibBg.setAttribute('stroke', p.color); ibBg.setAttribute('stroke-width','2');
-    const ibTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
-    ibTxt.setAttribute('x', div.cx+22); ibTxt.setAttribute('y', div.cy+22);
-    ibTxt.setAttribute('text-anchor','middle'); ibTxt.setAttribute('dominant-baseline','central');
-    ibTxt.setAttribute('font-size','13'); ibTxt.setAttribute('font-weight','900');
-    ibTxt.setAttribute('fill', p.color);
-    ibTxt.textContent = 'i';
-    ib.appendChild(ibBg); ib.appendChild(ibTxt);
-    node.appendChild(ib);
+    if (isCurrent) node.addEventListener('click', () => window.location.href = 'learn.html');
 
     g.appendChild(node);
   });
 
-  // ── Player pawn via CSS transform ──
-  const pos = DIVISIONS[u.position];
+  // Player pawn positioned above current stop
+  const curStop = STOPS[Math.min(currentStop, STOPS.length) - 1];
   const tk = document.getElementById('player-token');
   tk.style.display = 'block';
   if (!tk._init) {
     tk.style.transition = 'none';
-    tk.style.transform  = `translate(${pos.cx}px,${pos.cy}px)`;
+    tk.style.transform  = `translate(${curStop.cx}px,${curStop.cy - 38}px)`;
     tk._init = true;
     requestAnimationFrame(() => {
       tk.style.transition = 'transform 0.82s cubic-bezier(0.34,1.56,0.64,1)';
     });
   } else {
-    tk.style.transform = `translate(${pos.cx}px,${pos.cy}px)`;
+    tk.style.transform = `translate(${curStop.cx}px,${curStop.cy - 38}px)`;
   }
 }
 
 // ── SIDEBAR ──
 function renderSidebar() {
-  const u = getCurrentUser();
+  const u = initUserStops(getCurrentUser());
   document.getElementById('s-points').textContent  = u.points || 0;
   document.getElementById('s-level').textContent   = u.level || 1;
   const _ds = (u.daily || {}).streak || 0;
   document.getElementById('s-streak').textContent  = _ds + ' 🔥';
-  document.getElementById('s-visited').textContent = u.visitedDivisions.length + '/8';
+  const passedCount = Object.values(u.completedStops || {}).filter(s => s.passed).length;
+  document.getElementById('s-visited').textContent = passedCount + '/40';
 
-  const cycleOrder = ['MOS','NW','URAL','SIB','FAR','VOLGA','YUG','CENT'];
+  const divOrder = ['YUG','CENT','MOS','NW','VOLGA','URAL','SIB','FAR'];
+  const cur = u.currentStop || 1;
   const ul = document.getElementById('route-list');
   ul.innerHTML = '';
-  cycleOrder.forEach(id => {
-    const d = DIVISIONS[id];
-    const isCurrent = id === u.position;
-    const isVisited = u.visitedDivisions.includes(id);
-    const passed    = u.completedQuizzes[id]?.passed;
+  divOrder.forEach(divId => {
+    const d = DIVISIONS[divId];
+    const divStops = STOPS.filter(s => s.division === divId);
+    const passedInDiv = divStops.filter(s => u.completedStops?.[s.num]?.passed).length;
+    const isCurDiv  = divStops.some(s => s.num === cur);
+    const isDone    = passedInDiv === divStops.length;
+    const p = PRODUCTS[d.product];
     const li = document.createElement('li');
-    li.className = isCurrent ? 'current' : (isVisited && passed ? 'done' : '');
-    li.innerHTML = `<span class="tick">${isCurrent ? '📍' : (isVisited && passed ? '✓' : '·')}</span>
-      <span style="font-size:.82rem">${d.name} <span style="color:var(--muted);font-size:.75rem">(${PRODUCTS[d.product].name})</span></span>`;
+    li.className = isCurDiv ? 'current' : (isDone ? 'done' : '');
+    li.innerHTML = `<span class="tick">${isCurDiv ? '📍' : (isDone ? '✓' : '·')}</span>
+      <span style="font-size:.8rem">${d.name}
+        <span style="color:var(--muted);font-size:.73rem">${p.name} · ${passedInDiv}/${divStops.length}</span></span>`;
     ul.appendChild(li);
   });
 
@@ -921,12 +898,13 @@ function renderSidebar() {
 
 // ── INFO PANEL ──
 function renderInfoPanel() {
-  const u = getCurrentUser();
-  const div = DIVISIONS[u.position];
-  const p   = PRODUCTS[div.product];
-  const quiz = u.completedQuizzes[u.position];
-  const available = getAvailableMoves(u);
-  const allDone = u.visitedDivisions.length >= 8 && Object.values(u.completedQuizzes).every(q => q.passed);
+  const u = initUserStops(getCurrentUser());
+  const currentStop = u.currentStop || 1;
+  const stop = STOPS[Math.min(currentStop, STOPS.length) - 1];
+  const div  = DIVISIONS[stop.division];
+  const p    = PRODUCTS[stop.product];
+  const quiz = (u.completedStops || {})[currentStop];
+  const allDone = isLinearGameComplete(u);
 
   let html = '';
 
@@ -983,10 +961,10 @@ function renderInfoPanel() {
   </a>`;
 
   // Banner
-  html += `<div class="current-div-banner" style="border-left:4px solid ${div.color}">
+  html += `<div class="current-div-banner" style="border-left:4px solid ${p.color}">
     <div class="big-icon">${p.icon}</div>
     <div>
-      <h3>${div.name}</h3>
+      <h3>Ход ${currentStop} из ${STOPS.length} — ${div.name}</h3>
       <p>${p.fullName} · ${p.company}</p>
       <p style="font-size:.78rem;margin-top:2px;opacity:.75">${p.description}</p>
     </div>
@@ -995,76 +973,56 @@ function renderInfoPanel() {
   if (allDone) {
     html += `<div class="card" style="text-align:center;padding:28px;background:#fff">
       <div style="font-size:3.5rem">🏆</div>
-      <h2 style="margin:10px 0 6px">Вся Россия пройдена!</h2>
-      <p class="text-muted">Вы изучили все 5 инвестиционных продуктов Альфа-Банка, побывали в каждом из 8 дивизионов.</p>
+      <h2 style="margin:10px 0 6px">Вся Альфа-ландия пройдена!</h2>
+      <p class="text-muted">Вы прошли все 40 остановок и изучили все инвестиционные продукты Альфа-Банка!</p>
       <div style="font-size:2rem;font-weight:900;color:var(--red);margin-top:12px">${u.points} очков</div>
       <a href="profile.html"><button class="btn btn-primary" style="margin-top:14px">Посмотреть профиль</button></a>
     </div>`;
   } else if (!quiz || !quiz.passed) {
-    const role = ROLES[u.role];
     html += `<div class="card" style="background:#fff">
-      <div class="section-title">📝 Тест по текущему продукту</div>
+      <div class="section-title">📝 Тест по остановке ${currentStop}</div>
       <p style="font-size:.87rem;color:var(--muted);margin-bottom:14px">
-        Пройдите тест по продукту <strong>${p.fullName}</strong>, чтобы разблокировать передвижение на карте.
+        Пройдите тест по продукту <strong>${p.fullName}</strong>, чтобы продвинуться к следующей остановке.
       </p>
       <div class="grid-2" style="margin-bottom:14px">
         <div style="background:var(--gray);border-radius:10px;padding:12px;text-align:center">
           <div style="font-size:.7rem;color:var(--muted);font-weight:600">ВОПРОСОВ</div>
-          <div style="font-size:1.4rem;font-weight:800">5</div>
+          <div style="font-size:1.4rem;font-weight:800">10</div>
         </div>
         <div style="background:var(--gray);border-radius:10px;padding:12px;text-align:center">
-          <div style="font-size:.7rem;color:var(--muted);font-weight:600">УРОВЕНЬ</div>
-          <div style="font-size:1.4rem;font-weight:800;color:${role.color}">${role.label}</div>
+          <div style="font-size:.7rem;color:var(--muted);font-weight:600">ПОРОГ</div>
+          <div style="font-size:1.4rem;font-weight:800;color:var(--red)">60%</div>
         </div>
       </div>
       ${quiz && !quiz.passed ? `<div class="warning-block mb-16" style="font-size:.85rem">Предыдущий результат: ${quiz.score}/${quiz.maxScore} — попробуйте снова!</div>` : ''}
       <a href="learn.html"><button class="btn btn-primary">📖 Изучить и пройти тест</button></a>
     </div>`;
   } else {
+    const passedCount = Object.values(u.completedStops || {}).filter(s => s.passed).length;
     html += `<div class="card" style="background:#fff">
-      <span class="completed-badge">✅ Тест пройден · ${quiz.score}/${quiz.maxScore} очков</span>`;
-
-    if (available.length === 0) {
-      const unvisited = Object.keys(DIVISIONS).filter(id => !u.visitedDivisions.includes(id));
-      html += unvisited.length > 0
-        ? `<div class="info-block">Все соседние дивизионы уже посещены. Продолжайте путь!</div>`
-        : `<div class="success-block">🎉 Все дивизионы посещены! Пройдите тесты там, где ещё не сдавали.</div>`;
-    } else {
-      html += `<div class="section-title" style="margin-top:6px">🗺️ Выберите следующий дивизион</div>
-        <p style="font-size:.83rem;color:var(--muted);margin-bottom:10px">Нажмите на маркер карты или выберите ниже:</p>
-        <div class="move-options">`;
-      available.forEach(nId => {
-        const nd = DIVISIONS[nId];
-        const np = PRODUCTS[nd.product];
-        html += `<div class="move-card" onclick="handleMove('${nId}')">
-          <div style="font-size:1.5rem;margin-bottom:4px">${np.icon}</div>
-          <div class="div-name">${nd.name}</div>
-          <div class="product-preview">${np.fullName}</div>
-          <div style="margin-top:6px">
-            <span style="display:inline-block;padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;
-              background:${nd.color}20;border:1.5px solid ${nd.color};color:${nd.color}">${np.name}</span>
-          </div>
-        </div>`;
-      });
-      html += `</div>`;
-    }
-    html += `</div>`;
+      <span class="completed-badge">✅ Ход ${currentStop} пройден · ${quiz.score}/${quiz.maxScore} очков</span>
+      <div style="margin-top:10px;background:var(--gray);border-radius:10px;padding:12px;text-align:center">
+        <div style="font-size:.72rem;color:var(--muted);font-weight:600;margin-bottom:3px">ОБЩИЙ ПРОГРЕСС</div>
+        <div style="font-size:1.3rem;font-weight:900;color:var(--red)">${passedCount} / ${STOPS.length}</div>
+        <div style="width:100%;height:6px;background:#eee;border-radius:3px;margin-top:6px;overflow:hidden">
+          <div style="height:100%;background:var(--green);border-radius:3px;width:${Math.round(passedCount/STOPS.length*100)}%;transition:width .5s"></div>
+        </div>
+      </div>
+      ${currentStop < STOPS.length
+        ? `<div class="info-block" style="margin-top:10px">➡️ Следующая: <strong>Ход ${currentStop + 1}</strong> — ${DIVISIONS[STOPS[currentStop].division].name} (${PRODUCTS[STOPS[currentStop].product].name})</div>`
+        : `<div class="success-block" style="margin-top:10px">🎉 Это последняя остановка! Вы прошли всю Альфа-ландию!</div>`}
+    </div>`;
   }
 
   document.getElementById('info-panel').innerHTML = html;
 }
 
-// ── MOVE ──
-function handleMove(divId) {
-  let u = getCurrentUser();
-  if (!canMove(u)) { toast('Сначала пройдите тест!', 'error'); return; }
-  if (!getAvailableMoves(u).includes(divId)) { toast('Этот дивизион недоступен', 'error'); return; }
-  u = moveTo(u, divId);
-  toast('Переход в ' + DIVISIONS[divId].name + '!', 'success');
-  renderAll();
-}
-
 function renderAll() { renderMap(); renderSidebar(); renderInfoPanel(); }
+
+// Migrate old user data to new stop-based format
+const _u = getCurrentUser();
+if (_u && !_u.currentStop) { initUserStops(_u); saveUser(_u); }
+
 renderAll();
 </script>
 </body>

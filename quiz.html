@@ -100,9 +100,12 @@
 const user = requireAuth();
 document.getElementById('nav-user').textContent = user.name.split(' ')[0];
 
-const div     = DIVISIONS[user.position];
-const product = PRODUCTS[div.product];
-const questions = getQuestionsForUser(div.product, user.role);
+initUserStops(user);
+const currentStop = user.currentStop || 1;
+const stop    = STOPS[currentStop - 1];
+const div     = DIVISIONS[stop.division];
+const product = PRODUCTS[stop.product];
+const questions = getQuestionsForStop(currentStop);
 const maxScore = calcMaxScore(questions);
 
 let currentQ  = 0;
@@ -112,7 +115,7 @@ let timerVal  = 90;
 let timerInt  = null;
 let badgesBefore = [...(user.badges || [])];
 
-document.getElementById('div-label').innerHTML = `${product.icon} ${div.name} — <span style="color:var(--muted);font-weight:400">${product.fullName}</span>`;
+document.getElementById('div-label').innerHTML = `${product.icon} Ход ${currentStop} · ${div.name} — <span style="color:var(--muted);font-weight:400">${product.fullName}</span>`;
 
 function toast(msg, type = '') {
   const c = document.getElementById('toast-container');
@@ -225,7 +228,7 @@ function showResult() {
 
   // Save result
   let u = getCurrentUser();
-  u = recordQuizResult(u, user.position, score, maxScore, passed);
+  u = recordStopResult(u, currentStop, score, maxScore, passed);
 
   document.getElementById('quiz-screen').style.display = 'none';
   const rs = document.getElementById('result-screen');

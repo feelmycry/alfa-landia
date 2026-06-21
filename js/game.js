@@ -103,3 +103,89 @@ function getDivisionLeaderboard(divId) {
 function getGlobalLeaderboard() {
   return getAllUsers().sort((a, b) => (b.points || 0) - (a.points || 0));
 }
+
+// ============================================================
+// LINEAR GAME — 40 stops
+// ============================================================
+
+function shuffleArray(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function getAllProductQuestions(productId) {
+  const pool = QUESTIONS[productId];
+  const all = [];
+  ['easy', 'medium', 'hard'].forEach(lvl => {
+    pool[lvl].forEach(q => all.push({ ...q, difficulty: lvl }));
+  });
+  return all;
+}
+
+// Returns 10 questions for a given stop (recycling if pool is smaller than 10)
+function getQuestionsForStop(stopNum) {
+  const stop = STOPS[stopNum - 1];
+  const all = getAllProductQuestions(stop.product);
+  if (all.length >= 10) return shuffleArray(all).slice(0, 10);
+  const result = [];
+  while (result.length < 10) result.push(...shuffleArray(all));
+  return result.slice(0, 10);
+}
+
+function initUserStops(user) {
+  if (!user.currentStop) user.currentStop = 1;
+  if (!user.completedStops) user.completedStops = {};
+  return user;
+}
+
+function canAdvanceStop(user) {
+  const s = user.completedStops || {};
+  return !!(s[user.currentStop || 1]?.passed);
+}
+
+function recordStopResult(user, stopNum, score, maxScore, passed) {
+  initUserStops(user);
+  user.completedStops[stopNum] = { score, maxScore, passed, date: new Date().toISOString() };
+  if (passed) {
+    const pts = score + (score === maxScore ? 50 : 0);
+    user.points = (user.points || 0) + pts;
+    user.xp    = (user.xp    || 0) + pts;
+    user.level = Math.floor(user.xp / 200) + 1;
+    if (stopNum < STOPS.length) user.currentStop = stopNum + 1;
+  }
+  checkStopBadges(user, stopNum, score, maxScore);
+  saveUser(user);
+  return user;
+}
+
+function checkStopBadges(user, stopNum, score, maxScore) {
+  const add = id => { if (!user.badges.includes(id)) user.badges.push(id); };
+  const stops = user.completedStops || {};
+
+  if (Object.keys(stops).length >= 1) add('first_quiz');
+  if (score === maxScore) add('perfect_score');
+
+  const passedCount = Object.values(stops).filter(s => s.passed).length;
+  if (passedCount >= 20) add('half_map');
+  if (passedCount >= 40) add('full_map');
+
+  const stop = STOPS[stopNum - 1];
+  if (stop) {
+    const product = stop.product;
+    const allProd = STOPS.filter(s => s.product === product);
+    if (allProd.every(s => stops[s.num]?.passed) && PRODUCT_BADGES[product]) add(PRODUCT_BADGES[product]);
+  }
+
+  const dailyStreak = (user.daily || {}).streak || 0;
+  if (dailyStreak >= 3) add('streak_3');
+  if (dailyStreak >= 7) add('streak_7');
+}
+
+function isLinearGameComplete(user) {
+  const stops = user.completedStops || {};
+  return STOPS.every(s => stops[s.num]?.passed);
+}
