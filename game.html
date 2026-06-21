@@ -10,7 +10,7 @@
     .game-layout { display: grid; grid-template-columns: 260px 1fr; min-height: calc(100vh - 58px); }
     .sidebar { background: #fff; border-right: 1px solid var(--border); padding: 16px; overflow-y: auto; }
     .main-area { padding: 14px; overflow-y: auto; background: #0A1628; }
-    #map-wrap { width: 100%; border-radius: 18px; overflow: hidden; box-shadow: 0 12px 48px rgba(0,0,0,.6); }
+    #map-wrap { width: 100%; border-radius: 18px; overflow: hidden; box-shadow: 0 16px 56px rgba(0,0,0,.7), 0 4px 16px rgba(0,0,0,.4); }
     #game-map { width: 100%; display: block; }
     #info-panel { margin-top: 12px; }
     .current-div-banner {
@@ -92,30 +92,11 @@
       cursor: pointer; white-space: nowrap;
     }
 
-    /* ── 3D MAP BOARD ── */
-    .map-perspective {
-      perspective: 2400px;
-      perspective-origin: 50% -10%;
-      padding-bottom: 56px;
-    }
-    .map-3d-board {
-      transform: rotateX(13deg);
-      transform-origin: center top;
-      transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
-      border-radius: 18px;
-      overflow: hidden;
-      box-shadow:
-        0 65px 90px rgba(0,0,0,0.72),
-        0 32px 44px rgba(0,0,0,0.48),
-        0 10px 18px rgba(0,0,0,0.32);
-    }
-    .map-3d-board:hover { transform: rotateX(7deg); }
-
     /* ── PLAYER PAWN ── */
     #player-token {
       will-change: transform;
       transition: transform 0.82s cubic-bezier(0.34,1.56,0.64,1);
-      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.6));
+      filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
     }
     #pawn-pulse {
       transform-box: fill-box;
@@ -133,12 +114,11 @@
       80%  { transform: translateY(-3px); }
       100% { transform: translateY(0); }
     }
-    .pawn-bounce { animation: tokenBounce 0.5s ease-out forwards; }
 
     /* ── INFO BUTTON ── */
     .info-btn { cursor: pointer; }
     .info-btn circle { transition: fill 0.15s; }
-    .info-btn:hover circle { fill: #ffffff; }
+    .info-btn:hover circle { fill: #fff; }
 
     /* ── REGION MODAL ── */
     .r-modal {
@@ -223,639 +203,420 @@
   <!-- ═══ MAIN ═══ -->
   <main class="main-area">
     <!-- MAP -->
-    <div class="map-perspective">
-    <div class="map-3d-board">
     <div id="map-wrap">
-      <svg id="game-map" viewBox="0 0 1400 720" xmlns="http://www.w3.org/2000/svg" font-family="'Plus Jakarta Sans',Segoe UI,Arial,sans-serif">
+      <svg id="game-map" viewBox="0 0 1400 720" xmlns="http://www.w3.org/2000/svg" font-family="'Space Grotesk','Plus Jakarta Sans',Segoe UI,Arial,sans-serif">
         <defs>
-          <!-- Ocean -->
-          <linearGradient id="g-ocean" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#4EA8D8"/>
-            <stop offset="50%" stop-color="#3590C0"/>
-            <stop offset="100%" stop-color="#1E72A8"/>
+          <linearGradient id="g-sky" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#C2E8F8"/>
+            <stop offset="100%" stop-color="#78BDD8"/>
           </linearGradient>
-          <!-- Territory gradients -->
-          <linearGradient id="g-far" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1B6038"/>
-            <stop offset="100%" stop-color="#2A7D48"/>
+          <linearGradient id="g-la" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#7ACC58"/>
+            <stop offset="100%" stop-color="#56A83E"/>
           </linearGradient>
-          <linearGradient id="g-sib" x1="0%" y1="100%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#2A7A50"/>
-            <stop offset="55%" stop-color="#1E5F84"/>
-            <stop offset="100%" stop-color="#2468A0"/>
+          <linearGradient id="g-lb" x1="0%" y1="100%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#6ABE50"/>
+            <stop offset="100%" stop-color="#4CA83C"/>
           </linearGradient>
-          <linearGradient id="g-ural" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#267A62"/>
-            <stop offset="100%" stop-color="#185C4C"/>
+          <linearGradient id="g-lc" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#88CC62"/>
+            <stop offset="100%" stop-color="#60A848"/>
           </linearGradient>
-          <linearGradient id="g-nw" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#6030A0"/>
-            <stop offset="100%" stop-color="#482478"/>
+          <linearGradient id="g-ld" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#AACC56"/>
+            <stop offset="100%" stop-color="#86AE3E"/>
           </linearGradient>
-          <linearGradient id="g-cent" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#C87830"/>
-            <stop offset="100%" stop-color="#B06020"/>
-          </linearGradient>
-          <linearGradient id="g-mos" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#C03028"/>
-            <stop offset="100%" stop-color="#A0201A"/>
-          </linearGradient>
-          <linearGradient id="g-volga" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#C88520"/>
-            <stop offset="100%" stop-color="#B07010"/>
-          </linearGradient>
-          <linearGradient id="g-yug" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#1E7A3A"/>
-            <stop offset="100%" stop-color="#166030"/>
-          </linearGradient>
-          <!-- Volcano glow -->
-          <radialGradient id="g-lava" cx="50%" cy="50%">
-            <stop offset="0%" stop-color="#FF6600"/>
-            <stop offset="100%" stop-color="#FF4400" stop-opacity="0"/>
-          </radialGradient>
-          <!-- Filters -->
-          <filter id="f-shadow" x="-8%" y="-8%" width="122%" height="138%">
-            <!-- Soft ambient glow -->
-            <feGaussianBlur in="SourceAlpha" stdDeviation="9" result="blurred"/>
-            <feOffset in="blurred" dx="2" dy="5" result="s-off"/>
-            <feFlood flood-color="rgba(0,0,0,0.38)" result="s-clr"/>
-            <feComposite in="s-clr" in2="blurred" operator="in" result="soft-s"/>
-            <!-- Hard wall extrusion (+5,+14) -->
-            <feFlood flood-color="rgba(10,5,0,0.58)" result="w-clr"/>
-            <feComposite in="w-clr" in2="SourceAlpha" operator="in" result="w-shape"/>
-            <feOffset in="w-shape" dx="5" dy="14" result="wall"/>
-            <!-- Stack: soft shadow → hard wall → surface -->
-            <feMerge>
-              <feMergeNode in="soft-s"/>
-              <feMergeNode in="wall"/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
+          <filter id="f-shadow" x="-6%" y="-6%" width="120%" height="135%">
+            <feDropShadow dx="2" dy="5" stdDeviation="5" flood-color="rgba(0,60,0,0.28)"/>
+          </filter>
+          <filter id="f-node">
+            <feDropShadow dx="0" dy="4" stdDeviation="7" flood-color="rgba(0,0,0,0.22)"/>
+          </filter>
+          <filter id="f-title">
+            <feDropShadow dx="3" dy="3" stdDeviation="4" flood-color="rgba(140,0,0,0.45)"/>
           </filter>
           <filter id="f-card">
-            <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.4)"/>
+            <feDropShadow dx="1" dy="2" stdDeviation="3" flood-color="rgba(0,0,0,0.28)"/>
           </filter>
-          <filter id="f-glow">
-            <feGaussianBlur stdDeviation="5" result="b"/>
-            <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-          </filter>
-          <!-- Clip paths — same polygons as territory borders -->
-          <clipPath id="cp-far">
-            <polygon points="964,50 1030,47 1085,51 1140,59 1190,69 1245,81 1300,94 1352,112 1382,162 1388,244 1386,344 1364,444 1334,514 1272,570 1206,606 1102,652 988,664 916,642 886,598 842,538 964,482 1014,398 1024,232 994,112 964,50"/>
-          </clipPath>
-          <clipPath id="cp-sib">
-            <polygon points="642,58 686,50 728,40 772,28 816,22 858,32 898,48 926,52 964,50 994,112 1024,232 1014,398 964,482 842,538 720,568 622,554 582,488 586,454 650,448 676,382 686,258 676,132 642,58"/>
-          </clipPath>
-          <clipPath id="cp-ural">
-            <polygon points="514,68 538,56 562,42 586,36 608,50 622,62 642,58 676,132 686,258 676,382 650,448 586,454 550,468 576,404 582,294 572,177 552,97 514,68"/>
-          </clipPath>
-          <clipPath id="cp-nw">
-            <polygon points="50,174 50,102 72,83 98,65 122,55 142,68 157,82 170,66 183,80 204,74 250,70 304,68 360,68 414,74 440,120 426,186 386,218 316,228 246,224 180,244 126,258 86,248 52,224 50,174"/>
-          </clipPath>
-          <clipPath id="cp-cent">
-            <polygon points="126,258 180,244 246,224 218,264 236,308 290,322 330,298 356,378 330,444 256,458 180,448 116,418 86,374 90,308 126,258"/>
-          </clipPath>
-          <clipPath id="cp-volga">
-            <polygon points="414,74 516,68 552,97 572,177 582,294 576,404 550,468 500,509 446,524 406,504 392,478 330,444 356,378 330,298 316,228 386,218 426,186 440,120 414,74"/>
-          </clipPath>
-          <clipPath id="cp-yug">
-            <polygon points="86,374 116,418 180,448 256,458 330,444 392,478 376,560 320,614 226,628 152,604 92,564 66,510 70,434 86,374"/>
-          </clipPath>
-          <clipPath id="cp-mos">
-            <polygon points="246,224 316,228 330,298 290,322 236,308 218,264 246,224"/>
-          </clipPath>
-          <!-- Wave pattern for ocean -->
-          <pattern id="p-wave" x="0" y="0" width="80" height="24" patternUnits="userSpaceOnUse">
-            <path d="M0,12 Q20,6 40,12 Q60,18 80,12" stroke="rgba(255,255,255,0.12)" stroke-width="1.5" fill="none"/>
+          <pattern id="p-wave" x="0" y="0" width="68" height="20" patternUnits="userSpaceOnUse">
+            <path d="M0,10 Q17,4 34,10 Q51,16 68,10" stroke="rgba(255,255,255,0.28)" stroke-width="1.6" fill="none"/>
           </pattern>
+          <marker id="arrow-g" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#28A745"/>
+          </marker>
+          <marker id="arrow-r" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#E63946"/>
+          </marker>
         </defs>
 
-        <!-- ══ OCEAN ══ -->
-        <rect width="1400" height="720" fill="url(#g-ocean)"/>
+        <!-- ══ SKY / OCEAN ══ -->
+        <rect width="1400" height="720" fill="url(#g-sky)"/>
         <rect width="1400" height="720" fill="url(#p-wave)"/>
-        <!-- Ocean wave accents -->
-        <g stroke="rgba(255,255,255,0.18)" stroke-width="1.5" fill="none">
-          <path d="M1255,455 Q1280,446 1305,455 Q1330,464 1355,455"/>
-          <path d="M1258,478 Q1283,469 1308,478 Q1333,487 1358,478"/>
-          <path d="M1260,502 Q1285,493 1310,502 Q1335,511 1360,502"/>
-          <path d="M55,590 Q80,581 105,590 Q130,599 155,590"/>
-          <path d="M58,612 Q83,603 108,612 Q133,621 158,612"/>
-          <path d="M62,636 Q87,627 112,636 Q137,645 162,636"/>
+
+        <!-- Waves left (Baltic) -->
+        <g stroke="rgba(255,255,255,0.55)" stroke-width="2" fill="none">
+          <path d="M22,272 Q52,264 82,272 Q112,280 142,272"/>
+          <path d="M18,294 Q48,286 78,294 Q108,302 138,294"/>
+          <path d="M24,318 Q54,310 84,318 Q114,326 144,318"/>
         </g>
-        <!-- Decorative ships -->
-        <g transform="translate(1310,555)" fill="rgba(255,255,255,0.45)" stroke="rgba(255,255,255,0.3)" stroke-width="0.5">
-          <rect x="-14" y="0" width="28" height="5" rx="3"/>
-          <polygon points="0,-14 -9,0 9,0"/>
-          <rect x="-1" y="-14" width="2" height="14"/>
+        <!-- Waves right (Pacific) -->
+        <g stroke="rgba(255,255,255,0.52)" stroke-width="2" fill="none">
+          <path d="M1235,458 Q1268,450 1301,458 Q1334,466 1367,458"/>
+          <path d="M1240,481 Q1273,473 1306,481 Q1339,489 1372,481"/>
+          <path d="M1238,505 Q1271,497 1304,505 Q1337,513 1370,505"/>
         </g>
-        <g transform="translate(115,645)" fill="rgba(255,255,255,0.4)" stroke="rgba(255,255,255,0.25)" stroke-width="0.5">
-          <rect x="-11" y="0" width="22" height="4" rx="2"/>
-          <polygon points="0,-11 -7,0 7,0"/>
-          <rect x="-1" y="-11" width="2" height="11"/>
+        <!-- Waves south -->
+        <g stroke="rgba(255,255,255,0.48)" stroke-width="1.8" fill="none">
+          <path d="M60,654 Q96,646 132,654 Q168,662 204,654"/>
+          <path d="M64,674 Q100,666 136,674 Q172,682 208,674"/>
         </g>
 
-        <!-- ══════════════════════════════════════════ -->
-        <!--  TERRITORY BASE SHAPES                    -->
-        <!-- ══════════════════════════════════════════ -->
+        <!-- ══ TERRITORY SHAPES ══ -->
         <!-- FAR -->
-        <polygon filter="url(#f-shadow)" fill="url(#g-far)" stroke="white" stroke-width="4" stroke-linejoin="round"
+        <polygon filter="url(#f-shadow)" fill="url(#g-la)" stroke="white" stroke-width="3.5" stroke-linejoin="round"
           points="964,50 1030,47 1085,51 1140,59 1190,69 1245,81 1300,94 1352,112 1382,162 1388,244 1386,344 1364,444 1334,514 1272,570 1206,606 1102,652 988,664 916,642 886,598 842,538 964,482 1014,398 1024,232 994,112 964,50"/>
         <!-- SIB -->
-        <polygon filter="url(#f-shadow)" fill="url(#g-sib)" stroke="white" stroke-width="4" stroke-linejoin="round"
+        <polygon filter="url(#f-shadow)" fill="url(#g-lb)" stroke="white" stroke-width="3.5" stroke-linejoin="round"
           points="642,58 686,50 728,40 772,28 816,22 858,32 898,48 926,52 964,50 994,112 1024,232 1014,398 964,482 842,538 720,568 622,554 582,488 586,454 650,448 676,382 686,258 676,132 642,58"/>
         <!-- URAL -->
-        <polygon filter="url(#f-shadow)" fill="url(#g-ural)" stroke="white" stroke-width="4" stroke-linejoin="round"
+        <polygon filter="url(#f-shadow)" fill="url(#g-lc)" stroke="white" stroke-width="3.5" stroke-linejoin="round"
           points="514,68 538,56 562,42 586,36 608,50 622,62 642,58 676,132 686,258 676,382 650,448 586,454 550,468 576,404 582,294 572,177 552,97 514,68"/>
         <!-- NW -->
-        <polygon filter="url(#f-shadow)" fill="url(#g-nw)" stroke="white" stroke-width="4" stroke-linejoin="round"
+        <polygon filter="url(#f-shadow)" fill="url(#g-lb)" stroke="white" stroke-width="3.5" stroke-linejoin="round"
           points="50,174 50,102 72,83 98,65 122,55 142,68 157,82 170,66 183,80 204,74 250,70 304,68 360,68 414,74 440,120 426,186 386,218 316,228 246,224 180,244 126,258 86,248 52,224 50,174"/>
         <!-- VOLGA -->
-        <polygon filter="url(#f-shadow)" fill="url(#g-volga)" stroke="white" stroke-width="4" stroke-linejoin="round"
+        <polygon filter="url(#f-shadow)" fill="url(#g-ld)" stroke="white" stroke-width="3.5" stroke-linejoin="round"
           points="414,74 516,68 552,97 572,177 582,294 576,404 550,468 500,509 446,524 406,504 392,478 330,444 356,378 330,298 316,228 386,218 426,186 440,120 414,74"/>
         <!-- CENT -->
-        <polygon filter="url(#f-shadow)" fill="url(#g-cent)" stroke="white" stroke-width="4" stroke-linejoin="round"
+        <polygon filter="url(#f-shadow)" fill="url(#g-lc)" stroke="white" stroke-width="3.5" stroke-linejoin="round"
           points="126,258 180,244 246,224 218,264 236,308 290,322 330,298 356,378 330,444 256,458 180,448 116,418 86,374 90,308 126,258"/>
         <!-- YUG -->
-        <polygon filter="url(#f-shadow)" fill="url(#g-yug)" stroke="white" stroke-width="4" stroke-linejoin="round"
+        <polygon filter="url(#f-shadow)" fill="url(#g-la)" stroke="white" stroke-width="3.5" stroke-linejoin="round"
           points="86,374 116,418 180,448 256,458 330,444 392,478 376,560 320,614 226,628 152,604 92,564 66,510 70,434 86,374"/>
-        <!-- MOS (top layer) -->
-        <polygon filter="url(#f-shadow)" fill="url(#g-mos)" stroke="white" stroke-width="4" stroke-linejoin="round"
+        <!-- MOS -->
+        <polygon filter="url(#f-shadow)" fill="#88CC65" stroke="white" stroke-width="3.5" stroke-linejoin="round"
           points="246,224 316,228 330,298 290,322 236,308 218,264 246,224"/>
 
-        <!-- ══════════════════════════════════════════ -->
-        <!--  TERRAIN ILLUSTRATIONS PER TERRITORY      -->
-        <!-- ══════════════════════════════════════════ -->
+        <!-- ══ CARTOON ILLUSTRATIONS ══ -->
 
-        <!-- ── FAR (Дальний Восток): volcanoes, pine forests, Pacific coast ── -->
-        <g clip-path="url(#cp-far)">
-          <!-- Snow/ice in north -->
-          <ellipse cx="1055" cy="75" rx="90" ry="32" fill="rgba(220,240,255,0.38)"/>
-          <ellipse cx="1215" cy="105" rx="65" ry="24" fill="rgba(220,240,255,0.3)"/>
-          <!-- Rocky coast highlights -->
-          <ellipse cx="1368" cy="290" rx="30" ry="80" fill="rgba(60,40,20,0.2)"/>
-          <ellipse cx="1375" cy="430" rx="22" ry="55" fill="rgba(60,40,20,0.15)"/>
-          <!-- Pacific shimmer -->
-          <rect x="1370" y="160" width="18" height="360" fill="rgba(80,160,220,0.18)"/>
-
-          <!-- VOLCANO 1 — Ключевская (main, center-north) -->
-          <!-- Far-back shadow -->
-          <polygon points="1050,170 1010,295 1090,295" fill="#3A2010" opacity="0.5"/>
-          <!-- Main body -->
-          <polygon points="1050,170 1015,290 1085,290" fill="#6B3A1C"/>
-          <!-- Lava glow -->
-          <ellipse cx="1050" cy="168" rx="18" ry="11" fill="url(#g-lava)" filter="url(#f-glow)" opacity="0.9"/>
-          <ellipse cx="1050" cy="170" rx="8" ry="5" fill="#FF5500" opacity="0.95"/>
-          <!-- Snow cap (sides) -->
-          <polygon points="1022,220 1035,196 1050,208 1065,196 1078,220" fill="white" opacity="0.88"/>
-          <!-- Smoke plumes -->
-          <circle cx="1048" cy="150" r="13" fill="rgba(160,160,160,0.48)"/>
-          <circle cx="1053" cy="132" r="10" fill="rgba(140,140,140,0.38)"/>
-          <circle cx="1048" cy="117" r="7" fill="rgba(120,120,120,0.28)"/>
-
-          <!-- VOLCANO 2 — smaller, north-east -->
-          <polygon points="1255,248 1228,328 1282,328" fill="#5A3015" opacity="0.9"/>
-          <ellipse cx="1255" cy="246" rx="11" ry="7" fill="#FF5500" filter="url(#f-glow)" opacity="0.75"/>
-          <polygon points="1234,285 1244,264 1255,275 1266,264 1276,285" fill="white" opacity="0.82"/>
-          <circle cx="1254" cy="232" r="9" fill="rgba(160,160,160,0.42)"/>
-          <circle cx="1257" cy="219" r="6" fill="rgba(140,140,140,0.32)"/>
-
-          <!-- VOLCANO 3 — Авачинская, south -->
-          <polygon points="968,408 948,462 988,462" fill="#502A12" opacity="0.88"/>
-          <ellipse cx="968" cy="406" rx="8" ry="5" fill="#FF4400" filter="url(#f-glow)" opacity="0.7"/>
-          <polygon points="952,438 960,420 968,430 976,420 984,438" fill="white" opacity="0.78"/>
-          <circle cx="968" cy="394" r="7" fill="rgba(150,150,150,0.38)"/>
-
-          <!-- Pine forest cluster A (mid-east) -->
-          <circle cx="1105" cy="395" r="30" fill="#0C4A1E" opacity="0.88"/>
-          <circle cx="1138" cy="412" r="26" fill="#185A28" opacity="0.86"/>
-          <circle cx="1152" cy="390" r="22" fill="#0C4A1E" opacity="0.82"/>
-          <circle cx="1165" cy="418" r="24" fill="#145A24" opacity="0.86"/>
-          <circle cx="1120" cy="428" r="21" fill="#185A28" opacity="0.82"/>
-          <!-- Pine forest cluster B (south) -->
-          <circle cx="1055" cy="508" r="26" fill="#0C4A1E" opacity="0.85"/>
-          <circle cx="1082" cy="526" r="23" fill="#185A28" opacity="0.83"/>
-          <circle cx="1098" cy="510" r="20" fill="#0C4A1E" opacity="0.8"/>
-          <circle cx="1068" cy="540" r="18" fill="#145A24" opacity="0.78"/>
-          <!-- Pine forest cluster C -->
-          <circle cx="950" cy="578" r="23" fill="#0C4A1E" opacity="0.85"/>
-          <circle cx="976" cy="596" r="20" fill="#185A28" opacity="0.82"/>
-          <circle cx="962" cy="612" r="17" fill="#0C4A1E" opacity="0.78"/>
+        <!-- ── FAR: Volcanoes, pines, deer ── -->
+        <!-- Volcano 1 (Ключевская) -->
+        <polygon points="1055,278 1012,170 1098,170" fill="#8B6030"/>
+        <polygon points="1055,203 1036,232 1074,232" fill="white" opacity="0.9"/>
+        <ellipse cx="1055" cy="170" rx="17" ry="11" fill="#FF5500"/>
+        <circle cx="1054" cy="154" r="15" fill="rgba(195,195,195,0.78)"/>
+        <circle cx="1059" cy="137" r="11" fill="rgba(175,175,175,0.65)"/>
+        <circle cx="1054" cy="123" r="8" fill="rgba(155,155,155,0.5)"/>
+        <!-- Volcano 2 -->
+        <polygon points="1262,335 1231,260 1293,260" fill="#7A5028"/>
+        <polygon points="1262,289 1248,314 1276,314" fill="white" opacity="0.88"/>
+        <ellipse cx="1262" cy="260" rx="12" ry="8" fill="#FF4400" opacity="0.95"/>
+        <circle cx="1262" cy="246" r="10" fill="rgba(190,190,190,0.68)"/>
+        <circle cx="1265" cy="234" r="7" fill="rgba(170,170,170,0.55)"/>
+        <!-- Pine tree cluster FAR -->
+        <g opacity="0.95">
+          <g transform="translate(1108,382)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
+          <g transform="translate(1136,395)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-40 -16,0 16,0" fill="#1A6010"/><polygon points="0,-57 -12,-24 12,-24" fill="#207414"/></g>
+          <g transform="translate(1162,378)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
+          <g transform="translate(1096,452)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-40 -16,0 16,0" fill="#1A6010"/><polygon points="0,-57 -12,-24 12,-24" fill="#207414"/></g>
+          <g transform="translate(1122,466)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
+        </g>
+        <!-- Deer/Reindeer (FAR) -->
+        <g transform="translate(1195,445)">
+          <ellipse rx="19" ry="12" cy="3" fill="#A06030"/>
+          <circle cx="-9" cy="-14" r="10" fill="#A06030"/>
+          <ellipse cx="-4" cy="-17" rx="4" ry="3" fill="#C07848"/>
+          <line x1="-14" y1="-22" x2="-23" y2="-38" stroke="#7A4820" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="-23" y1="-38" x2="-30" y2="-30" stroke="#7A4820" stroke-width="2" stroke-linecap="round"/>
+          <line x1="-23" y1="-38" x2="-16" y2="-30" stroke="#7A4820" stroke-width="2" stroke-linecap="round"/>
+          <line x1="-5" y1="-23" x2="2" y2="-38" stroke="#7A4820" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="2" y1="-38" x2="8" y2="-30" stroke="#7A4820" stroke-width="2" stroke-linecap="round"/>
+          <rect x="-16" y="13" width="5" height="15" rx="2.5" fill="#8B5030"/>
+          <rect x="-6" y="13" width="5" height="15" rx="2.5" fill="#8B5030"/>
+          <rect x="4" y="13" width="5" height="15" rx="2.5" fill="#8B5030"/>
+          <rect x="14" y="13" width="5" height="15" rx="2.5" fill="#8B5030"/>
+        </g>
+        <!-- Crab (Pacific) -->
+        <g transform="translate(1370,606)" opacity="0.92">
+          <ellipse rx="16" ry="12" fill="#E84545" stroke="#C02020" stroke-width="1.5"/>
+          <line x1="-16" y1="-3" x2="-28" y2="-12" stroke="#E84545" stroke-width="3" stroke-linecap="round"/>
+          <line x1="-16" y1="4" x2="-28" y2="10" stroke="#E84545" stroke-width="3" stroke-linecap="round"/>
+          <line x1="16" y1="-3" x2="28" y2="-12" stroke="#E84545" stroke-width="3" stroke-linecap="round"/>
+          <line x1="16" y1="4" x2="28" y2="10" stroke="#E84545" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="-5" cy="-3" r="2.5" fill="white"/><circle cx="5" cy="-3" r="2.5" fill="white"/>
+          <circle cx="-5" cy="-3" r="1.2" fill="#333"/><circle cx="5" cy="-3" r="1.2" fill="#333"/>
         </g>
 
-        <!-- ── SIB (Сибирь): taiga, Lake Baikal, rivers ── -->
-        <g clip-path="url(#cp-sib)">
-          <!-- North snow/ice -->
-          <ellipse cx="835" cy="48" rx="110" ry="30" fill="rgba(220,240,255,0.42)"/>
-          <ellipse cx="700" cy="65" rx="70" ry="22" fill="rgba(220,240,255,0.35)"/>
-
-          <!-- Lake Baikal — elongated, rotated -->
-          <ellipse cx="900" cy="345" rx="28" ry="95" fill="#3A9BD5" opacity="0.82" transform="rotate(-18,900,345)"/>
-          <ellipse cx="900" cy="345" rx="18" ry="82" fill="#5AC0F5" opacity="0.42" transform="rotate(-18,900,345)"/>
-          <ellipse cx="893" cy="308" rx="7" ry="28" fill="rgba(255,255,255,0.22)" transform="rotate(-18,893,308)"/>
-
-          <!-- Ob River -->
-          <path d="M725,58 C732,128 740,195 736,265 C732,330 722,390 714,450"
-                stroke="#4AABDB" stroke-width="8" fill="none" stroke-linecap="round" opacity="0.68"/>
-          <path d="M725,58 C732,128 740,195 736,265 C732,330 722,390 714,450"
-                stroke="rgba(255,255,255,0.22)" stroke-width="3" fill="none" stroke-linecap="round"/>
-          <!-- Yenisei River -->
-          <path d="M822,35 C828,105 832,168 830,235 C828,305 822,362 818,435"
-                stroke="#4AABDB" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.58"/>
-
-          <!-- Taiga cluster NW -->
-          <circle cx="682" cy="118" r="24" fill="#0A4820" opacity="0.82"/>
-          <circle cx="708" cy="135" r="21" fill="#185A28" opacity="0.8"/>
-          <circle cx="666" cy="140" r="19" fill="#0A4820" opacity="0.76"/>
-          <!-- Taiga cluster central -->
-          <circle cx="773" cy="198" r="27" fill="#0A4020" opacity="0.8"/>
-          <circle cx="804" cy="214" r="23" fill="#165A28" opacity="0.8"/>
-          <circle cx="788" cy="236" r="21" fill="#0A4020" opacity="0.76"/>
-          <circle cx="762" cy="225" r="18" fill="#185A28" opacity="0.75"/>
-          <!-- Taiga cluster west of Baikal -->
-          <circle cx="822" cy="196" r="29" fill="#0C4820" opacity="0.8"/>
-          <circle cx="852" cy="218" r="25" fill="#165828" opacity="0.8"/>
-          <circle cx="838" cy="244" r="22" fill="#0C4820" opacity="0.76"/>
-          <!-- East of Baikal forest -->
-          <circle cx="952" cy="298" r="23" fill="#0C4820" opacity="0.78"/>
-          <circle cx="977" cy="316" r="20" fill="#165828" opacity="0.76"/>
-          <circle cx="942" cy="322" r="17" fill="#0C4820" opacity="0.72"/>
-          <!-- South mountains (Altai/Sayan) -->
-          <polygon points="645,470 622,545 668,545" fill="#5A6C5A" opacity="0.62"/>
-          <polygon points="645,470 637,492 653,492" fill="white" opacity="0.52"/>
-          <polygon points="675,455 652,532 698,532" fill="#6A7C6A" opacity="0.62"/>
-          <polygon points="675,455 667,477 683,477" fill="white" opacity="0.52"/>
-          <polygon points="700,448 678,525 722,525" fill="#5A6C5A" opacity="0.58"/>
-          <polygon points="700,448 692,470 708,470" fill="white" opacity="0.48"/>
+        <!-- ── SIB: Baikal, bear, pines, train ── -->
+        <!-- Lake Baikal -->
+        <ellipse cx="904" cy="362" rx="21" ry="70" fill="#4AA8DC" stroke="white" stroke-width="2" transform="rotate(-18,904,362)" opacity="0.9"/>
+        <!-- Bear -->
+        <g transform="translate(864,398)">
+          <ellipse rx="21" ry="16" cy="4" fill="#5A3418"/>
+          <circle cx="-6" cy="-17" r="12" fill="#5A3418"/>
+          <circle cx="-14" cy="-27" r="6.5" fill="#5A3418"/>
+          <circle cx="-1" cy="-28" r="6" fill="#5A3418"/>
+          <ellipse cx="-4" cy="-13" rx="6" ry="4.5" fill="#8B6044"/>
+          <circle cx="-7" cy="-12" r="1.7" fill="#333"/>
+          <circle cx="-2" cy="-12" r="1.7" fill="#333"/>
+          <ellipse cx="-14" cy="18" rx="6.5" ry="4.5" fill="#5A3418"/>
+          <ellipse cx="4" cy="19" rx="6.5" ry="4.5" fill="#5A3418"/>
+        </g>
+        <!-- Train (Trans-Siberian) -->
+        <g transform="translate(748,322)">
+          <rect x="-34" y="-12" width="68" height="22" rx="5" fill="#E84444" stroke="white" stroke-width="1.5"/>
+          <rect x="-34" y="-12" width="24" height="22" rx="4" fill="#CC3333"/>
+          <circle cx="-27" cy="12" r="6" fill="#444" stroke="white" stroke-width="1.2"/>
+          <circle cx="27" cy="12" r="6" fill="#444" stroke="white" stroke-width="1.2"/>
+          <rect x="-15" y="-9" width="9" height="9" rx="1.5" fill="rgba(255,255,255,0.85)"/>
+          <rect x="2" y="-9" width="9" height="9" rx="1.5" fill="rgba(255,255,255,0.85)"/>
+          <rect x="18" y="-9" width="9" height="9" rx="1.5" fill="rgba(255,255,255,0.85)"/>
+        </g>
+        <!-- Pine trees SIB -->
+        <g opacity="0.92">
+          <g transform="translate(698,252)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
+          <g transform="translate(726,242)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-40 -16,0 16,0" fill="#1A6010"/><polygon points="0,-57 -12,-24 12,-24" fill="#207414"/></g>
+          <g transform="translate(752,260)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
+          <g transform="translate(958,282)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-40 -16,0 16,0" fill="#1A6010"/><polygon points="0,-57 -12,-24 12,-24" fill="#207414"/></g>
+          <g transform="translate(982,298)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
         </g>
 
-        <!-- ── URAL (Урал): mountain chain north–south ── -->
-        <g clip-path="url(#cp-ural)">
-          <!-- Back ridge (dark) -->
-          <polygon points="552,88 530,172 574,172" fill="#3C4E3C" opacity="0.55"/>
-          <polygon points="582,68 558,158 606,158" fill="#445444" opacity="0.6"/>
-          <polygon points="614,54 590,146 638,146" fill="#3C4E3C" opacity="0.55"/>
-          <polygon points="640,64 618,152 662,152" fill="#445444" opacity="0.6"/>
-          <!-- Main peaks -->
-          <polygon points="552,88 532,162 572,162" fill="#6E826E"/>
-          <polygon points="582,68 560,150 604,150" fill="#809080"/>
-          <polygon points="614,54 590,140 638,140" fill="#6E826E"/>
-          <polygon points="640,64 620,148 660,148" fill="#809080"/>
-          <!-- Snow caps -->
-          <polygon points="552,88 540,116 564,116" fill="white" opacity="0.88"/>
-          <polygon points="582,68 570,96 594,96" fill="white" opacity="0.92"/>
-          <polygon points="614,54 602,82 626,82" fill="white" opacity="0.92"/>
-          <polygon points="640,64 628,92 652,92" fill="white" opacity="0.88"/>
-          <!-- Mid-chain mountains -->
-          <polygon points="562,182 540,264 584,264" fill="#5C6E5C" opacity="0.72"/>
-          <polygon points="592,174 568,254 616,254" fill="#6C7E6C" opacity="0.72"/>
-          <polygon points="620,182 598,258 642,258" fill="#5C6E5C" opacity="0.72"/>
-          <polygon points="562,182 554,204 570,204" fill="white" opacity="0.76"/>
-          <polygon points="592,174 584,198 600,198" fill="white" opacity="0.8"/>
-          <polygon points="620,182 612,204 628,204" fill="white" opacity="0.76"/>
-          <!-- South chain -->
-          <polygon points="558,295 538,378 578,378" fill="#566856" opacity="0.66"/>
-          <polygon points="582,284 562,366 602,366" fill="#667668" opacity="0.66"/>
-          <polygon points="610,290 590,372 630,372" fill="#566856" opacity="0.62"/>
-          <polygon points="558,295 550,318 566,318" fill="white" opacity="0.68"/>
-          <polygon points="582,284 574,308 590,308" fill="white" opacity="0.72"/>
-          <polygon points="610,290 602,314 618,314" fill="white" opacity="0.66"/>
-          <!-- East-slope forest -->
-          <circle cx="665" cy="196" r="20" fill="#0C4820" opacity="0.7"/>
-          <circle cx="683" cy="212" r="17" fill="#185828" opacity="0.7"/>
-          <circle cx="650" cy="222" r="15" fill="#0C4820" opacity="0.65"/>
-          <!-- West-slope forest -->
-          <circle cx="524" cy="308" r="17" fill="#0C4820" opacity="0.65"/>
-          <circle cx="542" cy="326" r="15" fill="#185828" opacity="0.65"/>
+        <!-- ── URAL: Mountains ── -->
+        <g transform="translate(568,172)">
+          <polygon points="-54,92 -20,0 14,92" fill="#9AB49A" opacity="0.62"/>
+          <polygon points="8,92 45,-12 82,92" fill="#ACBCAC" opacity="0.62"/>
+          <polygon points="-52,92 -24,8 4,92" fill="#7A9A7A"/>
+          <polygon points="-4,92 34,-12 72,92" fill="#8AAA8A"/>
+          <polygon points="46,92 80,4 114,92" fill="#7A9A7A"/>
+          <polygon points="-24,8 -38,44 -10,44" fill="white" opacity="0.93"/>
+          <polygon points="34,-12 18,26 50,26" fill="white" opacity="0.96"/>
+          <polygon points="80,4 64,42 96,42" fill="white" opacity="0.93"/>
         </g>
 
-        <!-- ── NW (Северо-Запад): lakes, pine forests, Baltic coast ── -->
-        <g clip-path="url(#cp-nw)">
-          <!-- Baltic coast tint -->
-          <ellipse cx="60" cy="138" rx="22" ry="58" fill="rgba(60,130,210,0.28)"/>
-          <!-- Lake Ladoga (large) -->
-          <ellipse cx="244" cy="132" rx="48" ry="68" fill="#4A90D5" opacity="0.76"/>
-          <ellipse cx="244" cy="132" rx="34" ry="54" fill="#5AB8F5" opacity="0.38"/>
-          <ellipse cx="237" cy="104" rx="12" ry="22" fill="rgba(255,255,255,0.18)"/>
-          <!-- Lake Onega -->
-          <ellipse cx="154" cy="116" rx="22" ry="42" fill="#4A90D5" opacity="0.7"/>
-          <ellipse cx="154" cy="116" rx="13" ry="30" fill="#5AB8F5" opacity="0.32"/>
-          <!-- Small lakes -->
-          <ellipse cx="340" cy="88" rx="15" ry="9" fill="#5AB8F5" opacity="0.62"/>
-          <ellipse cx="395" cy="130" rx="11" ry="7" fill="#5AB8F5" opacity="0.58"/>
-          <ellipse cx="100" cy="90" rx="9" ry="6" fill="#5AB8F5" opacity="0.55"/>
-          <!-- Pine forests (west) -->
-          <circle cx="100" cy="175" r="21" fill="#0C4820" opacity="0.82"/>
-          <circle cx="124" cy="192" r="19" fill="#185A28" opacity="0.82"/>
-          <circle cx="108" cy="204" r="17" fill="#0C4820" opacity="0.76"/>
-          <!-- East cluster -->
-          <circle cx="372" cy="156" r="19" fill="#0C4820" opacity="0.78"/>
-          <circle cx="394" cy="170" r="17" fill="#185A28" opacity="0.78"/>
-          <circle cx="357" cy="170" r="15" fill="#0C4820" opacity="0.72"/>
-          <!-- South cluster -->
-          <circle cx="310" cy="196" r="17" fill="#0C4820" opacity="0.75"/>
-          <circle cx="332" cy="212" r="15" fill="#185A28" opacity="0.75"/>
-          <!-- Rocky northern coast -->
-          <path d="M52,104 Q72,86 92,76 Q112,68 132,60" stroke="rgba(60,50,40,0.3)" stroke-width="6" fill="none" stroke-linecap="round"/>
-          <!-- Marshland patches -->
-          <ellipse cx="194" cy="218" rx="24" ry="13" fill="rgba(80,170,80,0.28)"/>
-          <ellipse cx="280" cy="208" rx="18" ry="10" fill="rgba(80,170,80,0.24)"/>
-          <!-- Snow hint (north) -->
-          <ellipse cx="165" cy="68" rx="40" ry="12" fill="rgba(220,235,255,0.3)"/>
+        <!-- ── NW: Ship, Ladoga, pines, gulls ── -->
+        <!-- Lake Ladoga -->
+        <ellipse cx="246" cy="134" rx="40" ry="57" fill="#5AAAD8" stroke="rgba(255,255,255,0.65)" stroke-width="2" opacity="0.84"/>
+        <!-- Ship (Baltic) -->
+        <g transform="translate(52,248)">
+          <rect x="-23" y="0" width="46" height="11" rx="5.5" fill="#5588CC" stroke="white" stroke-width="1.5"/>
+          <rect x="-15" y="-18" width="30" height="18" rx="2" fill="#6698DC" stroke="white" stroke-width="1"/>
+          <rect x="-2" y="-34" width="4" height="18" fill="#AA4444"/>
+          <rect x="-2" y="-37" width="11" height="7" rx="1" fill="#EE4444"/>
+        </g>
+        <!-- Seagulls -->
+        <g stroke="#336688" stroke-width="2" fill="none" opacity="0.72">
+          <path d="M78,208 Q86,202 94,208"/>
+          <path d="M99,194 Q107,188 115,194"/>
+          <path d="M66,222 Q74,216 82,222"/>
+        </g>
+        <!-- Pine trees NW -->
+        <g opacity="0.9">
+          <g transform="translate(130,188)"><rect x="-3" y="0" width="6" height="12" fill="#7B5533"/><polygon points="0,-36 -15,0 15,0" fill="#1A6010"/><polygon points="0,-52 -11,-20 11,-20" fill="#207414"/></g>
+          <g transform="translate(152,200)"><rect x="-3" y="0" width="6" height="12" fill="#7B5533"/><polygon points="0,-34 -13,0 13,0" fill="#1E6B14"/><polygon points="0,-49 -10,-20 10,-20" fill="#248018"/></g>
+          <g transform="translate(140,212)"><rect x="-3" y="0" width="6" height="12" fill="#7B5533"/><polygon points="0,-34 -14,0 14,0" fill="#1A6010"/><polygon points="0,-49 -10,-20 10,-20" fill="#207414"/></g>
+          <g transform="translate(372,157)"><rect x="-3" y="0" width="6" height="12" fill="#7B5533"/><polygon points="0,-34 -13,0 13,0" fill="#1E6B14"/><polygon points="0,-49 -10,-20 10,-20" fill="#248018"/></g>
+          <g transform="translate(394,170)"><rect x="-3" y="0" width="6" height="12" fill="#7B5533"/><polygon points="0,-34 -13,0 13,0" fill="#1A6010"/><polygon points="0,-49 -10,-20 10,-20" fill="#207414"/></g>
         </g>
 
-        <!-- ── CENT (Центральный): plains, birch forests, rivers ── -->
-        <g clip-path="url(#cp-cent)">
-          <!-- Rolling plains (lighter amber patches) -->
-          <ellipse cx="168" cy="315" rx="58" ry="32" fill="rgba(220,160,70,0.3)"/>
-          <ellipse cx="215" cy="406" rx="48" ry="28" fill="rgba(220,160,70,0.25)"/>
-          <ellipse cx="295" cy="358" rx="36" ry="22" fill="rgba(220,160,70,0.2)"/>
-          <!-- Oka River -->
-          <path d="M140,282 C156,312 166,344 176,382 C186,415 192,438 196,458"
-                stroke="#4AABDB" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.65"/>
-          <path d="M140,282 C156,312 166,344 176,382 C186,415 192,438 196,458"
-                stroke="rgba(255,255,255,0.22)" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <!-- Birch/mixed forest -->
-          <circle cx="252" cy="322" r="17" fill="#2A6A40" opacity="0.72"/>
-          <circle cx="272" cy="338" r="15" fill="#3A7A50" opacity="0.72"/>
-          <circle cx="256" cy="350" r="14" fill="#2A6A40" opacity="0.68"/>
-          <circle cx="302" cy="414" r="15" fill="#2A6A40" opacity="0.68"/>
-          <circle cx="318" cy="428" r="13" fill="#3A7A50" opacity="0.68"/>
-          <!-- Hill bumps -->
-          <ellipse cx="138" cy="360" rx="30" ry="14" fill="rgba(180,110,40,0.28)"/>
-          <ellipse cx="188" cy="294" rx="24" ry="10" fill="rgba(180,110,40,0.24)"/>
+        <!-- ── CENT: Birches, hills ── -->
+        <g transform="translate(250,337)">
+          <rect x="-3" y="-34" width="6" height="47" rx="3" fill="white" stroke="#CCCCCC" stroke-width="0.8"/>
+          <circle cx="0" cy="-36" r="17" fill="#58A840" opacity="0.88"/>
+          <circle cx="0" cy="-44" r="11" fill="#66B84E" opacity="0.82"/>
+        </g>
+        <g transform="translate(272,324)">
+          <rect x="-3" y="-30" width="6" height="42" rx="3" fill="white" stroke="#CCCCCC" stroke-width="0.8"/>
+          <circle cx="0" cy="-32" r="15" fill="#58A840" opacity="0.85"/>
+          <circle cx="0" cy="-40" r="9" fill="#66B84E" opacity="0.8"/>
+        </g>
+        <g transform="translate(308,410)">
+          <rect x="-3" y="-28" width="6" height="40" rx="3" fill="white" stroke="#CCCCCC" stroke-width="0.8"/>
+          <circle cx="0" cy="-30" r="14" fill="#58A840" opacity="0.85"/>
+        </g>
+        <path d="M130,392 Q158,376 186,392 Q214,408 242,392" stroke="rgba(55,130,38,0.3)" stroke-width="3" fill="none"/>
+        <path d="M134,410 Q162,394 190,410 Q218,426 246,410" stroke="rgba(55,130,38,0.22)" stroke-width="2.5" fill="none"/>
+
+        <!-- ── MOS: Kremlin ── -->
+        <g transform="translate(268,270)">
+          <rect x="-20" y="-9" width="40" height="15" fill="#CC3333" opacity="0.9"/>
+          <rect x="-20" y="-15" width="7" height="7" fill="#DD4444" opacity="0.85"/>
+          <rect x="-8" y="-15" width="7" height="7" fill="#DD4444" opacity="0.85"/>
+          <rect x="4" y="-15" width="7" height="7" fill="#DD4444" opacity="0.85"/>
+          <rect x="14" y="-15" width="7" height="7" fill="#DD4444" opacity="0.85"/>
+          <rect x="-5" y="-30" width="10" height="17" fill="#E84444"/>
+          <polygon points="-5,-30 5,-30 0,-40" fill="#CC3333"/>
+          <circle cx="0" cy="-44" r="5.5" fill="#FFD700"/>
         </g>
 
-        <!-- ── MOS (Москва): kremlin, Moskva river ── -->
-        <g clip-path="url(#cp-mos)">
-          <rect x="220" y="232" width="100" height="62" fill="rgba(80,18,10,0.18)" rx="2"/>
-          <!-- Kremlin tower -->
-          <rect x="262" y="240" width="11" height="20" fill="rgba(140,28,18,0.75)"/>
-          <polygon points="262,240 267.5,231 273,240" fill="rgba(170,28,18,0.85)"/>
-          <circle cx="267" cy="230" r="3" fill="rgba(255,210,0,0.85)"/>
-          <!-- Moskva River bend -->
-          <path d="M224,278 C242,272 267,270 288,275 C308,280 322,288 330,294"
-                stroke="#4AABDB" stroke-width="4" fill="none" opacity="0.72"/>
-          <!-- Gold stars -->
-          <text x="246" y="250" font-size="7" fill="rgba(255,210,0,0.82)">★</text>
-          <text x="280" y="260" font-size="7" fill="rgba(255,210,0,0.82)">★</text>
-          <!-- City blocks -->
-          <rect x="230" y="242" width="28" height="14" rx="1" fill="rgba(150,30,20,0.22)"/>
-          <rect x="264" y="262" width="22" height="12" rx="1" fill="rgba(150,30,20,0.2)"/>
-          <rect x="292" y="248" width="24" height="14" rx="1" fill="rgba(150,30,20,0.2)"/>
+        <!-- ── VOLGA: River, boat, sunflower ── -->
+        <path d="M445,94 C450,150 456,210 462,270 C468,330 457,382 446,427 C436,464 428,490 426,512"
+              stroke="#5AAAD8" stroke-width="12" fill="none" stroke-linecap="round" opacity="0.74"/>
+        <path d="M445,94 C450,150 456,210 462,270 C468,330 457,382 446,427 C436,464 428,490 426,512"
+              stroke="rgba(255,255,255,0.35)" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <g transform="translate(460,300)">
+          <rect x="-14" y="0" width="28" height="9" rx="4.5" fill="white" stroke="#5AAAD8" stroke-width="1.5"/>
+          <rect x="-10" y="-14" width="20" height="14" rx="2" fill="white" opacity="0.9"/>
+          <rect x="-1" y="-22" width="3" height="10" fill="#AA4444"/>
+          <rect x="-1" y="-25" width="10" height="6" rx="1" fill="#EE5555"/>
+        </g>
+        <!-- Sunflower -->
+        <g transform="translate(372,195)">
+          <line x1="0" y1="10" x2="0" y2="38" stroke="#3A8020" stroke-width="4" stroke-linecap="round"/>
+          <g transform="rotate(0)"><rect x="-4.5" y="-26" width="9" height="17" rx="4.5" fill="#F4D420"/></g>
+          <g transform="rotate(45)"><rect x="-4.5" y="-26" width="9" height="17" rx="4.5" fill="#F4D420"/></g>
+          <g transform="rotate(90)"><rect x="-4.5" y="-26" width="9" height="17" rx="4.5" fill="#F4D420"/></g>
+          <g transform="rotate(135)"><rect x="-4.5" y="-26" width="9" height="17" rx="4.5" fill="#F4D420"/></g>
+          <g transform="rotate(180)"><rect x="-4.5" y="-26" width="9" height="17" rx="4.5" fill="#F4D420"/></g>
+          <g transform="rotate(225)"><rect x="-4.5" y="-26" width="9" height="17" rx="4.5" fill="#F4D420"/></g>
+          <g transform="rotate(270)"><rect x="-4.5" y="-26" width="9" height="17" rx="4.5" fill="#F4D420"/></g>
+          <g transform="rotate(315)"><rect x="-4.5" y="-26" width="9" height="17" rx="4.5" fill="#F4D420"/></g>
+          <circle r="11" fill="#F4A261"/>
+          <circle r="6.5" fill="#5A3010"/>
         </g>
 
-        <!-- ── VOLGA (Поволжье): Volga river, steppes ── -->
-        <g clip-path="url(#cp-volga)">
-          <!-- Steppe lighter patches -->
-          <ellipse cx="422" cy="182" rx="58" ry="32" fill="rgba(220,178,55,0.3)"/>
-          <ellipse cx="458" cy="304" rx="54" ry="30" fill="rgba(220,178,55,0.26)"/>
-          <ellipse cx="432" cy="432" rx="42" ry="24" fill="rgba(220,178,55,0.22)"/>
-          <!-- Volga River — main feature -->
-          <path d="M448,88 C454,144 460,198 464,254 C468,308 457,358 446,408 C436,450 429,472 426,498"
-                stroke="#38A0D8" stroke-width="11" fill="none" stroke-linecap="round" opacity="0.78"/>
-          <path d="M448,88 C454,144 460,198 464,254 C468,308 457,358 446,408 C436,450 429,472 426,498"
-                stroke="rgba(255,255,255,0.32)" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <path d="M450,120 C454,168 460,215 462,268"
-                stroke="rgba(255,255,255,0.22)" stroke-width="2" fill="none" stroke-linecap="round"/>
-          <!-- Riverboat -->
-          <g transform="translate(461,316)">
-            <rect x="-11" y="0" width="22" height="5" rx="2.5" fill="rgba(255,255,255,0.62)"/>
-            <rect x="-7" y="-8" width="14" height="8" fill="rgba(255,255,255,0.52)"/>
-            <rect x="-1" y="-14" width="2" height="7" fill="rgba(255,255,255,0.42)"/>
-          </g>
-          <!-- Rolling hills -->
-          <path d="M332,440 Q358,428 384,440 Q410,452 436,440" stroke="rgba(190,140,42,0.3)" stroke-width="3" fill="none"/>
-          <path d="M335,458 Q362,446 388,458 Q415,470 442,458" stroke="rgba(190,140,42,0.22)" stroke-width="2.5" fill="none"/>
-          <!-- Small forest -->
-          <circle cx="372" cy="140" r="15" fill="#2A6A40" opacity="0.65"/>
-          <circle cx="390" cy="155" r="13" fill="#3A7A50" opacity="0.65"/>
+        <!-- ── YUG: Caucasus, palms, Black Sea ── -->
+        <!-- Black Sea -->
+        <ellipse cx="80" cy="582" rx="35" ry="22" fill="#5AAAD8" opacity="0.58" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
+        <text x="80" y="580" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.88)" font-weight="700">Чёрное</text>
+        <text x="80" y="591" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.88)" font-weight="700">море</text>
+        <!-- Caucasus mountains -->
+        <g transform="translate(205,420)">
+          <polygon points="-92,72 -50,-22 -8,72" fill="#9AB49A"/>
+          <polygon points="-42,72 6,-32 54,72" fill="#ACBCAC"/>
+          <polygon points="22,72 62,-20 102,72" fill="#9AB49A"/>
+          <polygon points="-50,-22 -66,14 -34,14" fill="white" opacity="0.94"/>
+          <polygon points="6,-32 -10,6 22,6" fill="white" opacity="0.96"/>
+          <polygon points="62,-20 46,16 78,16" fill="white" opacity="0.94"/>
+        </g>
+        <!-- Fish in Black Sea -->
+        <g transform="translate(50,604)" opacity="0.88">
+          <ellipse rx="14" ry="9" fill="#4477CC" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/>
+          <polygon points="14,-5 26,0 14,5" fill="#4477CC" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+          <circle cx="-5" cy="-2" r="2.5" fill="white"/><circle cx="-4" cy="-2" r="1.2" fill="#333"/>
+        </g>
+        <!-- Palm trees -->
+        <g transform="translate(157,514)">
+          <path d="M0,32 C2,20 1,2 0,-26" stroke="#8B6533" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-26 C-24,-42 -32,-34 -28,-24" stroke="#2D8A1E" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-26 C-9,-46 -5,-50 2,-44" stroke="#3A9E28" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-26 C15,-42 22,-36 18,-26" stroke="#2D8A1E" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-26 C24,-40 28,-32 22,-22" stroke="#3A9E28" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(180,530)">
+          <path d="M0,28 C2,18 1,0 0,-22" stroke="#8B6533" stroke-width="4" fill="none" stroke-linecap="round"/>
+          <path d="M0,-22 C-18,-36 -26,-28 -22,-18" stroke="#2D8A1E" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-22 C-7,-40 -3,-42 2,-36" stroke="#3A9E28" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-22 C16,-34 20,-26 14,-18" stroke="#2D8A1E" stroke-width="5" fill="none" stroke-linecap="round"/>
         </g>
 
-        <!-- ── YUG (Юг): Caucasus mountains, Black Sea, subtropical vegetation ── -->
-        <g clip-path="url(#cp-yug)">
-          <!-- Black Sea tint (bottom-left corner) -->
-          <ellipse cx="76" cy="578" rx="42" ry="32" fill="rgba(30,110,195,0.32)"/>
-          <ellipse cx="98" cy="612" rx="36" ry="22" fill="rgba(30,110,195,0.26)"/>
-          <!-- Caspian hint (right) -->
-          <ellipse cx="378" cy="485" rx="18" ry="28" fill="rgba(30,110,195,0.22)"/>
-
-          <!-- Caucasus mountain back-row (tall, atmospheric) -->
-          <polygon points="114,400 92,462 136,462" fill="#788A78" opacity="0.52"/>
-          <polygon points="150,390 126,460 174,460" fill="#8A9A8A" opacity="0.56"/>
-          <polygon points="192,384 168,456 216,456" fill="#788A78" opacity="0.52"/>
-          <polygon points="238,387 213,458 263,458" fill="#8A9A8A" opacity="0.56"/>
-          <polygon points="282,392 257,460 307,460" fill="#788A78" opacity="0.52"/>
-          <polygon points="322,398 298,462 346,462" fill="#8A9A8A" opacity="0.52"/>
-          <!-- Main Caucasus peaks -->
-          <polygon points="114,400 94,457 134,457" fill="#9AAA9A"/>
-          <polygon points="150,390 128,454 172,454" fill="#ACBCAC"/>
-          <polygon points="192,384 170,452 214,452" fill="#9AAA9A"/>
-          <!-- Elbrus (double peak, tallest) -->
-          <polygon points="238,387 212,454 264,454" fill="#ACBCAC"/>
-          <polygon points="282,392 258,456 306,456" fill="#9AAA9A"/>
-          <polygon points="322,398 300,460 344,460" fill="#ACBCAC"/>
-          <!-- Snow caps — extensive on Caucasus -->
-          <polygon points="114,400 104,422 124,422" fill="white" opacity="0.92"/>
-          <polygon points="150,390 139,414 161,414" fill="white" opacity="0.96"/>
-          <polygon points="192,384 181,408 203,408" fill="white" opacity="0.96"/>
-          <!-- Elbrus double-snowcap -->
-          <polygon points="234,387 222,410 246,410" fill="white" opacity="0.96"/>
-          <ellipse cx="230" cy="408" rx="13" ry="4.5" fill="white" opacity="0.72"/>
-          <ellipse cx="241" cy="409" rx="10" ry="3.5" fill="white" opacity="0.72"/>
-          <polygon points="282,392 270,414 294,414" fill="white" opacity="0.92"/>
-          <polygon points="322,398 310,420 334,420" fill="white" opacity="0.88"/>
-          <!-- Green southern plains -->
-          <ellipse cx="195" cy="515" rx="65" ry="28" fill="rgba(40,150,50,0.28)"/>
-          <ellipse cx="295" cy="536" rx="48" ry="22" fill="rgba(40,150,50,0.24)"/>
-          <!-- Cypress/palm trees -->
-          <line x1="155" y1="515" x2="155" y2="482" stroke="#5A3810" stroke-width="2.5"/>
-          <ellipse cx="155" cy="476" rx="10" ry="7" fill="#1A7A28" opacity="0.92"/>
-          <ellipse cx="150" cy="471" rx="7" ry="5" fill="#2A8A38" opacity="0.82"/>
-          <ellipse cx="163" cy="474" rx="6" ry="4" fill="#1A7A28" opacity="0.82"/>
-          <line x1="312" y1="535" x2="312" y2="502" stroke="#5A3810" stroke-width="2.5"/>
-          <ellipse cx="312" cy="496" rx="10" ry="7" fill="#1A7A28" opacity="0.9"/>
-          <ellipse cx="308" cy="491" rx="7" ry="5" fill="#2A8A38" opacity="0.8"/>
-          <line x1="185" y1="545" x2="185" y2="518" stroke="#5A3810" stroke-width="2"/>
-          <ellipse cx="185" cy="513" rx="8" ry="6" fill="#1A7A28" opacity="0.88"/>
-          <!-- Don River -->
-          <path d="M346,472 C338,494 326,518 312,542 C298,562 282,582 262,603"
-                stroke="#4AABDB" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.62"/>
-          <path d="M346,472 C338,494 326,518 312,542 C298,562 282,582 262,603"
-                stroke="rgba(255,255,255,0.2)" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <!-- Fish (Pacific, right ocean) -->
+        <g transform="translate(1344,618)" opacity="0.92">
+          <ellipse rx="19" ry="12" fill="#E84545" stroke="white" stroke-width="1.5"/>
+          <polygon points="19,-7 35,0 19,7" fill="#E84545" stroke="white" stroke-width="1"/>
+          <circle cx="-7" cy="-3" r="3" fill="white"/><circle cx="-6" cy="-3" r="1.5" fill="#333"/>
+        </g>
+        <!-- Ship (Pacific) -->
+        <g transform="translate(1308,550)">
+          <rect x="-21" y="0" width="42" height="10" rx="5" fill="#4488BB" stroke="white" stroke-width="1.5"/>
+          <rect x="-13" y="-16" width="26" height="16" rx="2" fill="#5598CB" stroke="white" stroke-width="1"/>
+          <rect x="-1" y="-28" width="3" height="14" fill="#AA4444"/>
+          <rect x="-1" y="-31" width="10" height="6" rx="1" fill="#EE5555"/>
         </g>
 
-        <!-- ══════════════════════════════════════════ -->
-        <!--  GAME ROUTE ROADS                         -->
-        <!-- ══════════════════════════════════════════ -->
+        <!-- ══ ALFA BADGE (top-left) ══ -->
+        <g transform="translate(66,52)" filter="url(#f-card)">
+          <circle r="32" fill="#EF3124" stroke="white" stroke-width="2.5"/>
+          <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
+                font-size="30" font-weight="900" fill="white"
+                font-family="'Space Grotesk',Arial,sans-serif">А</text>
+        </g>
+        <text x="108" y="37" font-size="12.5" font-weight="900" fill="#CC1122"
+              font-family="'Space Grotesk',Arial,sans-serif">АЛЬФА-БАНК</text>
+        <text x="108" y="54" font-size="10.5" font-weight="600"
+              fill="rgba(20,65,15,0.72)"
+              font-family="'Plus Jakarta Sans',Arial,sans-serif">Инвестиционные продукты</text>
+
+        <!-- ══ TERRITORY CITY LABELS ══ -->
+        <g font-family="'Plus Jakarta Sans',Arial,sans-serif" pointer-events="none">
+          <text x="318" y="192" font-size="11.5" font-weight="700" fill="rgba(15,50,10,0.7)">Санкт-Петербург</text>
+          <text x="336" y="262" font-size="10.5" font-weight="700" fill="rgba(15,50,10,0.7)">◀ Москва</text>
+          <text x="138" y="428" font-size="11.5" font-weight="700" fill="rgba(15,50,10,0.7)">Нижний Новгород</text>
+          <text x="230" y="572" font-size="11.5" font-weight="700" fill="rgba(15,50,10,0.7)">Краснодар · Сочи</text>
+          <text x="455" y="212" font-size="11.5" font-weight="700" fill="rgba(15,50,10,0.7)">Казань</text>
+          <text x="526" y="432" font-size="11.5" font-weight="700" fill="rgba(15,50,10,0.7)">Екатеринбург</text>
+          <text x="656" y="496" font-size="11.5" font-weight="700" fill="rgba(15,50,10,0.7)">Новосибирск</text>
+          <text x="1146" y="472" font-size="11.5" font-weight="700" fill="rgba(15,50,10,0.7)">Хабаровск</text>
+        </g>
+
+        <!-- ══ СТАРТ oval ══ -->
+        <g transform="translate(112,672)" filter="url(#f-card)">
+          <rect x="-58" y="-22" width="116" height="44" rx="22" fill="#E63946" stroke="white" stroke-width="3"/>
+          <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
+                font-size="21" font-weight="900" fill="white" letter-spacing="3"
+                font-family="'Space Grotesk',Arial,sans-serif">СТАРТ</text>
+        </g>
+
+        <!-- ══ GAME ROUTE PATHS ══ -->
         <g fill="none" stroke-linecap="round">
-          <path d="M 268,264 C 240,210 215,175 195,148" stroke="rgba(255,220,0,0.28)" stroke-width="14"/>
-          <path d="M 268,264 C 240,210 215,175 195,148" stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
-          <path d="M 268,264 C 240,300 215,328 188,350" stroke="rgba(255,220,0,0.28)" stroke-width="14"/>
-          <path d="M 268,264 C 240,300 215,328 188,350" stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
-          <path d="M 195,148 C 320,108 450,95 580,270" stroke="rgba(255,220,0,0.28)" stroke-width="14"/>
-          <path d="M 195,148 C 320,108 450,95 580,270" stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
-          <path d="M 188,350 C 194,414 200,456 212,500" stroke="rgba(255,220,0,0.28)" stroke-width="14"/>
-          <path d="M 188,350 C 194,414 200,456 212,500" stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
-          <path d="M 580,270 C 666,272 738,288 810,315" stroke="rgba(255,220,0,0.28)" stroke-width="14"/>
-          <path d="M 580,270 C 666,272 738,288 810,315" stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
-          <path d="M 810,315 C 936,322 1044,332 1145,345" stroke="rgba(255,220,0,0.28)" stroke-width="14"/>
-          <path d="M 810,315 C 936,322 1044,332 1145,345" stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
-          <path d="M 1145,345 C 950,460 720,510 435,340" stroke="rgba(239,49,36,0.22)" stroke-width="16"/>
-          <path d="M 1145,345 C 950,460 720,510 435,340" stroke="#EF3124" stroke-width="4" stroke-dasharray="6,8"/>
-          <path d="M 435,340 C 380,400 312,452 212,500" stroke="rgba(255,220,0,0.28)" stroke-width="14"/>
-          <path d="M 435,340 C 380,400 312,452 212,500" stroke="#FFD700" stroke-width="4" stroke-dasharray="10,5"/>
+          <!-- MOS → NW -->
+          <path d="M254,252 C235,212 218,190 200,166" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
+          <path d="M254,252 C235,212 218,190 200,166" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
+          <!-- MOS → CENT -->
+          <path d="M258,280 C238,308 220,333 191,367" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
+          <path d="M258,280 C238,308 220,333 191,367" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
+          <!-- NW → URAL -->
+          <path d="M225,153 C344,116 464,102 563,257" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
+          <path d="M225,153 C344,116 464,102 563,257" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
+          <!-- CENT → YUG -->
+          <path d="M188,373 C193,420 201,460 213,484" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
+          <path d="M188,373 C193,420 201,460 213,484" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
+          <!-- URAL → SIB -->
+          <path d="M613,274 C682,278 745,296 800,314" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
+          <path d="M613,274 C682,278 745,296 800,314" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
+          <!-- SIB → FAR -->
+          <path d="M845,318 C942,326 1052,337 1128,344" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
+          <path d="M845,318 C942,326 1052,337 1128,344" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
+          <!-- FAR → VOLGA (long red arch) -->
+          <path d="M1122,362 C958,468 732,522 460,354" stroke="rgba(230,57,70,0.26)" stroke-width="15"/>
+          <path d="M1122,362 C958,468 732,522 460,354" stroke="#E63946" stroke-width="5" stroke-dasharray="8,6" marker-end="url(#arrow-r)"/>
+          <!-- VOLGA → YUG -->
+          <path d="M419,356 C376,410 318,458 230,489" stroke="rgba(40,167,69,0.28)" stroke-width="13"/>
+          <path d="M419,356 C376,410 318,458 230,489" stroke="#28A745" stroke-width="4.5" stroke-dasharray="10,5" marker-end="url(#arrow-g)"/>
         </g>
 
-        <!-- ══════════════════════════════════════════ -->
-        <!--  DIVISION LABELS (pill background)        -->
-        <!-- ══════════════════════════════════════════ -->
-        <g font-family="'Plus Jakarta Sans','Space Grotesk',Segoe UI,Arial,sans-serif">
-          <!-- NW -->
-          <rect x="128" y="104" width="134" height="38" rx="19" fill="rgba(0,0,0,0.42)"/>
-          <text x="195" y="119" text-anchor="middle" font-size="11" font-weight="800" fill="white" paint-order="stroke" stroke="rgba(0,0,0,0.5)" stroke-width="2">Северо-Запад</text>
-          <text x="195" y="135" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.78)">ПДС 💰</text>
-          <!-- MOS (tiny territory — minimal label) -->
-          <text x="268" y="258" text-anchor="middle" font-size="8" font-weight="700" fill="white" paint-order="stroke" stroke="rgba(0,0,0,0.6)" stroke-width="2">Москва</text>
-          <text x="268" y="270" text-anchor="middle" font-size="7" fill="rgba(255,255,255,0.75)">📈 Брокер</text>
-          <!-- CENT -->
-          <rect x="130" y="338" width="98" height="38" rx="19" fill="rgba(0,0,0,0.42)"/>
-          <text x="179" y="353" text-anchor="middle" font-size="11" font-weight="800" fill="white" paint-order="stroke" stroke="rgba(0,0,0,0.5)" stroke-width="2">Центр</text>
-          <text x="179" y="369" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.78)">ОМС 🥇</text>
-          <!-- YUG -->
-          <rect x="158" y="480" width="98" height="38" rx="19" fill="rgba(0,0,0,0.42)"/>
-          <text x="207" y="495" text-anchor="middle" font-size="11" font-weight="800" fill="white" paint-order="stroke" stroke="rgba(0,0,0,0.5)" stroke-width="2">Юг</text>
-          <text x="207" y="511" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.78)">ПИФ 🌳</text>
-          <!-- VOLGA -->
-          <rect x="372" y="320" width="128" height="38" rx="19" fill="rgba(0,0,0,0.42)"/>
-          <text x="436" y="335" text-anchor="middle" font-size="11" font-weight="800" fill="white" paint-order="stroke" stroke="rgba(0,0,0,0.5)" stroke-width="2">Поволжье</text>
-          <text x="436" y="351" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.78)">НСЖ 🛡️</text>
-          <!-- URAL -->
-          <rect x="532" y="250" width="98" height="38" rx="19" fill="rgba(0,0,0,0.42)"/>
-          <text x="581" y="265" text-anchor="middle" font-size="11" font-weight="800" fill="white" paint-order="stroke" stroke="rgba(0,0,0,0.5)" stroke-width="2">Урал</text>
-          <text x="581" y="281" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.78)">НСЖ 🛡️</text>
-          <!-- SIB -->
-          <rect x="745" y="294" width="130" height="38" rx="19" fill="rgba(0,0,0,0.42)"/>
-          <text x="810" y="309" text-anchor="middle" font-size="13" font-weight="800" fill="white" paint-order="stroke" stroke="rgba(0,0,0,0.5)" stroke-width="2">Сибирь</text>
-          <text x="810" y="325" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.78)">ПДС 💰</text>
-          <!-- FAR -->
-          <rect x="1062" y="324" width="166" height="38" rx="19" fill="rgba(0,0,0,0.42)"/>
-          <text x="1145" y="339" text-anchor="middle" font-size="11" font-weight="800" fill="white" paint-order="stroke" stroke="rgba(0,0,0,0.5)" stroke-width="2">Дальний Восток</text>
-          <text x="1145" y="355" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.78)">ОМС 🥇</text>
-        </g>
+        <!-- ══ TITLE ══ -->
+        <text x="700" y="57" text-anchor="middle"
+              font-size="46" font-weight="900"
+              fill="#CC1122"
+              filter="url(#f-title)"
+              font-family="'Space Grotesk','Plus Jakarta Sans',Arial,sans-serif"
+              letter-spacing="5">АЛЬФА-ЛАНДИЯ</text>
+        <text x="700" y="80" text-anchor="middle"
+              font-size="14" font-weight="600"
+              fill="rgba(10,50,8,0.75)"
+              font-family="'Plus Jakarta Sans',Arial,sans-serif">Путешествие по продуктам Альфа-Банка</text>
 
-        <!-- ══ PRODUCT CARDS — LEFT ══ -->
-        <g transform="translate(8,148)" filter="url(#f-card)">
-          <rect width="122" height="78" rx="10" fill="white" opacity="0.96" stroke="#C0392B" stroke-width="2.5"/>
-          <text x="61" y="30" text-anchor="middle" font-size="20">📈</text>
-          <text x="61" y="49" text-anchor="middle" font-size="8.5" font-weight="800" fill="#C0392B">АВТОСЛЕДОВАНИЕ</text>
-          <text x="61" y="61" text-anchor="middle" font-size="7.5" fill="#555">Альфа Инвестиции</text>
-          <rect x="0" y="67" width="122" height="11" rx="0" fill="#C0392B"/>
-          <text x="61" y="76" text-anchor="middle" font-size="8" font-weight="700" fill="white">БРОКЕР</text>
-        </g>
-        <g transform="translate(8,240)" filter="url(#f-card)">
-          <rect width="122" height="78" rx="10" fill="white" opacity="0.96" stroke="#2196F3" stroke-width="2.5"/>
-          <text x="61" y="30" text-anchor="middle" font-size="20">💰</text>
-          <text x="61" y="49" text-anchor="middle" font-size="9" font-weight="800" fill="#2196F3">ПДС</text>
-          <text x="61" y="61" text-anchor="middle" font-size="7.5" fill="#555">Альфа НПФ</text>
-          <rect x="0" y="67" width="122" height="11" rx="0" fill="#2196F3"/>
-          <text x="61" y="76" text-anchor="middle" font-size="8" font-weight="700" fill="white">ДОЛГОСРОЧН.</text>
-        </g>
-        <g transform="translate(8,332)" filter="url(#f-card)">
-          <rect width="122" height="78" rx="10" fill="white" opacity="0.96" stroke="#1ABC9C" stroke-width="2.5"/>
-          <text x="61" y="30" text-anchor="middle" font-size="20">🛡️</text>
-          <text x="61" y="49" text-anchor="middle" font-size="9" font-weight="800" fill="#1ABC9C">НСЖ</text>
-          <text x="61" y="61" text-anchor="middle" font-size="7.5" fill="#555">Альфа Страхование</text>
-          <rect x="0" y="67" width="122" height="11" rx="0" fill="#1ABC9C"/>
-          <text x="61" y="76" text-anchor="middle" font-size="8" font-weight="700" fill="white">СТРАХОВАНИЕ</text>
-        </g>
-
-        <!-- ══ PRODUCT CARDS — RIGHT ══ -->
-        <g transform="translate(1272,210)" filter="url(#f-card)">
-          <rect width="122" height="78" rx="10" fill="white" opacity="0.96" stroke="#F4A261" stroke-width="2.5"/>
-          <text x="61" y="30" text-anchor="middle" font-size="20">🥇</text>
-          <text x="61" y="49" text-anchor="middle" font-size="9" font-weight="800" fill="#F4A261">ОМС</text>
-          <text x="61" y="61" text-anchor="middle" font-size="7.5" fill="#555">КИБ Альфа-Банка</text>
-          <rect x="0" y="67" width="122" height="11" rx="0" fill="#F4A261"/>
-          <text x="61" y="76" text-anchor="middle" font-size="8" font-weight="700" fill="white">МЕТАЛЛЫ</text>
-        </g>
-        <g transform="translate(1272,302)" filter="url(#f-card)">
-          <rect width="122" height="78" rx="10" fill="white" opacity="0.96" stroke="#6A0DAD" stroke-width="2.5"/>
-          <text x="61" y="30" text-anchor="middle" font-size="20">🌳</text>
-          <text x="61" y="49" text-anchor="middle" font-size="9" font-weight="800" fill="#6A0DAD">ПИФ</text>
-          <text x="61" y="61" text-anchor="middle" font-size="7.5" fill="#555">Альфа-Капитал</text>
-          <rect x="0" y="67" width="122" height="11" rx="0" fill="#6A0DAD"/>
-          <text x="61" y="76" text-anchor="middle" font-size="8" font-weight="700" fill="white">ПАЕВЫЕ ФОНДЫ</text>
-        </g>
-
-        <!-- ══ COMPASS ROSE ══ -->
-        <g transform="translate(1326,62)">
-          <circle cx="0" cy="0" r="33" fill="rgba(0,0,0,0.32)" stroke="rgba(255,255,255,0.48)" stroke-width="1.5"/>
-          <circle cx="0" cy="0" r="22" fill="rgba(0,0,0,0.18)" stroke="rgba(255,255,255,0.28)" stroke-width="1"/>
-          <line x1="0" y1="-27" x2="0" y2="27" stroke="rgba(255,255,255,0.52)" stroke-width="1"/>
-          <line x1="-27" y1="0" x2="27" y2="0" stroke="rgba(255,255,255,0.52)" stroke-width="1"/>
-          <line x1="-19" y1="-19" x2="19" y2="19" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-          <line x1="19" y1="-19" x2="-19" y2="19" stroke="rgba(255,255,255,0.22)" stroke-width="1"/>
-          <polygon points="0,-32 -5,-17 0,-21 5,-17" fill="#EF3124"/>
-          <polygon points="0,32 -5,17 0,21 5,17" fill="rgba(255,255,255,0.58)"/>
-          <text x="0" y="-37" text-anchor="middle" font-size="11" font-weight="700" fill="white">С</text>
-          <text x="0" y="49" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.65)">Ю</text>
-          <text x="40" y="4" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.65)">В</text>
-          <text x="-40" y="4" text-anchor="middle" font-size="10" fill="rgba(255,255,255,.65)">З</text>
-        </g>
-
-        <!-- ══ TITLE BANNER ══ -->
-        <rect x="320" y="8" width="760" height="50" rx="25" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-        <text x="348" y="40" font-size="22">🗺️</text>
-        <text x="700" y="40" text-anchor="middle" font-size="26" font-weight="900" fill="white"
-              paint-order="stroke" stroke="rgba(0,0,0,0.5)" stroke-width="3"
-              font-family="'Space Grotesk','Plus Jakarta Sans',Arial,sans-serif">
-          Альфа-<tspan fill="#FFD700">ландия</tspan>
-        </text>
-        <text x="1020" y="41" font-size="18">📍</text>
-
-        <!-- ══ LEGEND ══ -->
-        <g transform="translate(310,680)">
-          <rect width="780" height="36" rx="18" fill="rgba(0,0,0,0.55)" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
-          <rect x="16" y="10" width="14" height="14" rx="7" fill="#4CAF50"/>
-          <text x="36" y="21" font-size="10" font-weight="700" fill="white">НОВИЧОК</text>
-          <rect x="130" y="10" width="14" height="14" rx="7" fill="#FF9800"/>
-          <text x="150" y="21" font-size="10" font-weight="700" fill="white">ОПЫТНЫЙ</text>
-          <text x="258" y="22" font-size="13">⭐</text>
-          <text x="275" y="21" font-size="10" font-weight="700" fill="white">ЭКСПЕРТ</text>
-          <line x1="385" y1="18" x2="422" y2="18" stroke="#FFD700" stroke-width="3" stroke-dasharray="8,4"/>
-          <text x="430" y="21" font-size="9" fill="rgba(255,255,255,.8)">Основной маршрут</text>
-          <line x1="568" y1="18" x2="605" y2="18" stroke="#EF3124" stroke-width="3" stroke-dasharray="5,6"/>
-          <text x="613" y="21" font-size="9" fill="rgba(255,255,255,.8)">Игровой маршрут</text>
-          <text x="710" y="22" font-size="12">🌋</text>
-          <text x="726" y="21" font-size="9" fill="rgba(255,255,255,.72)">Камчатка</text>
-        </g>
+        <!-- Ocean labels -->
+        <text x="690" y="155" text-anchor="middle" font-size="13" fill="rgba(28,70,130,0.52)" font-style="italic" font-weight="600">Северный Ледовитый океан</text>
+        <text x="1352" y="380" text-anchor="middle" font-size="11" fill="rgba(28,70,130,0.48)" font-style="italic" font-weight="600" transform="rotate(-90,1352,380)">Тихий океан</text>
 
         <!-- ══ INTERACTIVE NODES — JS ══ -->
         <g id="map-nodes"></g>
-        <!-- ══ PLAYER PAWN (3D) — positioned via CSS transform ══ -->
+
+        <!-- ══ PLAYER PAWN ══ -->
         <g id="player-token" style="display:none">
-          <!-- Pulse ring -->
           <circle id="pawn-pulse" r="30" cy="8" fill="rgba(255,215,0,0.45)"/>
-          <!-- Ground shadow -->
           <ellipse rx="21" ry="7" cy="17" fill="rgba(0,0,0,0.38)"/>
-          <!-- Base disc (front lit) -->
           <ellipse rx="20" ry="6.5" cy="10" fill="#A00010" stroke="#FF1428" stroke-width="1.5"/>
-          <!-- Body (tapered cylinder) -->
           <path d="M-16,10 C-16,-15 -8,-34 0,-38 C8,-34 16,-15 16,10Z" fill="#E80014"/>
-          <!-- Left shadow on body -->
           <path d="M-16,10 C-16,-15 -9,-34 -4,-38 C-7,-30 -11,-13 -11,10Z" fill="rgba(0,0,0,0.22)"/>
-          <!-- Right shine on body -->
           <path d="M8,-5 C10,-18 11,-30 8,-38 C11,-26 13,-16 11,-5Z" fill="rgba(255,255,255,0.2)"/>
-          <!-- Head ball -->
           <circle r="15" cy="-52" fill="#FFD700" stroke="white" stroke-width="2.5"/>
-          <!-- Head shine -->
           <circle r="5" cx="-5" cy="-58" fill="rgba(255,255,255,0.42)"/>
-          <!-- Letter А on head -->
           <text text-anchor="middle" dominant-baseline="central" font-size="12" font-weight="900" fill="#880010" y="-52">А</text>
         </g>
       </svg>
-    </div><!-- /map-wrap -->
-    </div><!-- /map-3d-board -->
-    </div><!-- /map-perspective -->
+    </div>
 
     <!-- INFO PANEL -->
     <div id="info-panel"></div>
@@ -990,7 +751,7 @@ function toast(msg, type='') {
   setTimeout(() => t.remove(), 3500);
 }
 
-// ── RENDER MAP NODES (pins on the Russia map) ──
+// ── RENDER MAP NODES ──
 function renderMap() {
   const u = getCurrentUser();
   const available = canMove(u) ? getAvailableMoves(u) : [];
@@ -1011,8 +772,8 @@ function renderMap() {
     if (isAvailable) {
       const ring = document.createElementNS('http://www.w3.org/2000/svg','circle');
       ring.setAttribute('cx', div.cx); ring.setAttribute('cy', div.cy);
-      ring.setAttribute('r', 36);
-      ring.setAttribute('fill', 'none');
+      ring.setAttribute('r', '46');
+      ring.setAttribute('fill', 'rgba(40,167,69,0.15)');
       ring.setAttribute('stroke', '#28A745');
       ring.setAttribute('stroke-width', '2.5');
       ring.setAttribute('stroke-dasharray', '6 4');
@@ -1020,74 +781,83 @@ function renderMap() {
       node.appendChild(ring);
     }
 
-    // PIN base (location marker shape)
-    // Circle
+    // Main circle (board-game style)
     const pinBg = document.createElementNS('http://www.w3.org/2000/svg','circle');
     pinBg.setAttribute('cx', div.cx); pinBg.setAttribute('cy', div.cy);
-    pinBg.setAttribute('r', 22);
-    let bgColor = isCurrent ? '#EF3124' : isAvailable ? '#28A745' : isVisited ? div.color : 'rgba(255,255,255,0.25)';
-    let strokeC = isCurrent ? '#FFD700' : isAvailable ? '#FFFFFF' : isVisited ? 'rgba(255,255,255,0.6)' : 'rgba(255,255,255,0.3)';
-    pinBg.setAttribute('fill', bgColor);
-    pinBg.setAttribute('stroke', strokeC);
-    pinBg.setAttribute('stroke-width', isCurrent ? '3.5' : '2.5');
-    if (isLocked) pinBg.setAttribute('opacity','0.55');
+    pinBg.setAttribute('r', isCurrent ? '36' : '32');
+    const bgFill = isCurrent ? '#E63946' : 'white';
+    const strokeColor = isCurrent ? 'white' : isAvailable ? '#28A745' : isVisited ? p.color : 'rgba(160,160,160,0.65)';
+    const strokeW = isCurrent ? '5' : isAvailable ? '4.5' : '4';
+    pinBg.setAttribute('fill', bgFill);
+    pinBg.setAttribute('stroke', strokeColor);
+    pinBg.setAttribute('stroke-width', strokeW);
+    pinBg.setAttribute('filter', 'url(#f-node)');
+    if (isLocked) pinBg.setAttribute('opacity','0.62');
     node.appendChild(pinBg);
 
-    // Product emoji on pin
+    // Division short ID (top line)
+    const nameText = document.createElementNS('http://www.w3.org/2000/svg','text');
+    nameText.setAttribute('x', div.cx); nameText.setAttribute('y', div.cy - 9);
+    nameText.setAttribute('text-anchor','middle'); nameText.setAttribute('dominant-baseline','central');
+    nameText.setAttribute('font-size', '10.5'); nameText.setAttribute('font-weight', '900');
+    nameText.setAttribute('fill', isCurrent ? 'white' : isLocked ? '#AAAAAA' : '#1A1A2E');
+    nameText.setAttribute('font-family', "'Space Grotesk','Plus Jakarta Sans',sans-serif");
+    nameText.textContent = div.id;
+    node.appendChild(nameText);
+
+    // Product icon (bottom line)
     const icon = document.createElementNS('http://www.w3.org/2000/svg','text');
-    icon.setAttribute('x', div.cx); icon.setAttribute('y', div.cy + 1);
+    icon.setAttribute('x', div.cx); icon.setAttribute('y', div.cy + 11);
     icon.setAttribute('text-anchor','middle'); icon.setAttribute('dominant-baseline','central');
-    icon.setAttribute('font-size', '14');
-    if (isLocked) icon.setAttribute('opacity','0.5');
-    icon.textContent = isVisited || isAvailable || isCurrent ? p.icon : '🔒';
+    icon.setAttribute('font-size', '15');
+    if (isLocked) icon.setAttribute('opacity','0.38');
+    icon.textContent = isLocked ? '🔒' : p.icon;
     node.appendChild(icon);
 
-    // Status badges
+    // Status badge (top-right of circle)
     if (isVisited && !isCurrent) {
-      // Green checkmark badge
       const ck = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      ck.setAttribute('cx', div.cx + 16); ck.setAttribute('cy', div.cy - 16);
-      ck.setAttribute('r', '9'); ck.setAttribute('fill', '#28A745');
-      ck.setAttribute('stroke','white'); ck.setAttribute('stroke-width','1.5');
+      ck.setAttribute('cx', div.cx+22); ck.setAttribute('cy', div.cy-22);
+      ck.setAttribute('r','11'); ck.setAttribute('fill','#28A745');
+      ck.setAttribute('stroke','white'); ck.setAttribute('stroke-width','2');
       node.appendChild(ck);
       const ckTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
-      ckTxt.setAttribute('x', div.cx + 16); ckTxt.setAttribute('y', div.cy - 16);
+      ckTxt.setAttribute('x', div.cx+22); ckTxt.setAttribute('y', div.cy-22);
       ckTxt.setAttribute('text-anchor','middle'); ckTxt.setAttribute('dominant-baseline','central');
-      ckTxt.setAttribute('font-size','10'); ckTxt.setAttribute('fill','white'); ckTxt.setAttribute('font-weight','900');
+      ckTxt.setAttribute('font-size','11'); ckTxt.setAttribute('fill','white'); ckTxt.setAttribute('font-weight','900');
       ckTxt.textContent = '✓';
       node.appendChild(ckTxt);
     }
     if (isAvailable) {
-      // Green arrow badge
       const ab = document.createElementNS('http://www.w3.org/2000/svg','circle');
-      ab.setAttribute('cx', div.cx + 16); ab.setAttribute('cy', div.cy - 16);
-      ab.setAttribute('r','9'); ab.setAttribute('fill','#28A745');
-      ab.setAttribute('stroke','white'); ab.setAttribute('stroke-width','1.5');
+      ab.setAttribute('cx', div.cx+22); ab.setAttribute('cy', div.cy-22);
+      ab.setAttribute('r','11'); ab.setAttribute('fill','#28A745');
+      ab.setAttribute('stroke','white'); ab.setAttribute('stroke-width','2');
       node.appendChild(ab);
       const abTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
-      abTxt.setAttribute('x', div.cx + 16); abTxt.setAttribute('y', div.cy - 16);
+      abTxt.setAttribute('x', div.cx+22); abTxt.setAttribute('y', div.cy-22);
       abTxt.setAttribute('text-anchor','middle'); abTxt.setAttribute('dominant-baseline','central');
-      abTxt.setAttribute('font-size','11'); abTxt.setAttribute('fill','white'); abTxt.setAttribute('font-weight','900');
+      abTxt.setAttribute('font-size','13'); abTxt.setAttribute('fill','white'); abTxt.setAttribute('font-weight','700');
       abTxt.textContent = '→';
       node.appendChild(abTxt);
     }
 
     if (isAvailable) node.addEventListener('click', () => handleMove(div.id));
 
-    // ℹ Info button (top-right of pin)
+    // ℹ Info button (bottom-right)
     const ib = document.createElementNS('http://www.w3.org/2000/svg','g');
     ib.setAttribute('class','info-btn');
     ib.addEventListener('click', e => { e.stopPropagation(); showRegionInfo(div.id); });
     const ibBg = document.createElementNS('http://www.w3.org/2000/svg','circle');
-    ibBg.setAttribute('cx', div.cx+24); ibBg.setAttribute('cy', div.cy-24);
-    ibBg.setAttribute('r','12');
-    ibBg.setAttribute('fill','rgba(255,255,255,0.88)');
-    ibBg.setAttribute('stroke', div.color); ibBg.setAttribute('stroke-width','2');
+    ibBg.setAttribute('cx', div.cx+22); ibBg.setAttribute('cy', div.cy+22);
+    ibBg.setAttribute('r','11');
+    ibBg.setAttribute('fill','rgba(255,255,255,0.92)');
+    ibBg.setAttribute('stroke', p.color); ibBg.setAttribute('stroke-width','2');
     const ibTxt = document.createElementNS('http://www.w3.org/2000/svg','text');
-    ibTxt.setAttribute('x', div.cx+24); ibTxt.setAttribute('y', div.cy-24);
+    ibTxt.setAttribute('x', div.cx+22); ibTxt.setAttribute('y', div.cy+22);
     ibTxt.setAttribute('text-anchor','middle'); ibTxt.setAttribute('dominant-baseline','central');
     ibTxt.setAttribute('font-size','13'); ibTxt.setAttribute('font-weight','900');
-    ibTxt.setAttribute('fill', div.color);
+    ibTxt.setAttribute('fill', p.color);
     ibTxt.textContent = 'i';
     ib.appendChild(ibBg); ib.appendChild(ibTxt);
     node.appendChild(ib);
@@ -1095,12 +865,11 @@ function renderMap() {
     g.appendChild(node);
   });
 
-  // ── Player pawn via CSS transform (animated) ──
+  // ── Player pawn via CSS transform ──
   const pos = DIVISIONS[u.position];
   const tk = document.getElementById('player-token');
   tk.style.display = 'block';
   if (!tk._init) {
-    // First render: snap without animation
     tk.style.transition = 'none';
     tk.style.transform  = `translate(${pos.cx}px,${pos.cy}px)`;
     tk._init = true;
@@ -1109,12 +878,6 @@ function renderMap() {
     });
   } else {
     tk.style.transform = `translate(${pos.cx}px,${pos.cy}px)`;
-    // Bounce arrival animation (applied to inner element)
-    const head = tk.querySelector('circle[r="15"]');
-    if (head) {
-      head.style.animation = 'none';
-      requestAnimationFrame(() => { head.style.animation = 'pawnBounce 0.5s ease-out'; });
-    }
   }
 }
 
