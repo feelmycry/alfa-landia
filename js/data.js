@@ -840,52 +840,52 @@ const PRODUCT_BADGES = {
 // cx/cy = position on SVG map (viewBox 0 0 1400 720)
 // ============================================================
 const STOPS = [
-  // ── YUG (ПИФ) – south coast going north up west coast, stops 1-5 ──
-  { num:1,  division:'YUG',   product:'PIF',    cx:192, cy:632, special:false },
-  { num:2,  division:'YUG',   product:'PIF',    cx:156, cy:563, special:false },
-  { num:3,  division:'YUG',   product:'PIF',    cx:128, cy:498, special:true  },
-  { num:4,  division:'YUG',   product:'PIF',    cx:112, cy:440, special:false },
-  { num:5,  division:'YUG',   product:'PIF',    cx:106, cy:379, special:false },
-  // ── NW (ПДС) – northwest coast up to Мурманск, stops 6-10 ──
-  { num:6,  division:'NW',    product:'PDS',    cx:104, cy:320, special:false },
-  { num:7,  division:'NW',    product:'PDS',    cx:108, cy:262, special:false },
-  { num:8,  division:'NW',    product:'PDS',    cx:126, cy:210, special:true  },
-  { num:9,  division:'NW',    product:'PDS',    cx:163, cy:205, special:false },
-  { num:10, division:'NW',    product:'PDS',    cx:200, cy:230, special:false },
-  // ── MOS (Брокер) – Санкт-Петербург → Москва → east, stops 11-15 ──
-  { num:11, division:'MOS',   product:'BROKER', cx:238, cy:258, special:false },
-  { num:12, division:'MOS',   product:'BROKER', cx:270, cy:292, special:true  },
-  { num:13, division:'MOS',   product:'BROKER', cx:316, cy:256, special:false },
-  { num:14, division:'MOS',   product:'BROKER', cx:360, cy:226, special:false },
-  { num:15, division:'MOS',   product:'BROKER', cx:404, cy:270, special:false },
-  // ── VOLGA (НСЖ) – Урал → south to Новосибирск, stops 16-20 ──
-  { num:16, division:'VOLGA', product:'NSJ',    cx:446, cy:312, special:true  },
-  { num:17, division:'VOLGA', product:'NSJ',    cx:482, cy:360, special:false },
-  { num:18, division:'VOLGA', product:'NSJ',    cx:496, cy:420, special:false },
-  { num:19, division:'VOLGA', product:'NSJ',    cx:506, cy:472, special:false },
-  { num:20, division:'VOLGA', product:'NSJ',    cx:520, cy:512, special:true  },
-  // ── CENT (ОМС) – S.Siberia going NE toward Красноярск, stops 21-25 ──
-  { num:21, division:'CENT',  product:'OMS',    cx:540, cy:530, special:false },
-  { num:22, division:'CENT',  product:'OMS',    cx:562, cy:496, special:false },
-  { num:23, division:'CENT',  product:'OMS',    cx:600, cy:455, special:false },
-  { num:24, division:'CENT',  product:'OMS',    cx:642, cy:414, special:true  },
-  { num:25, division:'CENT',  product:'OMS',    cx:681, cy:358, special:false },
-  // ── URAL (НСЖ) – N.Siberia up to Норильск, stops 26-30 ──
-  { num:26, division:'URAL',  product:'NSJ',    cx:718, cy:302, special:false },
-  { num:27, division:'URAL',  product:'NSJ',    cx:758, cy:248, special:false },
-  { num:28, division:'URAL',  product:'NSJ',    cx:798, cy:200, special:true  },
-  { num:29, division:'URAL',  product:'NSJ',    cx:844, cy:172, special:false },
-  { num:30, division:'URAL',  product:'NSJ',    cx:888, cy:178, special:false },
-  // ── SIB (ПДС) – Eastern Siberia turning south, stops 31-35 ──
-  { num:31, division:'SIB',   product:'PDS',    cx:926, cy:202, special:false },
-  { num:32, division:'SIB',   product:'PDS',    cx:946, cy:240, special:false },
-  { num:33, division:'SIB',   product:'PDS',    cx:922, cy:285, special:true  },
-  { num:34, division:'SIB',   product:'PDS',    cx:940, cy:332, special:false },
-  { num:35, division:'SIB',   product:'PDS',    cx:958, cy:377, special:false },
-  // ── FAR (ОМС) – Far East coast to Владивосток, stops 36-40 ──
-  { num:36, division:'FAR',   product:'OMS',    cx:1008,cy:378, special:false },
-  { num:37, division:'FAR',   product:'OMS',    cx:1064,cy:384, special:true  },
-  { num:38, division:'FAR',   product:'OMS',    cx:1108,cy:413, special:false },
-  { num:39, division:'FAR',   product:'OMS',    cx:1152,cy:452, special:false },
-  { num:40, division:'FAR',   product:'OMS',    cx:1190,cy:494, special:true  },
+  // ── YUG – south coast → up west side (1-7)
+  { num:1,  division:'YUG',   product:'PIF',    cx:192, cy:618, special:false },
+  { num:2,  division:'YUG',   product:'PIF',    cx:164, cy:578, special:false },
+  { num:3,  division:'YUG',   product:'PIF',    cx:136, cy:536, special:true  },
+  { num:4,  division:'YUG',   product:'PIF',    cx:108, cy:488, special:false },
+  { num:5,  division:'YUG',   product:'PIF',    cx:92,  cy:436, special:false },
+  // ── NW – northwest up to Мурманск (6-10)
+  { num:6,  division:'NW',    product:'PDS',    cx:88,  cy:378, special:false },
+  { num:7,  division:'NW',    product:'PDS',    cx:92,  cy:318, special:false },
+  { num:8,  division:'NW',    product:'PDS',    cx:130, cy:228, special:true  },
+  { num:9,  division:'NW',    product:'PDS',    cx:186, cy:196, special:false },
+  { num:10, division:'NW',    product:'PDS',    cx:250, cy:194, special:false },
+  // ── MOS – С-Петербург → Москва (11-15)
+  { num:11, division:'MOS',   product:'BROKER', cx:302, cy:228, special:false },
+  { num:12, division:'MOS',   product:'BROKER', cx:330, cy:260, special:true  },
+  { num:13, division:'MOS',   product:'BROKER', cx:372, cy:242, special:false },
+  { num:14, division:'MOS',   product:'BROKER', cx:414, cy:248, special:false },
+  { num:15, division:'MOS',   product:'BROKER', cx:450, cy:278, special:false },
+  // ── VOLGA – Казань → south to Новосибирск (16-20)
+  { num:16, division:'VOLGA', product:'NSJ',    cx:480, cy:318, special:true  },
+  { num:17, division:'VOLGA', product:'NSJ',    cx:494, cy:378, special:false },
+  { num:18, division:'VOLGA', product:'NSJ',    cx:478, cy:440, special:false },
+  { num:19, division:'VOLGA', product:'NSJ',    cx:460, cy:500, special:false },
+  { num:20, division:'VOLGA', product:'NSJ',    cx:464, cy:552, special:true  },
+  // ── CENT – east south Siberia → Красноярск (21-25)
+  { num:21, division:'CENT',  product:'OMS',    cx:544, cy:534, special:false },
+  { num:22, division:'CENT',  product:'OMS',    cx:610, cy:502, special:false },
+  { num:23, division:'CENT',  product:'OMS',    cx:662, cy:468, special:false },
+  { num:24, division:'CENT',  product:'OMS',    cx:708, cy:430, special:true  },
+  { num:25, division:'CENT',  product:'OMS',    cx:736, cy:378, special:false },
+  // ── URAL – north through central Siberia to Норильск (26-30)
+  { num:26, division:'URAL',  product:'NSJ',    cx:750, cy:320, special:false },
+  { num:27, division:'URAL',  product:'NSJ',    cx:760, cy:264, special:false },
+  { num:28, division:'URAL',  product:'NSJ',    cx:774, cy:212, special:true  },
+  { num:29, division:'URAL',  product:'NSJ',    cx:820, cy:206, special:false },
+  { num:30, division:'URAL',  product:'NSJ',    cx:870, cy:218, special:false },
+  // ── SIB – east across north then south (31-35)
+  { num:31, division:'SIB',   product:'PDS',    cx:922, cy:244, special:false },
+  { num:32, division:'SIB',   product:'PDS',    cx:966, cy:284, special:false },
+  { num:33, division:'SIB',   product:'PDS',    cx:996, cy:338, special:true  },
+  { num:34, division:'SIB',   product:'PDS',    cx:990, cy:396, special:false },
+  { num:35, division:'SIB',   product:'PDS',    cx:970, cy:450, special:false },
+  // ── FAR – Far East → Владивосток (36-40)
+  { num:36, division:'FAR',   product:'OMS',    cx:982, cy:502, special:false },
+  { num:37, division:'FAR',   product:'OMS',    cx:1016,cy:542, special:true  },
+  { num:38, division:'FAR',   product:'OMS',    cx:1068,cy:544, special:false },
+  { num:39, division:'FAR',   product:'OMS',    cx:1132,cy:516, special:false },
+  { num:40, division:'FAR',   product:'OMS',    cx:1194,cy:488, special:true  },
 ];

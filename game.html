@@ -271,35 +271,33 @@
           <path d="M64,674 Q100,666 136,674 Q172,682 208,674"/>
         </g>
 
-        <!-- ══ TERRITORY SHAPES ══ -->
-        <!-- FAR -->
-        <polygon fill="#6ECF42" stroke="#4E9E2E" stroke-width="2" stroke-linejoin="round"
+        <!-- ══ RUSSIA LANDMASS (all same green = unified look) ══ -->
+        <polygon fill="#5DC440" stroke="#5DC440" stroke-width="1" stroke-linejoin="round"
           points="964,50 1030,47 1085,51 1140,59 1190,69 1245,81 1300,94 1352,112 1382,162 1388,244 1386,344 1364,444 1334,514 1272,570 1206,606 1102,652 988,664 916,642 886,598 842,538 964,482 1014,398 1024,232 994,112 964,50"/>
-        <!-- SIB -->
-        <polygon fill="#6ECF42" stroke="#4E9E2E" stroke-width="2" stroke-linejoin="round"
+        <polygon fill="#5DC440" stroke="#5DC440" stroke-width="1" stroke-linejoin="round"
           points="642,58 686,50 728,40 772,28 816,22 858,32 898,48 926,52 964,50 994,112 1024,232 1014,398 964,482 842,538 720,568 622,554 582,488 586,454 650,448 676,382 686,258 676,132 642,58"/>
-        <!-- URAL -->
-        <polygon fill="#6ECF42" stroke="#4E9E2E" stroke-width="2" stroke-linejoin="round"
+        <polygon fill="#68C83A" stroke="#68C83A" stroke-width="1" stroke-linejoin="round"
           points="514,68 538,56 562,42 586,36 608,50 622,62 642,58 676,132 686,258 676,382 650,448 586,454 550,468 576,404 582,294 572,177 552,97 514,68"/>
-        <!-- NW -->
-        <polygon fill="#6ECF42" stroke="#4E9E2E" stroke-width="2" stroke-linejoin="round"
+        <polygon fill="#5DC440" stroke="#5DC440" stroke-width="1" stroke-linejoin="round"
           points="50,174 50,102 72,83 98,65 122,55 142,68 157,82 170,66 183,80 204,74 250,70 304,68 360,68 414,74 440,120 426,186 386,218 316,228 246,224 180,244 126,258 86,248 52,224 50,174"/>
-        <!-- VOLGA -->
-        <polygon fill="#6ECF42" stroke="#4E9E2E" stroke-width="2" stroke-linejoin="round"
+        <polygon fill="#5DC440" stroke="#5DC440" stroke-width="1" stroke-linejoin="round"
           points="414,74 516,68 552,97 572,177 582,294 576,404 550,468 500,509 446,524 406,504 392,478 330,444 356,378 330,298 316,228 386,218 426,186 440,120 414,74"/>
-        <!-- CENT -->
-        <polygon fill="#6ECF42" stroke="#4E9E2E" stroke-width="2" stroke-linejoin="round"
+        <polygon fill="#5DC440" stroke="#5DC440" stroke-width="1" stroke-linejoin="round"
           points="126,258 180,244 246,224 218,264 236,308 290,322 330,298 356,378 330,444 256,458 180,448 116,418 86,374 90,308 126,258"/>
-        <!-- YUG -->
-        <polygon fill="#6ECF42" stroke="#4E9E2E" stroke-width="2" stroke-linejoin="round"
+        <polygon fill="#62CC46" stroke="#62CC46" stroke-width="1" stroke-linejoin="round"
           points="86,374 116,418 180,448 256,458 330,444 392,478 376,560 320,614 226,628 152,604 92,564 66,510 70,434 86,374"/>
-        <!-- MOS -->
-        <polygon fill="#6ECF42" stroke="#4E9E2E" stroke-width="2" stroke-linejoin="round"
+        <polygon fill="#5DC440" stroke="#5DC440" stroke-width="1" stroke-linejoin="round"
           points="246,224 316,228 330,298 290,322 236,308 218,264 246,224"/>
 
-        <!-- ══ CARTOON ILLUSTRATIONS ══ -->
+        <!-- ══ ILLUSTRATIONS ══ -->
 
-        <!-- ── FAR: Volcanoes, pines, deer ── -->
+        <!-- Arctic sea-ice patches -->
+        <ellipse cx="560" cy="128" rx="62" ry="22" fill="rgba(255,255,255,0.60)"/>
+        <ellipse cx="720" cy="108" rx="48" ry="16" fill="rgba(255,255,255,0.52)"/>
+        <ellipse cx="880" cy="96"  rx="55" ry="18" fill="rgba(255,255,255,0.56)"/>
+        <ellipse cx="1060" cy="104" rx="42" ry="14" fill="rgba(255,255,255,0.48)"/>
+
+        <!-- ── VOLCANOES (Kamchatka / Far East) ── -->
         <!-- Volcano 1 (Ключевская) -->
         <polygon points="1055,278 1012,170 1098,170" fill="#8B6030"/>
         <polygon points="1055,203 1036,232 1074,232" fill="white" opacity="0.9"/>
@@ -347,11 +345,12 @@
           <circle cx="-5" cy="-3" r="1.2" fill="#333"/><circle cx="5" cy="-3" r="1.2" fill="#333"/>
         </g>
 
-        <!-- ── SIB: Baikal, bear, pines, train ── -->
-        <!-- Lake Baikal -->
-        <ellipse cx="904" cy="362" rx="21" ry="70" fill="#4AA8DC" stroke="white" stroke-width="2" transform="rotate(-18,904,362)" opacity="0.9"/>
-        <!-- Bear -->
-        <g transform="translate(864,398)">
+        <!-- ── SIB: Baikal, bear ── -->
+        <!-- Lake Baikal — positioned south of path, visible in SIB territory -->
+        <ellipse cx="840" cy="448" rx="16" ry="54" fill="#4AA8DC" stroke="white" stroke-width="2" transform="rotate(-15,840,448)" opacity="0.88"/>
+        <text x="860" y="460" font-size="8.5" fill="rgba(30,80,180,0.82)" font-weight="700" font-family="'Plus Jakarta Sans',sans-serif">Байкал</text>
+        <!-- Bear — eastern Siberia, below path -->
+        <g transform="translate(864,468)">
           <ellipse rx="21" ry="16" cy="4" fill="#5A3418"/>
           <circle cx="-6" cy="-17" r="12" fill="#5A3418"/>
           <circle cx="-14" cy="-27" r="6.5" fill="#5A3418"/>
@@ -362,8 +361,8 @@
           <ellipse cx="-14" cy="18" rx="6.5" ry="4.5" fill="#5A3418"/>
           <ellipse cx="4" cy="19" rx="6.5" ry="4.5" fill="#5A3418"/>
         </g>
-        <!-- Train (Trans-Siberian) -->
-        <g transform="translate(748,322)">
+        <!-- Train (Trans-Siberian) — below path between stops 24-25 -->
+        <g transform="translate(820,488)">
           <rect x="-34" y="-12" width="68" height="22" rx="5" fill="#E84444" stroke="white" stroke-width="1.5"/>
           <rect x="-34" y="-12" width="24" height="22" rx="4" fill="#CC3333"/>
           <circle cx="-27" cy="12" r="6" fill="#444" stroke="white" stroke-width="1.2"/>
@@ -372,13 +371,15 @@
           <rect x="2" y="-9" width="9" height="9" rx="1.5" fill="rgba(255,255,255,0.85)"/>
           <rect x="18" y="-9" width="9" height="9" rx="1.5" fill="rgba(255,255,255,0.85)"/>
         </g>
-        <!-- Pine trees SIB -->
-        <g opacity="0.92">
-          <g transform="translate(698,252)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
-          <g transform="translate(726,242)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-40 -16,0 16,0" fill="#1A6010"/><polygon points="0,-57 -12,-24 12,-24" fill="#207414"/></g>
-          <g transform="translate(752,260)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
-          <g transform="translate(958,282)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-40 -16,0 16,0" fill="#1A6010"/><polygon points="0,-57 -12,-24 12,-24" fill="#207414"/></g>
-          <g transform="translate(982,298)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
+        <!-- Pine trees — Siberia, placed in open areas below/around path -->
+        <g opacity="0.88">
+          <!-- Central Siberia south of path -->
+          <g transform="translate(680,444)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
+          <g transform="translate(706,432)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-40 -16,0 16,0" fill="#1A6010"/><polygon points="0,-57 -12,-24 12,-24" fill="#207414"/></g>
+          <g transform="translate(730,452)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
+          <!-- Eastern Siberia south of path -->
+          <g transform="translate(1050,428)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-40 -16,0 16,0" fill="#1A6010"/><polygon points="0,-57 -12,-24 12,-24" fill="#207414"/></g>
+          <g transform="translate(1074,440)"><rect x="-3" y="0" width="6" height="14" fill="#7B5533"/><polygon points="0,-42 -18,0 18,0" fill="#1E6B10"/><polygon points="0,-60 -13,-24 13,-24" fill="#268018"/></g>
         </g>
 
         <!-- ── URAL: Mountains ── -->
@@ -436,8 +437,8 @@
         <path d="M130,392 Q158,376 186,392 Q214,408 242,392" stroke="rgba(55,130,38,0.3)" stroke-width="3" fill="none"/>
         <path d="M134,410 Q162,394 190,410 Q218,426 246,410" stroke="rgba(55,130,38,0.22)" stroke-width="2.5" fill="none"/>
 
-        <!-- ── MOS: Kremlin ── -->
-        <g transform="translate(268,270)">
+        <!-- ── MOS: Kremlin — placed south of stop 12 (330,260) ── -->
+        <g transform="translate(322,338)">
           <rect x="-20" y="-9" width="40" height="15" fill="#CC3333" opacity="0.9"/>
           <rect x="-20" y="-15" width="7" height="7" fill="#DD4444" opacity="0.85"/>
           <rect x="-8" y="-15" width="7" height="7" fill="#DD4444" opacity="0.85"/>
@@ -475,52 +476,57 @@
         </g>
 
         <!-- ── YUG: Caucasus, palms, Black Sea ── -->
-        <!-- Black Sea -->
-        <ellipse cx="80" cy="582" rx="35" ry="22" fill="#5AAAD8" opacity="0.58" stroke="rgba(255,255,255,0.4)" stroke-width="1.5"/>
-        <text x="80" y="580" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.88)" font-weight="700">Чёрное</text>
-        <text x="80" y="591" text-anchor="middle" font-size="8.5" fill="rgba(255,255,255,0.88)" font-weight="700">море</text>
-        <!-- Caucasus mountains -->
-        <g transform="translate(205,420)">
-          <polygon points="-92,72 -50,-22 -8,72" fill="#9AB49A"/>
-          <polygon points="-42,72 6,-32 54,72" fill="#ACBCAC"/>
-          <polygon points="22,72 62,-20 102,72" fill="#9AB49A"/>
-          <polygon points="-50,-22 -66,14 -34,14" fill="white" opacity="0.94"/>
-          <polygon points="6,-32 -10,6 22,6" fill="white" opacity="0.96"/>
-          <polygon points="62,-20 46,16 78,16" fill="white" opacity="0.94"/>
+        <!-- Black Sea — in ocean area west of path (path x≈88-192, so sea at x=54 is safe) -->
+        <ellipse cx="54" cy="564" rx="30" ry="20" fill="#5AAAD8" opacity="0.55"/>
+        <text x="54" y="561" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.9)" font-weight="700" font-family="'Plus Jakarta Sans',sans-serif">Чёрное</text>
+        <text x="54" y="572" text-anchor="middle" font-size="8" fill="rgba(255,255,255,0.9)" font-weight="700" font-family="'Plus Jakarta Sans',sans-serif">море</text>
+        <!-- Caucasus mountains — south of main path, between stops 3-5 area but further south -->
+        <g transform="translate(230,590)">
+          <polygon points="-72,48 -38,-16 -4,48" fill="#9AB49A" opacity="0.82"/>
+          <polygon points="-30,48 6,-22 42,48" fill="#ACBCAC" opacity="0.82"/>
+          <polygon points="14,48 46,-14 78,48" fill="#9AB49A" opacity="0.82"/>
+          <polygon points="-38,-16 -52,14 -24,14" fill="white" opacity="0.94"/>
+          <polygon points="6,-22 -8,10 20,10" fill="white" opacity="0.96"/>
+          <polygon points="46,-14 32,16 60,16" fill="white" opacity="0.94"/>
         </g>
         <!-- Fish in Black Sea -->
-        <g transform="translate(50,604)" opacity="0.88">
-          <ellipse rx="14" ry="9" fill="#4477CC" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/>
-          <polygon points="14,-5 26,0 14,5" fill="#4477CC" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
-          <circle cx="-5" cy="-2" r="2.5" fill="white"/><circle cx="-4" cy="-2" r="1.2" fill="#333"/>
+        <g transform="translate(32,596)" opacity="0.88">
+          <ellipse rx="12" ry="8" fill="#4477CC" stroke="rgba(255,255,255,0.7)" stroke-width="1.2"/>
+          <polygon points="12,-4 22,0 12,4" fill="#4477CC" stroke="rgba(255,255,255,0.7)" stroke-width="1"/>
+          <circle cx="-4" cy="-2" r="2" fill="white"/><circle cx="-3" cy="-2" r="1" fill="#333"/>
         </g>
-        <!-- Palm trees -->
-        <g transform="translate(157,514)">
-          <path d="M0,32 C2,20 1,2 0,-26" stroke="#8B6533" stroke-width="4.5" fill="none" stroke-linecap="round"/>
-          <path d="M0,-26 C-24,-42 -32,-34 -28,-24" stroke="#2D8A1E" stroke-width="5.5" fill="none" stroke-linecap="round"/>
-          <path d="M0,-26 C-9,-46 -5,-50 2,-44" stroke="#3A9E28" stroke-width="5.5" fill="none" stroke-linecap="round"/>
-          <path d="M0,-26 C15,-42 22,-36 18,-26" stroke="#2D8A1E" stroke-width="5.5" fill="none" stroke-linecap="round"/>
-          <path d="M0,-26 C24,-40 28,-32 22,-22" stroke="#3A9E28" stroke-width="5.5" fill="none" stroke-linecap="round"/>
-        </g>
-        <g transform="translate(180,530)">
+        <!-- Palm trees — Сочи, south coast, below stop 1 (192,618) -->
+        <g transform="translate(242,612)">
           <path d="M0,28 C2,18 1,0 0,-22" stroke="#8B6533" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <path d="M0,-22 C-18,-36 -26,-28 -22,-18" stroke="#2D8A1E" stroke-width="5" fill="none" stroke-linecap="round"/>
-          <path d="M0,-22 C-7,-40 -3,-42 2,-36" stroke="#3A9E28" stroke-width="5" fill="none" stroke-linecap="round"/>
-          <path d="M0,-22 C16,-34 20,-26 14,-18" stroke="#2D8A1E" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-22 C-20,-36 -26,-28 -22,-18" stroke="#2D8A1E" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-22 C-7,-40 -3,-44 2,-38" stroke="#3A9E28" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-22 C14,-36 18,-28 14,-18" stroke="#2D8A1E" stroke-width="5" fill="none" stroke-linecap="round"/>
+        </g>
+        <g transform="translate(264,624)">
+          <path d="M0,24 C2,14 1,0 0,-18" stroke="#8B6533" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-18 C-16,-30 -20,-22 -16,-14" stroke="#2D8A1E" stroke-width="4.5" fill="none" stroke-linecap="round"/>
+          <path d="M0,-18 C12,-30 14,-22 10,-14" stroke="#3A9E28" stroke-width="4.5" fill="none" stroke-linecap="round"/>
         </g>
 
-        <!-- Fish (Pacific, right ocean) -->
-        <g transform="translate(1344,618)" opacity="0.92">
+        <!-- Fish (Pacific ocean, right side) -->
+        <g transform="translate(1350,590)" opacity="0.92">
           <ellipse rx="19" ry="12" fill="#E84545" stroke="white" stroke-width="1.5"/>
           <polygon points="19,-7 35,0 19,7" fill="#E84545" stroke="white" stroke-width="1"/>
           <circle cx="-7" cy="-3" r="3" fill="white"/><circle cx="-6" cy="-3" r="1.5" fill="#333"/>
         </g>
         <!-- Ship (Pacific) -->
-        <g transform="translate(1308,550)">
+        <g transform="translate(1322,636)">
           <rect x="-21" y="0" width="42" height="10" rx="5" fill="#4488BB" stroke="white" stroke-width="1.5"/>
           <rect x="-13" y="-16" width="26" height="16" rx="2" fill="#5598CB" stroke="white" stroke-width="1"/>
           <rect x="-1" y="-28" width="3" height="14" fill="#AA4444"/>
           <rect x="-1" y="-31" width="10" height="6" rx="1" fill="#EE5555"/>
+        </g>
+        <!-- Icebreaker ship (Arctic Ocean, above Russia) -->
+        <g transform="translate(596,114)">
+          <rect x="-28" y="0" width="56" height="14" rx="7" fill="#5588CC" stroke="white" stroke-width="1.5"/>
+          <rect x="-20" y="-22" width="40" height="22" rx="2" fill="#6698DC" stroke="white" stroke-width="1"/>
+          <rect x="-2" y="-40" width="5" height="22" fill="#AA4444"/>
+          <rect x="-2" y="-44" width="14" height="8" rx="2" fill="#EE4444"/>
         </g>
 
         <!-- ══ ALFA BADGE (top-left) ══ -->
@@ -532,86 +538,103 @@
         </g>
         <text x="108" y="37" font-size="12.5" font-weight="900" fill="#CC1122"
               font-family="'Space Grotesk',Arial,sans-serif">АЛЬФА-БАНК</text>
-        <text x="108" y="54" font-size="10.5" font-weight="600"
+        <text x="108" y="54" font-size="10" font-weight="600"
               fill="rgba(20,65,15,0.72)"
               font-family="'Plus Jakarta Sans',Arial,sans-serif">Инвестиционные продукты</text>
 
-        <!-- ══ TERRITORY CITY LABELS (matching МОЯ РОССИЯ positions) ══ -->
-        <g font-family="'Plus Jakarta Sans',Arial,sans-serif" pointer-events="none" font-size="11" font-weight="700" fill="rgba(15,50,10,0.68)">
-          <!-- South / YUG -->
-          <text x="218" y="618">Сочи</text>
-          <text x="160" y="536">Краснодар</text>
-          <!-- Northwest / NW -->
-          <text x="60" y="300">Архангельск</text>
-          <text x="142" y="188">Мурманск</text>
-          <!-- Moscow / MOS -->
-          <text x="245" y="246">Санкт-Петербург</text>
-          <text x="284" y="316">Москва</text>
-          <!-- Volga / URAL belt -->
-          <text x="468" y="296">Казань</text>
-          <text x="482" y="398">Екатеринбург</text>
-          <!-- Central Siberia -->
-          <text x="560" y="550">Омск</text>
-          <text x="648" y="440">Новосибирск</text>
-          <text x="688" y="338">Красноярск</text>
-          <!-- North Siberia -->
-          <text x="764" y="228">Норильск</text>
-          <text x="848" y="152">Диксон</text>
-          <!-- Eastern Siberia -->
-          <text x="930" y="186">Якутск</text>
-          <text x="950" y="320">Иркутск</text>
-          <!-- Far East -->
-          <text x="1010" y="364">Хабаровск</text>
-          <text x="1080" y="434">Владивосток</text>
-        </g>
-
-        <!-- ══ СТАРТ oval ══ -->
-        <g transform="translate(148,663)" filter="url(#f-card)">
-          <rect x="-54" y="-20" width="108" height="40" rx="20" fill="#E63946" stroke="white" stroke-width="3"/>
-          <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
-                font-size="19" font-weight="900" fill="white" letter-spacing="4"
-                font-family="'Space Grotesk',Arial,sans-serif">СТАРТ</text>
-        </g>
-        <line x1="185" y1="645" x2="192" y2="634" stroke="rgba(230,57,70,0.7)" stroke-width="2" stroke-dasharray="3,3"/>
-
-        <!-- ══ LINEAR GAME PATH (single winding route, matches МОЯ РОССИЯ) ══ -->
-        <!-- Full path halo -->
-        <polyline fill="none" stroke-linejoin="round" stroke-linecap="round"
-          points="192,632 156,563 128,498 112,440 106,379 104,320 108,262 126,210 163,205 200,230 238,258 270,292 316,256 360,226 404,270 446,312 482,360 496,420 506,472 520,512 540,530 562,496 600,455 642,414 681,358 718,302 758,248 798,200 844,172 888,178 926,202 946,240 922,285 940,332 958,377 1008,378 1064,384 1108,413 1152,452 1190,494"
-          stroke="rgba(40,110,20,0.22)" stroke-width="13"/>
-        <!-- Full path line (green dashed) -->
-        <polyline fill="none" stroke-linejoin="round" stroke-linecap="round"
-          points="192,632 156,563 128,498 112,440 106,379 104,320 108,262 126,210 163,205 200,230 238,258 270,292 316,256 360,226 404,270 446,312 482,360 496,420 506,472 520,512 540,530 562,496 600,455 642,414 681,358 718,302 758,248 798,200 844,172 888,178 926,202 946,240 922,285 940,332 958,377 1008,378 1064,384 1108,413 1152,452 1190,494"
-          stroke="#28A745" stroke-width="3.5" stroke-dasharray="8,4"/>
-
-        <!-- GREEN jump arrow: stop 8 → stop 20 (Мурманск → S.Siberia shortcut, like reference) -->
-        <path d="M126,210 C240,90 430,90 520,512" fill="none" stroke="rgba(40,167,69,0.3)" stroke-width="14"/>
-        <path d="M126,210 C240,90 430,90 520,512" fill="none" stroke="#28A745" stroke-width="4.5" stroke-dasharray="7,5" marker-end="url(#arrow-g)"/>
-
-        <!-- ══ ФИНИШ oval ══ -->
-        <line x1="1208" y1="502" x2="1250" y2="526" stroke="rgba(230,57,70,0.7)" stroke-width="2" stroke-dasharray="3,3"/>
-        <g transform="translate(1308,540)" filter="url(#f-card)">
-          <rect x="-54" y="-20" width="108" height="40" rx="20" fill="#E63946" stroke="white" stroke-width="3"/>
-          <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
-                font-size="19" font-weight="900" fill="white" letter-spacing="4"
-                font-family="'Space Grotesk',Arial,sans-serif">ФИНИШ</text>
-        </g>
-
         <!-- ══ TITLE ══ -->
-        <text x="700" y="57" text-anchor="middle"
-              font-size="46" font-weight="900"
-              fill="#CC1122"
+        <text x="720" y="54" text-anchor="middle"
+              font-size="48" font-weight="900" fill="#CC1122"
               filter="url(#f-title)"
               font-family="'Space Grotesk','Plus Jakarta Sans',Arial,sans-serif"
-              letter-spacing="5">АЛЬФА-ЛАНДИЯ</text>
-        <text x="700" y="80" text-anchor="middle"
-              font-size="14" font-weight="600"
-              fill="rgba(10,50,8,0.75)"
+              letter-spacing="4">АЛЬФА-ЛАНДИЯ</text>
+        <text x="720" y="76" text-anchor="middle" font-size="13" font-weight="600"
+              fill="rgba(10,50,8,0.72)"
               font-family="'Plus Jakarta Sans',Arial,sans-serif">Путешествие по продуктам Альфа-Банка</text>
 
-        <!-- Ocean labels -->
-        <text x="690" y="155" text-anchor="middle" font-size="13" fill="rgba(28,70,130,0.52)" font-style="italic" font-weight="600">Северный Ледовитый океан</text>
-        <text x="1352" y="380" text-anchor="middle" font-size="11" fill="rgba(28,70,130,0.48)" font-style="italic" font-weight="600" transform="rotate(-90,1352,380)">Тихий океан</text>
+        <!-- ══ OCEAN LABELS ══ -->
+        <text x="660" y="142" text-anchor="middle" font-size="13" fill="rgba(28,70,130,0.50)" font-style="italic" font-weight="600" font-family="'Plus Jakarta Sans',sans-serif">Северный Ледовитый океан</text>
+        <text x="1366" y="360" text-anchor="middle" font-size="11" fill="rgba(28,70,130,0.46)" font-style="italic" font-weight="600" font-family="'Plus Jakarta Sans',sans-serif" transform="rotate(-90,1366,360)">Тихий океан</text>
+        <text x="28" y="435" text-anchor="middle" font-size="9" fill="rgba(28,70,130,0.48)" font-style="italic" font-weight="600" font-family="'Plus Jakarta Sans',sans-serif" transform="rotate(-90,28,435)">Балтийское море</text>
+
+        <!-- ══ CITY LABELS ══ -->
+        <g font-family="'Plus Jakarta Sans',Arial,sans-serif" pointer-events="none">
+          <!-- West/south coast labels (placed east of path stops) -->
+          <text x="168" y="650" font-size="10" font-weight="700" fill="rgba(15,50,10,0.75)">Сочи</text>
+          <text x="56" y="550" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Крым</text>
+          <text x="56" y="490" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Волгоград</text>
+          <!-- Northwest — labels east of the path -->
+          <text x="150" y="218" font-size="10.5" font-weight="700" fill="rgba(15,50,10,0.75)">Мурманск</text>
+          <text x="154" y="302" font-size="9.5" font-weight="700" fill="rgba(15,50,10,0.68)">Республика</text>
+          <text x="154" y="314" font-size="9.5" font-weight="700" fill="rgba(15,50,10,0.68)">Карелия</text>
+          <!-- Moscow area -->
+          <text x="302" y="214" font-size="10.5" font-weight="700" fill="rgba(15,50,10,0.75)">Санкт-Петербург</text>
+          <text x="260" y="284" font-size="11" font-weight="800" fill="rgba(15,50,10,0.85)">Москва</text>
+          <text x="360" y="308" font-size="9.5" font-weight="600" fill="rgba(15,50,10,0.65)">Нижний Новгород</text>
+          <!-- Ural/Volga -->
+          <text x="452" y="250" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Казань</text>
+          <text x="508" y="354" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Екатеринбург</text>
+          <text x="508" y="400" font-size="10" font-weight="700" fill="rgba(15,50,10,0.68)">Челябинск</text>
+          <!-- Siberia south labels (below path) -->
+          <text x="462" y="588" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Новосибирск</text>
+          <text x="614" y="534" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Красноярск</text>
+          <!-- North Siberia -->
+          <text x="724" y="200" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Норильск</text>
+          <!-- Eastern -->
+          <text x="958" y="224" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Якутск</text>
+          <!-- Far East -->
+          <text x="1018" y="420" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Хабаровск</text>
+          <text x="1140" y="542" font-size="10" font-weight="700" fill="rgba(15,50,10,0.72)">Владивосток</text>
+          <!-- Kamchatka -->
+          <text x="1240" y="388" font-size="9" font-weight="600" fill="rgba(15,50,10,0.62)">Полуостров</text>
+          <text x="1244" y="400" font-size="9" font-weight="600" fill="rgba(15,50,10,0.62)">Камчатка</text>
+          <text x="1260" y="460" font-size="9" font-weight="600" fill="rgba(15,50,10,0.60)">Охотское море</text>
+          <!-- Калининград (west of path, in ocean area) -->
+          <text x="38" y="368" font-size="9" font-weight="600" fill="rgba(15,50,10,0.65)">Калинингр.</text>
+        </g>
+
+        <!-- ══ GAME PATH — follows reference route: south→west coast→Murmansk→east→Ural→S.Siberia→N.Siberia→east→Far East ══ -->
+        <!-- Path shadow/halo -->
+        <polyline fill="none" stroke-linejoin="round" stroke-linecap="round"
+          points="192,618 164,578 136,536 108,488 92,436 88,378 92,318 130,228 186,196 250,194 302,228 330,260 372,242 414,248 450,278 480,318 494,378 478,440 460,500 464,552 544,534 610,502 662,468 708,430 736,378 750,320 760,264 774,212 820,206 870,218 922,244 966,284 996,338 990,396 970,450 982,502 1016,542 1068,544 1132,516 1194,488"
+          stroke="rgba(20,80,10,0.22)" stroke-width="15"/>
+        <!-- Path main line -->
+        <polyline fill="none" stroke-linejoin="round" stroke-linecap="round"
+          points="192,618 164,578 136,536 108,488 92,436 88,378 92,318 130,228 186,196 250,194 302,228 330,260 372,242 414,248 450,278 480,318 494,378 478,440 460,500 464,552 544,534 610,502 662,468 708,430 736,378 750,320 760,264 774,212 820,206 870,218 922,244 966,284 996,338 990,396 970,450 982,502 1016,542 1068,544 1132,516 1194,488"
+          stroke="#2E9E1E" stroke-width="4" stroke-dasharray="9,4"/>
+
+        <!-- ══ JUMP ARROWS (matching reference style) ══ -->
+        <!-- GREEN shortcut: stop 20 (464,552) → stop 22 (610,502) — Новосибирск shortcut -->
+        <path d="M464,552 C492,616 558,616 610,502" fill="none" stroke="rgba(40,167,69,0.28)" stroke-width="14"/>
+        <path d="M464,552 C492,616 558,616 610,502" fill="none" stroke="#28A745" stroke-width="5" stroke-dasharray="8,5" marker-end="url(#arrow-g)"/>
+        <rect x="484" y="606" width="74" height="22" rx="11" fill="#28A745" opacity="0.9"/>
+        <text x="521" y="617" text-anchor="middle" dominant-baseline="central" font-size="10" font-weight="800" fill="white" font-family="'Space Grotesk',sans-serif">ВПЕРЁД!</text>
+
+        <!-- RED penalty: stop 28 (774,212) → stop 32 (966,284) — Норильск penalty arc -->
+        <path d="M774,212 C858,150 920,164 966,284" fill="none" stroke="rgba(230,57,70,0.26)" stroke-width="13"/>
+        <path d="M774,212 C858,150 920,164 966,284" fill="none" stroke="#E63946" stroke-width="4" stroke-dasharray="7,5" marker-end="url(#arrow-r)"/>
+
+        <!-- RED penalty: stop 33 (996,338) → stop 37 (1016,542) -->
+        <path d="M996,338 C1066,304 1066,462 1016,542" fill="none" stroke="rgba(230,57,70,0.22)" stroke-width="12"/>
+        <path d="M996,338 C1066,304 1066,462 1016,542" fill="none" stroke="#E63946" stroke-width="3.5" stroke-dasharray="7,5" marker-end="url(#arrow-r)"/>
+
+        <!-- ══ СТАРТ oval ══ -->
+        <line x1="230" y1="656" x2="194" y2="624" stroke="rgba(230,57,70,0.65)" stroke-width="2.5" stroke-dasharray="4,3"/>
+        <g transform="translate(298,672)" filter="url(#f-card)">
+          <rect x="-66" y="-24" width="132" height="48" rx="24" fill="#E63946" stroke="white" stroke-width="3"/>
+          <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
+                font-size="22" font-weight="900" fill="white" letter-spacing="5"
+                font-family="'Space Grotesk',Arial,sans-serif">СТАРТ</text>
+        </g>
+
+        <!-- ══ ФИНИШ oval ══ -->
+        <line x1="1212" y1="492" x2="1266" y2="548" stroke="rgba(230,57,70,0.65)" stroke-width="2.5" stroke-dasharray="4,3"/>
+        <g transform="translate(1334,572)" filter="url(#f-card)">
+          <rect x="-66" y="-24" width="132" height="48" rx="24" fill="#E63946" stroke="white" stroke-width="3"/>
+          <text x="0" y="0" text-anchor="middle" dominant-baseline="central"
+                font-size="22" font-weight="900" fill="white" letter-spacing="4"
+                font-family="'Space Grotesk',Arial,sans-serif">ФИНИШ</text>
+        </g>
 
         <!-- ══ INTERACTIVE NODES — JS ══ -->
         <g id="map-nodes"></g>
